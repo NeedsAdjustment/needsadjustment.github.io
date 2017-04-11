@@ -11,7 +11,20 @@ header {
     padding: 40px 0;
 }
 
-@media(min-width:0px) {
+@media(min-width:100px) {
+    hr {
+        width: 250px;
+    }
+    .headertitle {
+        font-size: 40px;
+    }
+    .subtitle {
+        font-size: 15px;
+    }
+    ;
+}
+
+@media(min-width:400px) {
     hr {
         width: 373px;
     }
