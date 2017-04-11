@@ -1,5 +1,58 @@
+body {
+    margin: 0;
+}
+
 header {
-    background-color: #825B56;
-    color: #052439;
-    font-family: 'Josefin Sans', sans-serif;
+    width: 100%;
+    background-color: #14161F;
+    color: #B6BAD1;
+    text-align: center;
+    padding: 40px 0;
+}
+
+.headertitle {
+    margin: auto;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 100px;
+    font-weight: 800;
+}
+
+.subtitle {
+    margin: auto;
+    font-family: 'Vesper Libre', sans-serif;
+    font-size: 30px;
+    letter-spacing: 1.2px;
+}
+
+hr {
+    color: #F4BF75;
+    display: block;
+    width: 30%;
+    margin-top: -4px;
+    border-style: solid;
+    border-width: 2px;
+}
+
+a:link {
+    color: #B6BAD1;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #B6BAD1;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #F4BF75;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a:active {
+    color: #F4BF75;
+    background-color: transparent;
+    text-decoration: none;
 }
