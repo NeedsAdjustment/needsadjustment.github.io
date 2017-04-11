@@ -11,7 +11,7 @@ header {
     padding: 40px 0;
 }
 
-@media(max-width:400px) {
+@media(min-width:0px) {
     hr {
         width: 373px;
     }
