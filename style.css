@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    background-color: #191C28;
 }
 
 header {
@@ -13,14 +14,14 @@ header {
 .headertitle {
     margin: auto;
     font-family: 'Nunito Sans', sans-serif;
-    font-size: 100px;
+    font-size: 5.5vw;
     font-weight: 800;
 }
 
 .subtitle {
     margin: auto;
     font-family: 'Vesper Libre', sans-serif;
-    font-size: 30px;
+    font-size: 2vw;
     letter-spacing: 1.2px;
 }
 
