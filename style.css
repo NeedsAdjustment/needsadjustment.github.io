@@ -11,9 +11,9 @@ header {
     padding: 40px 0;
 }
 
-@media(min-width:400px) {
+@media(max-width:400px) {
     hr {
-        width: 375px;
+        width: 373px;
     }
     .headertitle {
         font-size: 60px;
