@@ -14,6 +14,7 @@ header {
 @media(min-width:100px) {
     hr {
         width: 250px;
+        border-width: 1px;
     }
     .headertitle {
         font-size: 40px;
@@ -27,6 +28,7 @@ header {
 @media(min-width:400px) {
     hr {
         width: 373px;
+        border-width: 1px;
     }
     .headertitle {
         font-size: 60px;
@@ -40,6 +42,7 @@ header {
 @media(min-width:768px) {
     hr {
         width: 420px;
+        border-width: 1px;
     }
     .headertitle {
         font-size: 70px;
@@ -53,6 +56,7 @@ header {
 @media(min-width:950px) {
     hr {
         width: 500px;
+        border-width: 2px;
     }
     .headertitle {
         font-size: 80px;
@@ -67,6 +71,7 @@ header {
 @media(min-width:1400px) {
     hr {
         width: 600px;
+        border-width: 2px;
     }
     .headertitle {
         font-size: 100px;
@@ -94,7 +99,6 @@ hr {
     display: block;
     margin-top: -4px;
     border-style: solid;
-    border-width: 2px;
 }
 
 a, hr, .subtitle, .headertitle {
