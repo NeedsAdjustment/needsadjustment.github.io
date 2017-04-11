@@ -26,6 +26,23 @@ header {
     .subtitle {
         font-size: 15px;
     }
+    main {
+        width: 300px;
+        margin: auto;
+        padding-top: 8px;
+        padding-bottom: 40px;
+    }
+    .poemtext {
+        border-radius: 0 25px 25px 0;
+        font-size: 13px;
+        border-left: 1px solid #F4BF75;
+        padding: 3px 0 3px 20px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    h1 {
+        font-size: 17px;
+    }
     ;
 }
 
@@ -42,6 +59,23 @@ header {
     }
     .subtitle {
         font-size: 24px;
+    }
+    main {
+        width: 390px;
+        margin: auto;
+        padding-top: 8px;
+        padding-bottom: 40px;
+    }
+    .poemtext {
+        border-radius: 0 25px 25px 0;
+        font-size: 17px;
+        border-left: 2px solid #F4BF75;
+        padding: 3px 0 3px 20px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    h1 {
+        font-size: 20px;
     }
     ;
 }
@@ -60,6 +94,23 @@ header {
     .subtitle {
         font-size: 27px;
     }
+    main {
+        width: 420px;
+        margin: auto;
+        padding-top: 8px;
+        padding-bottom: 40px;
+    }
+    .poemtext {
+        border-radius: 0 25px 25px 0;
+        font-size: 19px;
+        border-left: 3px solid #F4BF75;
+        padding: 3px 0 3px 20px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    h1 {
+        font-size: 23px;
+    }
     ;
 }
 
@@ -77,6 +128,23 @@ header {
     .subtitle {
         font-size: 30px;
         letter-spacing: 1.1px;
+    }
+    main {
+        width: 490px;
+        margin: auto;
+        padding-top: 8px;
+        padding-bottom: 40px;
+    }
+    .poemtext {
+        border-radius: 0 25px 25px 0;
+        font-size: 22px;
+        border-left: 5px solid #F4BF75;
+        padding: 3px 0 3px 20px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    h1 {
+        font-size: 27px;
     }
     ;
 }
@@ -97,9 +165,9 @@ header {
         letter-spacing: 1.2px;
     }
     main {
-        width: 30%;
+        width: 580px;
         margin: auto;
-        padding-top: 40px;
+        padding-top: 10px;
         padding-bottom: 40px;
     }
     .poemtext {
@@ -107,6 +175,8 @@ header {
         font-size: 26px;
         border-left: 6px solid #F4BF75;
         padding: 3px 0 3px 20px;
+        margin-top: 50px;
+        margin-bottom: 50px;
     }
     h1 {
         font-size: 30px;
