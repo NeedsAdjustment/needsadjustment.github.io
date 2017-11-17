@@ -1,0 +1,55 @@
+==================================================================
+https://keybase.io/needsadjustment
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://needsadjustment.github.io
+  * I am needsadjustment (https://keybase.io/needsadjustment) on keybase.
+  * I have a public key ASCN207fynSvNqLiBVixv0Lc5jRq9RKHGzqG_MLanR4rTQo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01208ddb4edfca74af36a2e20558b1bf42dce6346af512871b3a86fcc2da9d1e2b4d0a",
+      "host": "keybase.io",
+      "kid": "01208ddb4edfca74af36a2e20558b1bf42dce6346af512871b3a86fcc2da9d1e2b4d0a",
+      "uid": "77985e18c4fbef98dea21b1a8246d219",
+      "username": "needsadjustment"
+    },
+    "merkle_root": {
+      "ctime": 1510906777,
+      "hash": "ebf29f665bb2405851a40f7b650bee6060e363d4754bac1f6c2668abc8bade0fcfd70b3ac107e3f021b0a59fd086854e376d6bff4b83bf9947ad6d6a250d4fbf",
+      "hash_meta": "115d5c7d941c19d7857f02b59791922803e9db44998fb10ce5834cd848d2e8b0",
+      "seqno": 1713946
+    },
+    "service": {
+      "hostname": "needsadjustment.github.io",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "1.0.34"
+  },
+  "ctime": 1510906787,
+  "expire_in": 504576000,
+  "prev": "bdd3165121de6dddb9c0322e67b8e30795d895c7154801c4a55676438b033383",
+  "seqno": 10,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgjdtO38p0rzai4gVYsb9C3OY0avUShxs6hvzC2p0eK00Kp3BheWxvYWTFA1l7ImJvZHkiOnsia2V5Ijp7ImVsZGVzdF9raWQiOiIwMTIwOGRkYjRlZGZjYTc0YWYzNmEyZTIwNTU4YjFiZjQyZGNlNjM0NmFmNTEyODcxYjNhODZmY2MyZGE5ZDFlMmI0ZDBhIiwiaG9zdCI6ImtleWJhc2UuaW8iLCJraWQiOiIwMTIwOGRkYjRlZGZjYTc0YWYzNmEyZTIwNTU4YjFiZjQyZGNlNjM0NmFmNTEyODcxYjNhODZmY2MyZGE5ZDFlMmI0ZDBhIiwidWlkIjoiNzc5ODVlMThjNGZiZWY5OGRlYTIxYjFhODI0NmQyMTkiLCJ1c2VybmFtZSI6Im5lZWRzYWRqdXN0bWVudCJ9LCJtZXJrbGVfcm9vdCI6eyJjdGltZSI6MTUxMDkwNjc3NywiaGFzaCI6ImViZjI5ZjY2NWJiMjQwNTg1MWE0MGY3YjY1MGJlZTYwNjBlMzYzZDQ3NTRiYWMxZjZjMjY2OGFiYzhiYWRlMGZjZmQ3MGIzYWMxMDdlM2YwMjFiMGE1OWZkMDg2ODU0ZTM3NmQ2YmZmNGI4M2JmOTk0N2FkNmQ2YTI1MGQ0ZmJmIiwiaGFzaF9tZXRhIjoiMTE1ZDVjN2Q5NDFjMTlkNzg1N2YwMmI1OTc5MTkyMjgwM2U5ZGI0NDk5OGZiMTBjZTU4MzRjZDg0OGQyZThiMCIsInNlcW5vIjoxNzEzOTQ2fSwic2VydmljZSI6eyJob3N0bmFtZSI6Im5lZWRzYWRqdXN0bWVudC5naXRodWIuaW8iLCJwcm90b2NvbCI6Imh0dHBzOiJ9LCJ0eXBlIjoid2ViX3NlcnZpY2VfYmluZGluZyIsInZlcnNpb24iOjF9LCJjbGllbnQiOnsibmFtZSI6ImtleWJhc2UuaW8gZ28gY2xpZW50IiwidmVyc2lvbiI6IjEuMC4zNCJ9LCJjdGltZSI6MTUxMDkwNjc4NywiZXhwaXJlX2luIjo1MDQ1NzYwMDAsInByZXYiOiJiZGQzMTY1MTIxZGU2ZGRkYjljMDMyMmU2N2I4ZTMwNzk1ZDg5NWM3MTU0ODAxYzRhNTU2NzY0MzhiMDMzMzgzIiwic2Vxbm8iOjEwLCJ0YWciOiJzaWduYXR1cmUifaNzaWfEQINuLPNPJosJKPI2BLXw/X1yw5qVXv5iNvC2jb2mYR4fA78CLQN1ltxqBQpQIVyXBJeu61/wZvBAp4u5NPgfcQSoc2lnX3R5cGUgpGhhc2iCpHR5cGUIpXZhbHVlxCC2gwRTTKzQSd8QoLJmC08RG5G/tvtB8Zt9pXsIH2Pon6N0YWfNAgKndmVyc2lvbgE=
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/needsadjustment
+
+==================================================================
