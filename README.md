@@ -1,7 +1,3 @@
-# NerdyPepper.github.io
-GitHub page for My Startpage
+# Starlight/Startpages
 
-A collection of startpages based on popular colorschemes.
-
-Link to any startpage: https://nerdypepper.github.io/colorscheme_name_here/
-
+The most messed up backend for any personal website, ever. Has my poetry and startpages.
