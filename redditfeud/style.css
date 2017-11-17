@@ -27,3 +27,13 @@ table, th, td {
 table {
   width: 100%;
 }
+
+#score {
+  position: absolute;
+  top:0;
+  right:0;
+}
+
+td.points {
+  width:5%;
+}
