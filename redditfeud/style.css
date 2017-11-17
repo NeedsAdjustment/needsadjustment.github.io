@@ -1,0 +1,29 @@
+#container {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background-color: #66c2ff;
+}
+html, body {
+  width:  100%;
+  width:auto;
+  height: 100%;
+  margin: 0px;
+  text-align: center;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+#answers {
+  display: inline-block;
+  width: 50%;
+}
+
+table {
+  width: 100%;
+}
