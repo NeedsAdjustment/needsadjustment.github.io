@@ -34,6 +34,10 @@ table {
   right:0;
 }
 
+td.item {
+  width:40%;
+}
+
 td.points {
-  width:5%;
+  width:10%;
 }
