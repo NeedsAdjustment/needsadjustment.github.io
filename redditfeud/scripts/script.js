@@ -3,15 +3,11 @@ var points = [];
 var guessed = [];
 var score = 0;
 var TEST = [["a",1],["b",2],["c",3],["d",4],["e",5],["f",6],["g",7],["h",8]];
+var STUFF = {};
 
 function init() {
   setContent();
-  what = fetchContent("sheep").then(function(value) {
-    STUFF = value.data.children;
-    console.log(STUFF);
-  }, function(reason) {
-    console.log(reason);
-  });
+  getContent2();
 }
 
 function setContent() {
@@ -47,9 +43,24 @@ function guess() {
 function getContent() {
   return TEST;
 }
+
+function getContent2() {
+  promise = fetchContent("sheep").then(function(value) {
+    STUFF = value.data.children;
+    console.log(STUFF);
+  }, function(reason) {
+    console.log(reason);
+  });
+  huh = [];
+  huh.push(promise);
+  Promise.all(huh).then(function() {
+    picked = Math.floor((Math.random() * STUFF.length));
+    alert(STUFF[picked].data.title);
+    });
+}
 ;function fetchContent(name) {
   url = 'https://www.reddit.com/r/';
-  url = url.concat(name, '/top.json');
+  url = url.concat(name, '/top.json?sort=top&t=month');
 
   return fetch(url)
     .then(function (response) {

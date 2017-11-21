@@ -1,6 +1,6 @@
 function fetchContent(name) {
   url = 'https://www.reddit.com/r/';
-  url = url.concat(name, '/top.json');
+  url = url.concat(name, '/top.json?sort=top&t=month');
 
   return fetch(url)
     .then(function (response) {
