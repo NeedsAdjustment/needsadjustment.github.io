@@ -1,0 +1,3 @@
+[submodule "sheep-subreddits"]
+	path = sheep-subreddits
+	url = https://github.com/sheepmolestor/sheep-subreddits/
