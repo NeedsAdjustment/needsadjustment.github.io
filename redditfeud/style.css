@@ -14,30 +14,14 @@ html, body {
   text-align: center;
 }
 
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
-}
-
 #answers {
   display: inline-block;
+  text-align: center;
   width: 50%;
-}
-
-table {
-  width: 100%;
 }
 
 #score {
   position: absolute;
   top:0;
   right:0;
-}
-
-td.item {
-  width:40%;
-}
-
-td.points {
-  width:10%;
 }
