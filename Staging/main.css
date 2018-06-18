@@ -1,0 +1,43 @@
+.bg { background-color: #121C21; }
+
+.pink { color: #F0696F; }
+.green { color: #76A08C; }
+.navy { color: #718C97; }
+.yellow { color: #F7CCA1; }
+.teal { color: #5F9993; }
+.purple { color: #CEB5CE; }
+.grey { color: #AAAFB2; }
+.lime { color: #80CBC4; }
+
+* {
+    outline: 1px solid red;
+    outline-offset: -1px;
+}
+
+html {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 100%;
+}
+
+body {
+    height: 80vh;
+    width: 80vw;
+
+    font-family: 'Vesper Libre', serif;
+}
+
+.title {
+    font-size: 5rem;
+    font-family: 'Nunito Sans', sans-serif;
+}
+
+.subtitle {
+    font-size: 2rem;
+}
