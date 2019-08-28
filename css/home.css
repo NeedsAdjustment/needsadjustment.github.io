@@ -1,0 +1,187 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css?family=Fira+Mono&display=swap');
+.fab {display: inline}
+
+/* Colours */
+
+:root {
+    --bg: #191C28;
+    --btext: #B6BAD1;
+    --ytext: #F4BF75;
+    --rtext: #FE6262;
+    --gtext: #7AC582;
+}
+
+/* Global */
+
+body {
+    background-color: var(--bg);
+    color: var(--btext);
+
+    font-family: 'Fira Mono', monospace;
+
+    height: calc(100vh - 100em);
+
+    font-size: 180%;
+}
+
+a.secret, smol {font-size: 40%}
+
+a.secret:link {
+    color: var(--bg);
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a.secret:visited {
+    color: var(--bg);
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a.social:link {
+    color: var(--btext);
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a.social:visited {
+    color: var(--btext);
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a.social:hover {
+    color: var(--ytext);
+    background-color: transparent;
+    text-decoration: none;
+}
+
+intro, socials, caret {display: flex}
+
+.centre {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+}
+
+#xcentre {margin: auto}
+
+.intro {
+    display: flex;
+    overflow: hidden;
+
+    border-right: 2px solid var(--btext);
+    white-space: nowrap;
+
+    margin: 0 auto;
+
+    animation:
+        typewriter 3s steps(30) 1s 1 normal both,
+        blinkTextCursor 0.75s steps(15) 10 normal forwards,
+        lineBreak 0.1s steps(4) 7.5s 1 normal forwards,
+        lineBreak2 0.1s steps(4) 15.5s 1 normal forwards;
+}
+
+.socials {
+    position: absolute;
+    width: 0;
+
+    transform: translateX(-7.9em) translateY(-2.25em);
+    -moz-transform: translateX(-7.9em) translateY(-2.25em);
+    -webkit-transform: translateX(-7.9em) translateY(-2.25em);
+
+    text-align: left;
+
+    overflow: hidden;
+
+    border-right: 2px solid transparent;
+    white-space: nowrap;
+
+    animation:
+        typewriterS 2.5s steps(22) 8s 1 normal both,
+        blinkTextCursor 0.75s steps(15) 8s 10 normal forwards,
+        lineBreakS 0.1s steps(4) 15.5s 1 normal forwards;
+
+}
+
+.caret {
+    position: absolute;
+
+    transform: translateX(-8.93em) translateY(-2.25em);
+    -moz-transform: translateX(-8.93em) translateY(-2.25em);
+    -webkit-transform: translateX(-8.93em) translateY(-2.25em);
+
+}
+
+yellow {
+    color: var(--btext);
+    animation: fadeYellow 200ms steps(20) 2.45s 1 normal forwards;
+}
+
+green {
+    color: var(--btext);
+    animation: fadeGreen 200ms steps(20) 9s 1 normal forwards;
+}
+
+transparent {color: transparent}
+
+red {
+    color: transparent;
+    animation: fadeRedIn 1s steps(20) 4.1s 1 normal forwards;
+}
+
+
+@keyframes typewriter {
+    from {width: 0}
+    to {width: 100%}
+}
+
+@keyframes typewriterS {
+    from {width: 0}
+    to {width: 13.8em}
+}
+
+@keyframes blinkTextCursor {
+    from {border-right-color: var(--btext)}
+    to {border-right-color: transparent}
+}
+
+@keyframes fadeYellow {
+    from {color: var(--btext)}
+    to {color: var(--ytext)}
+}
+
+@keyframes fadeGreen {
+    from {color: var(--btext)}
+    to {color: var(--gtext)}
+}
+
+@keyframes fadeRedIn {
+    from {color: transparent}
+    to {color: var(--rtext)}
+}
+
+@keyframes fadeRedOut {
+    from {color: var(--rtext)}
+    to {color: var(--btext)}
+}
+
+@keyframes lineBreak {
+    from {transform: translateY(0)}
+    to {transform: translateY(-2.25em)}
+}
+
+@keyframes lineBreak2 {
+    from {transform:  translateY(-2.25em)}
+    to {transform:  translateY(-4.5em)}
+}
+
+@keyframes lineBreakS {
+    from {transform: translateX(-7.9em) translateY(-2.25em)}
+    to {transform: translateX(-7.9em) translateY(-4.5em)}
+}
