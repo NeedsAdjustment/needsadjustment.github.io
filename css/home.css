@@ -97,15 +97,15 @@ intro, socials, links, caret {display: flex}
     display: flex;
     border-right: 2px solid var(--btext);
     margin: 0 auto;
-    animation: typewriter 3s steps(30) 1s 1 normal both,
-                        blinkTextCursor 0.75s steps(15) 10 normal forwards,
-                        lineBreak 0.1s steps(4) 7.5s 1 normal forwards,
-                        lineBreak2 0.1s steps(4) 14s 1 normal forwards;
+    animation: typewriter 1.5s steps(30) 1s 1 normal both,
+                        blinkTextCursor 0.75s steps(15) 5 normal forwards,
+                        lineBreak 0.1s steps(4) 3.75s 1 normal forwards,
+                        lineBreak2 0.1s steps(4) 7s 1 normal forwards;
 }
-.socials {animation: typewriterS 2.5s steps(22) 8s 1 normal both,
-                                    blinkTextCursor 0.75s steps(15) 8s 8 normal forwards,
-                                    lineBreakS 0.1s steps(4) 14s 1 normal forwards}
-.links {animation: typewriterL 3s steps(30) 14.5s 1 normal both,
+.socials {animation: typewriterS 1.25s steps(22) 4s 1 normal both,
+                                    blinkTextCursor 0.75s steps(15) 4s 4 normal forwards,
+                                    lineBreakS 0.1s steps(4) 7s 1 normal forwards}
+.links {animation: typewriterL 1.5s steps(30) 7.5s 1 normal both,
                                 blinkTextCursor 0.75s steps(15) 14.5s infinite normal}
 .caret {
     transform: translateX(-8.93em) translateY(-2.25em);
