@@ -106,7 +106,7 @@ intro, socials, links, caret {display: flex}
                                     blinkTextCursor 0.75s steps(15) 4s 4 normal forwards,
                                     lineBreakS 0.1s steps(4) 7s 1 normal forwards}
 .links {animation: typewriterL 1.5s steps(30) 7.5s 1 normal both,
-                                blinkTextCursor 0.75s steps(15) 14.5s infinite normal}
+                                blinkTextCursor 0.75s steps(15) 7.5s infinite normal}
 .caret {
     transform: translateX(-8.93em) translateY(-2.25em);
     -moz-transform: translateX(-8.93em) translateY(-2.25em);
