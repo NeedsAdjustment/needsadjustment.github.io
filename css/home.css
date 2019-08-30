@@ -13,10 +13,10 @@
 }
 
 yellow, green, blue {color: var(--btext)}
-yellow {animation: fadeYellow 200ms steps(20) 2.45s 1 normal forwards}
-green {animation: fadeGreen 200ms steps(20) 9s 1 normal forwards}
-blue {animation: fadeBlue 200ms steps(20) 15s 1 normal forwards}
-red {animation: fadeRedIn 1s steps(20) 4.1s 1 normal forwards}
+yellow {animation: fadeYellow 200ms steps(20) 1.8s 1 normal forwards}
+green {animation: fadeGreen 200ms steps(20) 4.4s 1 normal forwards}
+blue {animation: fadeBlue 200ms steps(20) 7.8s 1 normal forwards}
+red {animation: fadeRedIn 1s steps(20) 3s 1 normal forwards}
 red, transparent {color: transparent}
 
 @keyframes fadeYellow {from {color: var(--btext)} to {color: var(--ytext)}}
