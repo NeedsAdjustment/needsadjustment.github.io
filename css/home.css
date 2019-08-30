@@ -23,7 +23,6 @@ red, transparent {color: transparent}
 @keyframes fadeGreen {from {color: var(--btext)} to {color: var(--gtext)}}
 @keyframes fadeBlue {from {color: var(--btext)} to {color: var(--bltext)}}
 @keyframes fadeRedIn {from {color: transparent} to {color: var(--rtext)}}
-@keyframes fadeRedOut {from {color: var(--rtext)} to {color: var(--btext)}}
 
 /* Global */
 body {
