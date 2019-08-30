@@ -1,3 +1,3 @@
-# Starlight/Startpages
+# Personal Site
 
-The most messed up backend for any personal website, ever. Has my poetry and startpages.
+Hosted [here](https://joshsoong.design). Startpage [here](https://joshsoong.design/Startpage).
