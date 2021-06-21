@@ -1,118 +1,141 @@
 /* Fonts */
-@import url('https://fonts.googleapis.com/css?family=Fira+Mono&display=swap');
-.fab {display: inline}
+@font-face {
+    font-family: Apercu;
+    src: url(../fonts/Apercu.otf) format("opentype");
+}
+
+@font-face {
+    font-family: THItalic;
+    src: url(../fonts/TiemposHeadlineItalic.otf) format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
 
 /* Colours */
 :root {
-    --bg: #191C28;
-    --btext: #B6BAD1;
-    --ytext: #F4BF75;
-    --rtext: #FE6262;
-    --gtext: #7AC582;
-    --bltext: #7AD0DE;
+    --desaturated-gray: #7f85a3;
+    --dark-blue: #3e68d7;
+    --blue: #82aaff;
+    --sky-blue: #65bcff;
+    --cyan: #86e1fc;
+    --red: #ff757f;
+    --dark-red: #ff5370;
+    --light-red: #ff98a4;
+    --yellow: #ffc777;
+    --orange: #ff966c;
+    --dark-orange: #fc7b7b;
+    --teal: #4fd6be;
+    --green: #c3e88d;
+    --purple: #c099ff;
+    --pink: #fca7ea;
+    --indigo: #7a88cf;
+    --bright-cyan: #b4f9f8;
+
+    --fg: #c8d3f5;
+    --bg: #222436;
+    --bg2: #1E2030;
 }
-
-yellow, green, blue {color: var(--btext)}
-yellow {animation: fadeYellow 200ms steps(20) 1.8s 1 normal forwards}
-green {animation: fadeGreen 200ms steps(20) 4.4s 1 normal forwards}
-blue {animation: fadeBlue 200ms steps(20) 7.8s 1 normal forwards}
-red {animation: fadeRedIn 1s steps(20) 3s 1 normal forwards}
-red, transparent {color: transparent}
-
-@keyframes fadeYellow {from {color: var(--btext)} to {color: var(--ytext)}}
-@keyframes fadeGreen {from {color: var(--btext)} to {color: var(--gtext)}}
-@keyframes fadeBlue {from {color: var(--btext)} to {color: var(--bltext)}}
-@keyframes fadeRedIn {from {color: transparent} to {color: var(--rtext)}}
 
 /* Global */
 body {
     background-color: var(--bg);
-    color: var(--btext);
-    font-family: 'Fira Mono', monospace;
-    height: calc(100vh - 100em);
-    font-size: 180%;
+    color: var(--fg);
+    font-size: 62.5%;
+    overflow-x: hidden;
 }
 
-/* Links */
-a.secret, smol {font-size: 40%}
-a.secret, a.social, a.link, a.inactive {text-decoration: none}
-a.secret, a.social {background-color: transparent}
-a.secret:link, a.secret:visited, a.link:hover {color: var(--bg)}
-a.social, a.link, a.inactive {color: var(--btext)}
-a.social:hover {color: var(--ytext)}
-a.link {
-    background: linear-gradient(to bottom, var(--ytext) 0%, var(--ytext) 100%);
+/* Top Bar */
+.topbar {
+    padding: 30px;
+    margin-left: -0.8rem;
+    margin-right: -0.8rem;
+    margin-top: -0.8rem;
+    background-color: var(--bg2);
+}
+
+.icon {
+    height: 4rem;
+    /* https://codepen.io/sosuke/pen/Pjoqqp to generate colour filter from --fg */
+    filter: invert(85%) sepia(10%) saturate(918%) hue-rotate(193deg) brightness(99%) contrast(95%);
+    margin-left: 1rem;
+}
+
+.toplinks {
+    float: right;
+    margin-right: 3rem;
+}
+
+a.toplink {
+    /* text */
+    font-family: 'Apercu';
+    font-size: 1.5rem;
+    
+    /* colouring */
+    color: var(--fg);
+    text-decoration: none;
+
+    /* hover animation */
+    background: linear-gradient(to bottom, var(--yellow) 0%, var(--yellow) 100%);
 	background-position: 0 100%;
 	background-repeat: repeat-x;
-    background-size: 4px 4px;
+    background-size: 0.1rem 0.1rem;
     transition: color .2s, background-size .2s;
-}
-a.link:hover {background-size: 4px 50px}
-a.inactive {
-    cursor: default;
-    background: linear-gradient(to bottom, var(--btext) 0%, var(--btext) 100%);
-	background-position: 0 50%;
-	background-repeat: repeat-x;
-	background-size: 3px 3px;
-}
-a.inactive:hover {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23B6BAD1' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E");
-    background-size: auto 6px;
-}
-a.inactive:active {pointer-events: none}
+    border-right: 0.3rem solid transparent;
+    border-left: 0.3rem solid transparent;
+    /* display descenders properly */
+    text-shadow: 2px 2px var(--bg), -2px 2px var(--bg), 0px 2px var(--bg), 1px 2px var(--bg), -1px 2px var(--bg);
 
-/* Structure */
-.centre {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-
-    transform: translateX(-50%) translateY(-50%);
-    -moz-transform: translateX(-50%) translateY(-50%);
-    -webkit-transform: translateX(-50%) translateY(-50%);
+    /* positioning */
+    line-height: 2.5em;
+    margin-left: 2.5rem;
 }
+a.toplink:hover {
+    color: var(--bg);
+    background-size: 0.1rem 2rem;
+    border-radius: 0.3rem;
+    text-shadow: none;
+}
+
+/* Body */
+.content {
+    min-height: 500px;
+    margin-top: 1.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.namecontainer {
+    display: flex;
+    height: calc(80vh);
+    max-width: 1200px;
+
+    /* Name formatting */
+    font-family: 'THItalic';
+    font-size: 10rem;
+    text-align:center;
+    text-anchor:middle;
+}
+
+.name {
+    fill: var(--fg);
+}
+
+.subname {
+    stroke-width: 1px;
+    fill: none;
+
+    opacity: 0;
+    -webkit-transition: all 500ms ease-in-out;
+    -moz-transition: all 500ms ease-in-out;
+    -ms-transition: all 500ms ease-in-out;
+    -o-transition: all 500ms ease-in-out;
+    transition: all 500ms ease-in-out;
+}
+
+.name:hover ~ .subname {
+    opacity: 1;
+}
+
 #xcentre {margin: auto}
 intro, socials, links, caret {display: flex}
-
-/* Text */
-.intro, .socials, .links {
-    overflow: hidden;
-    white-space: nowrap;
-}
-.socials, .links, .caret {position: absolute}
-.socials, .links {
-    width: 0;
-    text-align: left;
-    border-right: 2px solid transparent;
-
-    transform: translateX(-7.9em) translateY(-2.25em);
-    -moz-transform: translateX(-7.9em) translateY(-2.25em);
-    -webkit-transform: translateX(-7.9em) translateY(-2.25em);
-}
-.intro {
-    display: flex;
-    border-right: 2px solid var(--btext);
-    margin: 0 auto;
-    animation: typewriter 1.5s steps(30) 1s 1 normal both,
-                        blinkTextCursor 0.75s steps(15) 5 normal forwards,
-                        lineBreak 0.1s steps(4) 3.75s 1 normal forwards,
-                        lineBreak2 0.1s steps(4) 7s 1 normal forwards;
-}
-.socials {animation: typewriterS 1.25s steps(22) 4s 1 normal both,
-                                    blinkTextCursor 0.75s steps(15) 4s 4 normal forwards,
-                                    lineBreakS 0.1s steps(4) 7s 1 normal forwards}
-.links {animation: typewriterL 1.5s steps(30) 7.5s 1 normal both,
-                                blinkTextCursor 0.75s steps(15) 7.5s infinite normal}
-.caret {
-    transform: translateX(-8.93em) translateY(-2.25em);
-    -moz-transform: translateX(-8.93em) translateY(-2.25em);
-    -webkit-transform: translateX(-8.93em) translateY(-2.25em);
-}
-
-@keyframes typewriter {from {width: 0} to {width: 100%}}
-@keyframes typewriterS {from {width: 0} to {width: 16.3em}}
-@keyframes typewriterL {from {width: 0} to {width: 16.5em}}
-@keyframes blinkTextCursor {from {border-right-color: var(--btext)} to {border-right-color: transparent}}
-@keyframes lineBreak {from {transform: translateY(0)} to {transform: translateY(-2.25em)}}
-@keyframes lineBreak2 {from {transform:  translateY(-2.25em)} to {transform:  translateY(-4.5em)}}
-@keyframes lineBreakS {from {transform: translateX(-7.9em) translateY(-2.25em)} to {transform: translateX(-7.9em) translateY(-4.5em)}}
