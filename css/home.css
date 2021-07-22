@@ -79,7 +79,7 @@ a.toplink {
 	background-position: 0 100%;
 	background-repeat: repeat-x;
     background-size: 0.1rem 0.1rem;
-    transition: color .2s, background-size .2s;
+    transition: color .3s, text-shadow .3s, background-size .3s;
     border-right: 0.3rem solid transparent;
     border-left: 0.3rem solid transparent;
     /* display descenders properly */
@@ -99,6 +99,7 @@ a.toplink:hover {
 /* Body */
 .content {
     min-height: 500px;
+    height: calc(80vh);
     margin-top: 1.6rem;
     display: flex;
     justify-content: center;
@@ -107,7 +108,6 @@ a.toplink:hover {
 
 .namecontainer {
     display: flex;
-    height: calc(80vh);
     max-width: 1200px;
 
     /* Name formatting */
@@ -133,8 +133,10 @@ a.toplink:hover {
     transition: all 500ms ease-in-out;
 }
 
-.name:hover ~ .subname {
+.namecontainer:hover .subname {
     opacity: 1;
+    x: 50%;
+    y: 50%;
 }
 
 #xcentre {margin: auto}
