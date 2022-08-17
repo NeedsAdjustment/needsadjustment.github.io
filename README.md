@@ -1,3 +1,3 @@
 # Personal Site
 
-Hosted [here](https://joshsoong.design).
+Hosted [here](https://joshuasoong.studio).
