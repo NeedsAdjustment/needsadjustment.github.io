@@ -1,0 +1,182 @@
+/* Fonts */
+@font-face {
+  font-family: Against;
+  src: url(against.otf) format('opentype');
+}
+@font-face {
+  font-family: Geist Mono;
+  src: url(geistmono.woff2) format('woff2');
+}
+
+/* Colours */
+:root {
+  --bg: #191c28;
+  --btext: #b6bad1;
+  --ytext: #f4bf75;
+  --rtext: #fe6262;
+  --gtext: #7ac582;
+  --bltext: #7ad0de;
+}
+
+yellow,
+green,
+blue {
+  color: var(--btext);
+}
+yellow {
+  animation: fadeYellow 200ms steps(20) 1.8s 1 normal forwards;
+}
+green {
+  animation: fadeGreen 200ms steps(20) 4.4s 1 normal forwards;
+}
+blue {
+  animation: fadeBlue 200ms steps(20) 7.8s 1 normal forwards;
+}
+red {
+  animation: fadeRedIn 1s steps(20) 3s 1 normal forwards;
+}
+red,
+transparent {
+  color: transparent;
+}
+
+@keyframes fadeYellow {
+  from {
+    color: var(--btext);
+  }
+  to {
+    color: var(--ytext);
+  }
+}
+@keyframes fadeGreen {
+  from {
+    color: var(--btext);
+  }
+  to {
+    color: var(--gtext);
+  }
+}
+@keyframes fadeBlue {
+  from {
+    color: var(--btext);
+  }
+  to {
+    color: var(--bltext);
+  }
+}
+@keyframes fadeRedIn {
+  from {
+    color: transparent;
+  }
+  to {
+    color: var(--rtext);
+  }
+}
+
+/* Global */
+html,
+body {
+  height: 100%;
+  background-color: var(--bg);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: Geist Mono;
+}
+
+#background {
+  flex: 1 0 0;
+  width: 100%;
+}
+
+#topbar {
+  display: flex;
+}
+
+#bottombar {
+  border-top: 0.1rem solid #444a73;
+  display: flex;
+  align-items: center;
+  height: 10vw;
+}
+
+#me {
+  border-radius: 3.5vw;
+  border: 1px solid #444a73;
+  overflow: hidden;
+  margin-left: 2vw;
+  margin-top: 0;
+  padding: 0.5rem;
+  padding-left: 2.5vw;
+  padding-right: 2.5vw;
+  font-family: Against;
+  font-size: 3.5vw;
+  letter-spacing: 0.2vw;
+  text-transform: uppercase;
+  background: linear-gradient(60deg, #82aaff 20%, #ff98a4 40%, #ff98a4 60%, #82aaff 80%);
+  background-size: 200% auto;
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 10s linear infinite;
+}
+
+#who {
+  font-size: 2vw;
+  color: #444a73;
+  flex: 1 0 0;
+  text-align: center;
+}
+
+#link {
+  font-size: 3vw;
+  margin-right: 5vw;
+}
+
+a {
+  text-decoration: none;
+  color: #ff757f;
+}
+
+a:visited {
+  text-decoration: none;
+}
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@media (max-width: 1000px) {
+  #bottombar {
+    height: 14vw;
+  }
+
+  #me {
+    border-radius: 5vw;
+    font-size: 5vw;
+  }
+}
+
+@media (max-width: 750px) {
+  #bottombar {
+    height: 25vw;
+    justify-content: center;
+  }
+
+  #me {
+    border-radius: 8vw;
+    font-size: 8vw;
+  }
+
+  #who {
+    display: none;
+  }
+
+  #link {
+    font-size: 8vw;
+    margin-left: 3vw;
+    margin-right: 3vw;
+  }
+}
