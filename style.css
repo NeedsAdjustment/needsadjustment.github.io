@@ -68,6 +68,12 @@ body {
   --radius-md: clamp(0.5rem, 1vw, 1rem);
   --radius-lg: clamp(1rem, 1.5vw, 1.5rem);
   --radius-full: 9999px;
+
+  /* Noise Filter */
+  --noise-filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0 0 0 0.1 0' in='noise' result='monoNoise'/%3E%3CfeBlend mode='soft-light' in='SourceGraphic' in2='monoNoise' result='blend'/%3E%3C/filter%3E%3C/svg%3E#noise");
+
+  /* Moon Spotlight */
+  --spotlight-dark-filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spotlight-dark' x='-100%25' y='-100%25' width='300%25' height='300%25'%3E%3CfeGaussianBlur in='SourceAlpha' stdDeviation='2' result='blur'/%3E%3CfeSpecularLighting result='specOut' in='blur' specularExponent='16' lighting-color='rgba(245, 189, 230, 0.9)'%3E%3CfePointLight x='82' y='25' z='15'/%3E%3C/feSpecularLighting%3E%3CfeGaussianBlur in='specOut' stdDeviation='4' result='innerGlow'/%3E%3CfeComposite in='innerGlow' in2='blur' operator='in' result='maskedGlow'/%3E%3CfeComposite in='SourceGraphic' in2='maskedGlow' operator='arithmetic' k1='0' k2='1' k3='0.5' k4='0'/%3E%3C/filter%3E%3C/svg%3E#spotlight-dark");
 }
 
 /* ===== Theme Switching ===== */
@@ -106,7 +112,6 @@ html:has(#color-scheme-dark:checked) {
   }
 }
 
-/* ===== Noise Texture ===== */
 /* Dark theme noise layer */
 html:has(#color-scheme-dark:checked) body::before {
   content: '';
@@ -114,7 +119,7 @@ html:has(#color-scheme-dark:checked) body::before {
   inset: 0;
   z-index: -1;
   background-color: var(--background-color);
-  filter: url(#noise);
+  filter: var(--noise-filter);
   pointer-events: none;
   opacity: var(--grain-opacity);
   transition: opacity 0.5s ease, background-color 0.5s ease;
@@ -127,7 +132,7 @@ html:has(#color-scheme-light:checked) body::after {
   inset: 0;
   z-index: -1;
   background-color: var(--background-color);
-  filter: url(#noise);
+  filter: var(--noise-filter);
   pointer-events: none;
   opacity: var(--grain-opacity);
   mix-blend-mode: multiply;
@@ -154,20 +159,16 @@ html:has(#color-scheme-light:checked) body::before {
   padding: var(--space-xs);
   border: none;
   position: relative;
-  filter: none;
+  filter: none; /* Default to no filter in light mode */
   transition: filter 0.8s ease;
   box-sizing: border-box;
   max-height: 114px;
   overflow: visible;
 }
 
-/* Apply spotlight based on selected theme */
-html:has(#color-scheme-light:checked) .toggle-group {
-  filter: url(#spotlight-light);
-}
-
+/* Apply spotlight only for dark theme */
 html:has(#color-scheme-dark:checked) .toggle-group {
-  filter: url(#spotlight-dark);
+  filter: var(--spotlight-dark-filter);
 }
 
 /* Style the fieldset */
@@ -245,34 +246,40 @@ fieldset.toggle-group {
 }
 
 /* ===== Animations ===== */
-/* Create a lazy wobble animation that wobbles exactly twice */
 @keyframes lazy-wobble {
-  0% {
-    transform: rotate(0deg);
+  33% {
+    transform: rotate(-20deg);
   }
-  15% {
-    transform: rotate(-5deg);
+  67% {
+    transform: rotate(20deg);
   }
-  35% {
-    transform: rotate(5deg);
+}
+
+@keyframes lazy-wobble-2 {
+  3.3% {
+    transform: rotate(90deg) scale(0.9);
   }
-  50% {
-    transform: rotate(0deg);
+  6.7% {
+    transform: rotate(180deg) scale(1.1);
   }
-  65% {
-    transform: rotate(-5deg);
+  10% {
+    transform: rotate(270deg) scale(0.9);
   }
-  85% {
-    transform: rotate(5deg);
+  13.3% {
+    transform: rotate(360deg) scale(1);
   }
   100% {
-    transform: rotate(0deg);
+    transform: rotate(360deg);
   }
 }
 
 /* Apply wobble animation only to unselected icons on hover */
 .toggle-group label:not(:has(input:checked)):hover .icon-container {
-  animation: lazy-wobble 2s ease-in-out 1;
+  animation: lazy-wobble 1s ease-in-out 1;
+}
+
+.toggle-group label:not(:has(input:checked)) .icon-container {
+  animation: lazy-wobble-2 10s linear 2s infinite;
 }
 
 /* ===== Helper Classes ===== */
