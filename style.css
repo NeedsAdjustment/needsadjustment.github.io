@@ -1,0 +1,210 @@
+/* ===== Base Styles ===== */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+:where(html) {
+  --darkmode: 0;
+  container-name: root;
+  container-type: normal;
+  font-size: clamp(18px, 1vw + 0.5rem, 24px);
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.2s ease-in-out,
+    transform 0.2s ease-in-out;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  color-scheme: light dark;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  padding: clamp(1rem, 3vw, 3rem);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* ===== Theme Variables ===== */
+:root {
+  /* Flexoki Light Theme */
+  --background-color: #fffcf0;
+  --text-color: #100f0f;
+  --secondary-background: #d4d0c8;
+  --ui-border: #b7b3ad;
+  --accent-red: #d14d41;
+  --accent-orange: #da702c;
+  --accent-yellow: #d0a215;
+  --accent-green: #879a39;
+  --accent-cyan: #3aa99f;
+  --accent-blue: #4385be;
+  --accent-magenta: #ce5d97;
+  --accent-purple: #8b7ec8;
+
+  /* Spacing */
+  --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);
+  --space-sm: clamp(0.5rem, 1vw, 1rem);
+  --space-md: clamp(1rem, 2vw, 1.5rem);
+  --space-lg: clamp(1.5rem, 3vw, 2.5rem);
+  --space-xl: clamp(2rem, 4vw, 4rem);
+
+  /* Border Radius */
+  --radius-sm: clamp(0.25rem, 0.5vw, 0.5rem);
+  --radius-md: clamp(0.5rem, 1vw, 1rem);
+  --radius-lg: clamp(1rem, 1.5vw, 1.5rem);
+  --radius-full: 9999px;
+}
+
+/* ===== Theme Switching ===== */
+/* System preference detection */
+@media (prefers-color-scheme: dark) {
+  html {
+    --darkmode: 1;
+  }
+}
+@media (prefers-color-scheme: light) {
+  html {
+    --darkmode: 0;
+  }
+}
+
+/* User selected theme overrides */
+html:has(#color-scheme-light:checked) {
+  --darkmode: 0;
+}
+html:has(#color-scheme-dark:checked) {
+  --darkmode: 1;
+}
+
+/* Catppuccin Macchiato Theme (dark mode) */
+@container root style(--darkmode: 1) {
+  body {
+    --background-color: #24273a;
+    --text-color: #cad3f5;
+    --secondary-background: #363a4f;
+    --ui-border: #5b6078;
+    --accent-red: #ed8796;
+    --accent-orange: #f5a97f;
+    --accent-yellow: #eed49f;
+    --accent-green: #a6da95;
+    --accent-cyan: #8bd5ca;
+    --accent-blue: #8aadf4;
+    --accent-magenta: #f5bde6;
+    --accent-purple: #c6a0f6;
+  }
+}
+
+/* ===== Theme Toggle ===== */
+.toggle-group {
+  background-color: var(--secondary-background);
+  border-radius: var(--radius-full);
+  inline-size: fit-content;
+  padding: var(--space-xs);
+  border: none;
+}
+
+fieldset.toggle-group {
+  border: none;
+  padding: var(--space-xs);
+  margin: 0;
+}
+
+.toggle-group label {
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: inline-flex;
+  padding: var(--space-xs);
+  width: 2.2em;
+  height: 2.2em;
+  text-align: center;
+  user-select: none;
+  font-size: clamp(0.75rem, 1vw + 0.25rem, 1rem);
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  line-height: 1;
+  box-sizing: border-box;
+}
+
+.toggle-group label:hover:not(:has(input:checked)) {
+  background-color: var(--ui-border);
+}
+
+.toggle-group label:has(input:checked) {
+  background-color: var(--accent-magenta);
+  color: var(--background-color);
+}
+
+/* ===== Icons ===== */
+.icon-container {
+  position: relative;
+  width: 1.2em;
+  height: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-group .ph {
+  font-size: 1.2em;
+  position: absolute;
+  line-height: 1;
+}
+
+.regular-icon {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.filled-icon {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.toggle-group label:has(input:checked) .regular-icon {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.toggle-group label:has(input:checked) .filled-icon {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 480px) {
+  .toggle-group {
+    width: 100%;
+    display: flex;
+  }
+
+  .toggle-group label {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+/* ===== Accessibility ===== */
+[data-sr] {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+  transition: none;
+}
