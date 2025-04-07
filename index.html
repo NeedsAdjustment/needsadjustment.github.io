@@ -11,6 +11,51 @@
     <title>Joshua Soong</title>
   </head>
   <body>
+    <!-- Combined SVG filters for both grain and spotlight effects -->
+    <svg class="filters-svg" width="0" height="0" style="position: absolute; z-index: -1">
+      <!-- Grain noise filter with improved visibility for both themes -->
+      <filter id="noise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" result="noise" />
+        <feColorMatrix
+          type="matrix"
+          values="0.33 0.33 0.33 0 0 
+                  0.33 0.33 0.33 0 0 
+                  0.33 0.33 0.33 0 0 
+                  0 0 0 0.1 0"
+          in="noise"
+          result="monoNoise"
+        />
+        <feBlend mode="soft-light" in="SourceGraphic" in2="monoNoise" result="blend" />
+      </filter>
+
+      <!-- Light mode filter - no spotlight effect -->
+      <filter id="spotlight-light">
+        <!-- Simply pass through the source graphic without adding light -->
+        <feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0" />
+      </filter>
+
+      <!-- Dark mode spotlight filter with improved point light positioning -->
+      <filter id="spotlight-dark" x="-100%" y="-100%" width="300%" height="300%">
+        <!-- Create a sharper alpha mask for better definition -->
+        <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur" />
+
+        <!-- Position the light with fixed coordinates to target the moon button -->
+        <feSpecularLighting result="specOut" in="blur" specularExponent="16" lighting-color="rgba(245, 189, 230, 0.9)">
+          <!-- Fixed position optimized for the toggle's dimensions -->
+          <fePointLight x="82" y="25" z="15" />
+        </feSpecularLighting>
+
+        <!-- Create two-step blur for more dramatic falloff -->
+        <feGaussianBlur in="specOut" stdDeviation="4" result="innerGlow" />
+
+        <!-- Apply distance-based attenuation with blur -->
+        <feComposite in="innerGlow" in2="blur" operator="in" result="maskedGlow" />
+
+        <!-- Apply final composite with reduced intensity for better falloff -->
+        <feComposite in="SourceGraphic" in2="maskedGlow" operator="arithmetic" k1="0" k2="1" k3="0.5" k4="0" />
+      </filter>
+    </svg>
+
     <fieldset class="toggle-group" id="colorScheme">
       <label title="Light Mode">
         <input type="radio" name="color-scheme" id="color-scheme-light" value="0" data-sr />
