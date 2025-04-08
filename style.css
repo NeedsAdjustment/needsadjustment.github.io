@@ -1,3 +1,159 @@
+/* ===== Custom Properties (Variables) ===== */
+:root {
+  /* Theme Variables */
+  --darkmode: 0;
+
+  /* Flexoki Light Theme (default) */
+  --background-color: #fffcf0;
+  --text-color: #100f0f;
+  --secondary-background: #d4d0c8;
+  --ui-border: #b7b3ad;
+  --accent-red: #d14d41;
+  --accent-orange: #da702c;
+  --accent-yellow: #d0a215;
+  --accent-green: #879a39;
+  --accent-cyan: #3aa99f;
+  --accent-blue: #4385be;
+  --accent-magenta: #ce5d97;
+  --accent-purple: #8b7ec8;
+  --toggle-accent-color: var(--accent-yellow);
+  --grain-opacity: 0.2;
+  --gradient-color-1: var(--accent-blue);
+  --gradient-color-2: var(--accent-cyan);
+  --gradient-color-3: var(--accent-green);
+
+  /* Grain/Noise Filter */
+  --noise-filter: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  --spotlight-dark-filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spotlight-dark' x='-100%25' y='-100%25' width='300%25' height='300%25'%3E%3CfeGaussianBlur in='SourceAlpha' stdDeviation='2' result='blur'/%3E%3CfeSpecularLighting result='specOut' in='blur' specularExponent='16' lighting-color='rgba(245, 189, 230, 0.9)'%3E%3CfePointLight x='82' y='25' z='15'/%3E%3C/feSpecularLighting%3E%3CfeGaussianBlur in='specOut' stdDeviation='4' result='innerGlow'/%3E%3CfeComposite in='innerGlow' in2='blur' operator='in' result='maskedGlow'/%3E%3CfeComposite in='SourceGraphic' in2='maskedGlow' operator='arithmetic' k1='0' k2='1' k3='0.5' k4='0'/%3E%3C/filter%3E%3C/svg%3E#spotlight-dark");
+
+  /* Animation Properties */
+  --bg-1-x: 25;
+  --bg-1-y: 50;
+  --bg-2-x: 35;
+  --bg-2-y: 40;
+  --bg-3-x: 45;
+  --bg-3-y: 45;
+
+  /* Spacing */
+  --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);
+  --space-sm: clamp(0.5rem, 1vw, 1rem);
+  --space-md: clamp(1rem, 2vw, 1.5rem);
+  --space-lg: clamp(1.5rem, 3vw, 2.5rem);
+  --space-xl: clamp(2rem, 4vw, 4rem);
+
+  /* Border Radius */
+  --radius-sm: clamp(0.25rem, 0.5vw, 0.5rem);
+  --radius-md: clamp(0.5rem, 1vw, 1rem);
+  --radius-lg: clamp(1rem, 1.5vw, 1.5rem);
+  --radius-full: 9999px;
+}
+
+/* ===== CSS Custom Property Definitions ===== */
+@property --bg-shift-x {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 50;
+}
+
+@property --bg-shift-y {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 50;
+}
+
+@property --bg-1-x {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 25;
+}
+
+@property --bg-1-y {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 50;
+}
+
+@property --bg-2-x {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 35;
+}
+
+@property --bg-2-y {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 40;
+}
+
+@property --bg-3-x {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 45;
+}
+
+@property --bg-3-y {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 45;
+}
+
+/* ===== Theme Switching ===== */
+/* System preference detection */
+@media (prefers-color-scheme: dark) {
+  html {
+    --darkmode: 1;
+  }
+}
+
+/* User selected theme overrides */
+html:has(#color-scheme-light:checked) {
+  --darkmode: 0;
+}
+
+html:has(#color-scheme-dark:checked) {
+  --darkmode: 1;
+}
+
+/* Dark Theme Variables */
+@container root style(--darkmode: 1) {
+  body {
+    --background-color: #24273a;
+    --text-color: #cad3f5;
+    --secondary-background: #363a4f;
+    --ui-border: #5b6078;
+    --accent-red: #ed8796;
+    --accent-orange: #f5a97f;
+    --accent-yellow: #eed49f;
+    --accent-green: #a6da95;
+    --accent-cyan: #8bd5ca;
+    --accent-blue: #8aadf4;
+    --accent-magenta: #f5bde6;
+    --accent-purple: #c6a0f6;
+    --toggle-accent-color: var(--accent-magenta);
+    --grain-opacity: 0.5;
+    --gradient-color-1: var(--accent-magenta);
+    --gradient-color-2: var(--accent-purple);
+    --gradient-color-3: var(--accent-blue);
+  }
+}
+
+/* ===== Fonts ===== */
+@font-face {
+  font-family: 'Abordage';
+  src: url(fonts/Abordage-Regular.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Louise';
+  src: url(fonts/Louise-Regular.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-weight: 300 700;
+  src: url(fonts/SpaceGrotesk-Variable.ttf);
+}
+
 /* ===== Base Styles ===== */
 html,
 body {
@@ -7,7 +163,6 @@ body {
 }
 
 :where(html) {
-  --darkmode: 0;
   container-name: root;
   container-type: normal;
   font-size: clamp(18px, 1vw + 0.5rem, 24px);
@@ -24,10 +179,10 @@ body {
 }
 
 body {
-  background-color: var(--background-color); /* Change from transparent to actual color */
+  background-color: var(--background-color);
   color: var(--text-color);
   color-scheme: light dark;
-  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-family: Abordage;
   padding: clamp(1rem, 3vw, 3rem);
   height: 100%;
   display: flex;
@@ -38,119 +193,46 @@ body {
   overflow-x: hidden;
 }
 
-/* ===== Theme Variables ===== */
-:root {
-  /* Flexoki Light Theme (default) */
-  --background-color: #fffcf0;
-  --text-color: #100f0f;
-  --secondary-background: #d4d0c8;
-  --ui-border: #b7b3ad;
-  --accent-red: #d14d41;
-  --accent-orange: #da702c;
-  --accent-yellow: #d0a215;
-  --accent-green: #879a39;
-  --accent-cyan: #3aa99f;
-  --accent-blue: #4385be;
-  --accent-magenta: #ce5d97;
-  --accent-purple: #8b7ec8;
-  --toggle-accent-color: var(--accent-yellow);
-  --grain-opacity: 0.3;
-
-  /* Spacing */
-  --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);
-  --space-sm: clamp(0.5rem, 1vw, 1rem);
-  --space-md: clamp(1rem, 2vw, 1.5rem);
-  --space-lg: clamp(1.5rem, 3vw, 2.5rem);
-  --space-xl: clamp(2rem, 4vw, 4rem);
-
-  /* Border Radius */
-  --radius-sm: clamp(0.25rem, 0.5vw, 0.5rem);
-  --radius-md: clamp(0.5rem, 1vw, 1rem);
-  --radius-lg: clamp(1rem, 1.5vw, 1.5rem);
-  --radius-full: 9999px;
-
-  /* Noise Filter */
-  --noise-filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0 0 0 0.1 0' in='noise' result='monoNoise'/%3E%3CfeBlend mode='soft-light' in='SourceGraphic' in2='monoNoise' result='blend'/%3E%3C/filter%3E%3C/svg%3E#noise");
-
-  /* Moon Spotlight */
-  --spotlight-dark-filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spotlight-dark' x='-100%25' y='-100%25' width='300%25' height='300%25'%3E%3CfeGaussianBlur in='SourceAlpha' stdDeviation='2' result='blur'/%3E%3CfeSpecularLighting result='specOut' in='blur' specularExponent='16' lighting-color='rgba(245, 189, 230, 0.9)'%3E%3CfePointLight x='82' y='25' z='15'/%3E%3C/feSpecularLighting%3E%3CfeGaussianBlur in='specOut' stdDeviation='4' result='innerGlow'/%3E%3CfeComposite in='innerGlow' in2='blur' operator='in' result='maskedGlow'/%3E%3CfeComposite in='SourceGraphic' in2='maskedGlow' operator='arithmetic' k1='0' k2='1' k3='0.5' k4='0'/%3E%3C/filter%3E%3C/svg%3E#spotlight-dark");
+/* ===== Title & Heading Styles ===== */
+h1 {
+  font-family: Space Grotesk;
+  font-size: clamp(2.5rem, 10vw, 7rem);
+  position: relative;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
 }
 
-/* ===== Theme Switching ===== */
-/* System preference detection */
-@media (prefers-color-scheme: dark) {
-  html {
-    --darkmode: 1;
+/* Update the letter styling with the layered gradients */
+h1 .letter {
+  display: inline-block;
+  font-weight: 300;
+  transition: font-weight 0.15s ease-out, filter 0.3s ease;
+  position: relative;
+  z-index: 1;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: var(--noise-filter), conic-gradient(from 140deg at calc(var(--bg-1-x) * 1%) calc(var(--bg-1-y) * 1%), var(--gradient-color-1), var(--gradient-color-2), var(--gradient-color-3), var(--gradient-color-1));
+  background-size: 200px;
+  background-blend-mode: normal;
+  animation: multi-bg 15s linear infinite alternate;
+}
+
+/* Space character styling */
+h1 .letter.space {
+  display: inline-block;
+  width: 0.3em;
+  background-image: none;
+}
+
+/* Variable font support */
+@supports (font-variation-settings: normal) {
+  h1 .letter {
+    transition: font-variation-settings 0.15s ease-out;
   }
 }
 
-/* User selected theme overrides */
-html:has(#color-scheme-light:checked) {
-  --darkmode: 0;
-}
-html:has(#color-scheme-dark:checked) {
-  --darkmode: 1;
-}
-
-/* Catppuccin Macchiato Theme (dark mode) */
-@container root style(--darkmode: 1) {
-  body {
-    --background-color: #24273a;
-    --text-color: #cad3f5;
-    --secondary-background: #363a4f;
-    --ui-border: #5b6078;
-    --accent-red: #ed8796;
-    --accent-orange: #f5a97f;
-    --accent-yellow: #eed49f;
-    --accent-green: #a6da95;
-    --accent-cyan: #8bd5ca;
-    --accent-blue: #8aadf4;
-    --accent-magenta: #f5bde6;
-    --accent-purple: #c6a0f6;
-    --toggle-accent-color: var(--accent-magenta);
-    --grain-opacity: 0.2;
-  }
-}
-
-/* Dark theme noise layer */
-html:has(#color-scheme-dark:checked) body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-color: var(--background-color);
-  filter: var(--noise-filter);
-  pointer-events: none;
-  opacity: var(--grain-opacity);
-  transition: opacity 0.5s ease, background-color 0.5s ease;
-}
-
-/* Light theme noise layer */
-html:has(#color-scheme-light:checked) body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-color: var(--background-color);
-  filter: var(--noise-filter);
-  pointer-events: none;
-  opacity: var(--grain-opacity);
-  mix-blend-mode: multiply;
-  transition: opacity 0.5s ease, background-color 0.5s ease;
-}
-
-/* Hide the inactive noise layer */
-html:has(#color-scheme-dark:checked) body::after,
-html:has(#color-scheme-light:checked) body::before {
-  content: '';
-  opacity: 0;
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* ===== Theme Toggle ===== */
+/* ===== Theme Toggle Styling ===== */
 .toggle-group {
   backdrop-filter: blur(16px);
   background-color: var(--secondary-background);
@@ -159,19 +241,19 @@ html:has(#color-scheme-light:checked) body::before {
   padding: var(--space-xs);
   border: none;
   position: relative;
-  filter: none; /* Default to no filter in light mode */
+  filter: none;
   transition: filter 0.8s ease;
   box-sizing: border-box;
   max-height: 114px;
   overflow: visible;
 }
 
-/* Apply spotlight only for dark theme */
+/* Dark theme spotlight effect */
 html:has(#color-scheme-dark:checked) .toggle-group {
   filter: var(--spotlight-dark-filter);
 }
 
-/* Style the fieldset */
+/* Fieldset styling */
 fieldset.toggle-group {
   border: none;
   padding: var(--space-xs);
@@ -181,7 +263,7 @@ fieldset.toggle-group {
   justify-content: center;
 }
 
-/* Base label styles */
+/* Toggle label styling */
 .toggle-group label {
   border-radius: var(--radius-full);
   cursor: pointer;
@@ -210,7 +292,7 @@ fieldset.toggle-group {
   z-index: 2;
 }
 
-/* ===== Icon Styling ===== */
+/* Icon container styling */
 .icon-container {
   position: relative;
   width: 1.5em;
@@ -222,6 +304,7 @@ fieldset.toggle-group {
   transform-origin: center;
 }
 
+/* Phosphor icons styling */
 .toggle-group .ph {
   font-size: 1.2em;
   position: absolute;
@@ -246,6 +329,56 @@ fieldset.toggle-group {
 }
 
 /* ===== Animations ===== */
+@keyframes multi-bg {
+  0% {
+    --bg-1-x: 25;
+    --bg-1-y: 50;
+    --bg-2-x: 35;
+    --bg-2-y: 40;
+    --bg-3-x: 45;
+    --bg-3-y: 45;
+    filter: hue-rotate(0deg);
+  }
+
+  25% {
+    --bg-1-x: 30;
+    --bg-2-y: 50;
+    --bg-2-x: 80;
+    --bg-3-y: 20;
+    --bg-3-x: 70;
+    filter: hue-rotate(15deg);
+  }
+
+  50% {
+    --bg-1-x: 10;
+    --bg-2-y: 40;
+    --bg-2-x: 30;
+    --bg-3-y: 80;
+    --bg-3-x: 50;
+    filter: hue-rotate(0deg);
+  }
+
+  75% {
+    --bg-1-x: 70;
+    --bg-2-y: 10;
+    --bg-2-x: 50;
+    --bg-3-y: 30;
+    --bg-3-x: 40;
+    filter: hue-rotate(-15deg);
+  }
+
+  100% {
+    --bg-1-x: 25;
+    --bg-1-y: 50;
+    --bg-2-x: 35;
+    --bg-2-y: 40;
+    --bg-3-x: 45;
+    --bg-3-y: 45;
+    filter: hue-rotate(0deg);
+  }
+}
+
+/* Icon wobble animations */
 @keyframes lazy-wobble {
   33% {
     transform: rotate(-20deg);
@@ -273,7 +406,7 @@ fieldset.toggle-group {
   }
 }
 
-/* Apply wobble animation only to unselected icons on hover */
+/* Apply animations to elements */
 .toggle-group label:not(:has(input:checked)):hover .icon-container {
   animation: lazy-wobble 1s ease-in-out 1;
 }
@@ -282,15 +415,16 @@ fieldset.toggle-group {
   animation: lazy-wobble-2 20s linear 5s infinite;
 }
 
-/* ===== Helper Classes ===== */
-/* Preserve all filter effects */
-.filters-svg {
-  position: absolute;
-  z-index: -1;
-  pointer-events: none;
+/* ===== Media Queries & Accessibility ===== */
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  h1 .letter,
+  .toggle-group label .icon-container {
+    animation: none;
+  }
 }
 
-/* ===== Responsive Adjustments ===== */
+/* Small screen adjustments */
 @media (max-width: 480px) {
   .toggle-group {
     width: 100%;
@@ -303,7 +437,7 @@ fieldset.toggle-group {
   }
 }
 
-/* ===== Accessibility ===== */
+/* Accessibility helpers */
 [data-sr] {
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
