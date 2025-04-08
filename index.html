@@ -8,10 +8,12 @@
     <link rel="stylesheet" href="./style.css" />
     <script src="./inittheme.js" defer></script>
     <script src="./textgrow.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2"></script>
+    <script src="teranoptise.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2" defer></script>
   </head>
   <body>
     <h1>Joshua Soong</h1>
+    <tera id="glyphOutput"></tera>
     <fieldset class="toggle-group" id="colorScheme">
       <label title="Light Mode">
         <input type="radio" name="color-scheme" id="color-scheme-light" value="0" data-sr />
@@ -31,4 +33,17 @@
       </label>
     </fieldset>
   </body>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      function generateGlyph() {
+        const numChars = 4
+        const direction = 'right'
+        const portals = false
+        const glyph = teranoptise(numChars, direction, portals)
+        document.getElementById('glyphOutput').innerText = glyph
+      }
+
+      generateGlyph()
+    })
+  </script>
 </html>

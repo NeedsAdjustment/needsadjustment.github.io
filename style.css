@@ -139,8 +139,8 @@ html:has(#color-scheme-dark:checked) {
 
 /* ===== Fonts ===== */
 @font-face {
-  font-family: 'Abordage';
-  src: url(fonts/Abordage-Regular.woff2) format('woff2');
+  font-family: 'Teranoptia';
+  src: url(fonts/Teranoptia-Furiae.woff2) format('woff2');
 }
 
 @font-face {
@@ -212,7 +212,14 @@ h1 .letter {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  background-image: var(--noise-filter), conic-gradient(from 140deg at calc(var(--bg-1-x) * 1%) calc(var(--bg-1-y) * 1%), var(--gradient-color-1), var(--gradient-color-2), var(--gradient-color-3), var(--gradient-color-1));
+  background-image: var(--noise-filter),
+    conic-gradient(
+      from 140deg at calc(var(--bg-1-x) * 1%) calc(var(--bg-1-y) * 1%),
+      var(--gradient-color-1),
+      var(--gradient-color-2),
+      var(--gradient-color-3),
+      var(--gradient-color-1)
+    );
   background-size: 200px;
   background-blend-mode: normal;
   animation: multi-bg 15s linear infinite alternate;
@@ -230,6 +237,10 @@ h1 .letter.space {
   h1 .letter {
     transition: font-variation-settings 0.15s ease-out;
   }
+}
+
+tera {
+  font-family: 'Teranoptia';
 }
 
 /* ===== Theme Toggle Styling ===== */
