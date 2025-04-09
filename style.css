@@ -5,7 +5,7 @@
 
   /* Flexoki Light Theme (default) */
   --background-color: #fffcf0;
-  --text-color: #100f0f;
+  --text-color: #6f6e68;
   --secondary-background: #d4d0c8;
   --ui-border: #b7b3ad;
   --accent-red: #d14d41;
@@ -16,6 +16,7 @@
   --accent-blue: #4385be;
   --accent-magenta: #ce5d97;
   --accent-purple: #8b7ec8;
+  --link-colour: var(--accent-green);
   --toggle-accent-color: var(--accent-yellow);
   --grain-opacity: 0.2;
   --gradient-color-1: var(--accent-blue);
@@ -129,6 +130,7 @@ html:has(#color-scheme-dark:checked) {
     --accent-blue: #8aadf4;
     --accent-magenta: #f5bde6;
     --accent-purple: #c6a0f6;
+    --link-colour: var(--accent-blue);
     --toggle-accent-color: var(--accent-magenta);
     --grain-opacity: 0.5;
     --gradient-color-1: var(--accent-magenta);
@@ -152,6 +154,12 @@ html:has(#color-scheme-dark:checked) {
   font-family: 'Space Grotesk';
   font-weight: 300 700;
   src: url(fonts/SpaceGrotesk-Variable.ttf);
+}
+
+@font-face {
+  font-family: 'Unbounded';
+  font-weight: 200 900;
+  src: url(fonts/Unbounded-Variable.woff2);
 }
 
 /* ===== Base Styles ===== */
@@ -189,16 +197,18 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  line-height: 1.5;
   overflow-x: hidden;
+  min-height: 100vh; /* Ensure body takes full viewport height */
+  position: relative; /* For absolute positioning of footer */
+  padding-bottom: calc(var(--space-xl) + 1.5rem); /* Add padding at bottom for footer */
 }
 
 /* ===== Title & Heading Styles ===== */
 h1 {
-  font-family: Space Grotesk;
-  font-size: clamp(2.5rem, 10vw, 7rem);
+  font-family: Unbounded;
+  font-size: clamp(1rem, 10vw, 7rem);
   position: relative;
-  margin: 0 0 1.5rem 0;
+  margin: 0;
   text-align: center;
 }
 
@@ -206,7 +216,7 @@ h1 {
 h1 .letter {
   display: inline-block;
   font-weight: 300;
-  transition: font-weight 0.15s ease-out, filter 0.3s ease;
+  transition: font-weight 0.15s cubic-bezier(0.25, 0.1, 0.25, 1), filter 0.3s ease;
   position: relative;
   z-index: 1;
   background-clip: text;
@@ -239,8 +249,49 @@ h1 .letter.space {
   }
 }
 
+h2 {
+  font-family: 'Space Grotesk';
+  font-size: clamp(1.5rem, 2vw, 4rem);
+  font-weight: 400;
+  margin: 0;
+  display: flex;
+  width: 80%;
+  justify-content: space-around;
+}
+
+h2 a {
+  font-family: 'Unbounded';
+  font-weight: 200;
+  vertical-align: sub;
+  font-feature-settings: 'ss02';
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.5s ease, font-feature-settings 0.5s ease;
+}
+
+h2 a:hover {
+  cursor: pointer;
+  color: var(--link-colour);
+  font-feature-settings: 'ss04';
+}
+
 tera {
   font-family: 'Teranoptia';
+}
+
+.tag {
+  font-family: 'Louise';
+  font-size: clamp(1rem, 3vw + 0.75rem, 3rem);
+  color: var(--secondary-background);
+  position: fixed;
+  bottom: var(--space-md);
+  text-align: center;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
 }
 
 /* ===== Theme Toggle Styling ===== */
@@ -445,6 +496,15 @@ fieldset.toggle-group {
   .toggle-group label {
     flex: 1;
     justify-content: center;
+  }
+
+  tag {
+    bottom: var(--space-xs);
+    font-size: clamp(0.6rem, 0.8vw + 0.3rem, 1.2rem);
+  }
+
+  body {
+    padding-bottom: calc(var(--space-lg) + 1.5rem);
   }
 }
 

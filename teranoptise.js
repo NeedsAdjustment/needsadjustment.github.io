@@ -54,9 +54,22 @@ function generateBodySegment(direction, portals, used) {
   return randomChoice(availableBodySegments, used)
 }
 
-// Function to generate a random snake eating segment based on direction
-function generateEatingSegment(direction, used) {
+// Function to generate a random snake eating head based on direction
+function generateEatingHead(direction, used) {
+  if (direction === 'right') {
+    // Check if the snake is eating to the right
+    return randomChoice(eatingSegments.right, used) + randomChoice(specialTails.left, used)
+  } else if (direction === 'left') {
+    // Check if the snake is eating to the left
+    return randomChoice(specialTails.right, used) + randomChoice(eatingSegments.left, used)
+  }
+
   return randomChoice(eatingSegments[direction], used)
+}
+
+// Function to generate a random special tail based on direction
+function generateSpecialTail(direction, used) {
+  return randomChoice(specialTails[direction], used)
 }
 
 // Main function to generate the glyph string
@@ -65,51 +78,37 @@ function teranoptise(numChars, direction, portals = false) {
 
   if (numChars === 1) {
     const standalone = generateStandaloneOddity(used)
-    used.push(standalone)
     return standalone
-  } else if (numChars === 2) {
-    const tail = generateTail(direction, portals, used)
-    used.push(tail)
-    const head = generateHead(direction, used)
-    used.push(head)
-    return tail + head
   } else {
     let result = ''
-    let middleIndex = Math.floor((numChars - 2) / 2)
-    let addEatingSegment = false
-
-    // Generate tail
-    let tail = generateTail(direction, portals, used)
-    used.push(tail)
-    result += tail
+    let offset = 2
 
     // Determine if we should add the snake eating segment
+
+    let head = ''
     if (numChars > 3 && Math.random() < 1 / (bodySegments[direction].length + 1)) {
-      addEatingSegment = true
+      head = generateEatingHead(direction, used)
+      offset = 3 // Adjust offset for the eating head
+    } else {
+      head = generateHead(direction, used)
     }
+    used.push(head)
+    const tail = generateTail(direction, portals, used)
+    used.push(tail)
 
     // Generate body segments
-    for (let i = 0; i < numChars - 2; i++) {
-      let segment
-      if (addEatingSegment && ((numChars >= 5 && i === middleIndex) || (numChars < 5 && i === numChars - 3))) {
-        segment = generateEatingSegment(direction, used)
-      } else {
-        segment = generateBodySegment(direction, portals, used)
-      }
+    const body = []
+    for (let i = 0; i < numChars - offset; i++) {
+      let segment = generateBodySegment(direction, portals, used)
       used.push(segment)
-      result += segment
+      body.push(segment)
     }
 
-    // Add special tail if needed when using snake eating segment
-    if (addEatingSegment && numChars < 5) {
-      direction = direction === 'right' ? 'left' : 'right'
-      const specialTail = randomChoice(specialTails[direction], used)
-      used.push(specialTail)
-      result += specialTail
+    // Assemble the creature
+    if (direction === 'right') {
+      result = tail + body.join('') + head
     } else {
-      const head = generateHead(direction, used)
-      used.push(head)
-      result += head
+      result = head + body.join('') + tail
     }
 
     return result

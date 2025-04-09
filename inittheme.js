@@ -1,41 +1,77 @@
 /**
- * Theme initialization and switching
+ * Theme initialization and persistence
+ * Remembers user preferences across sessions
  */
 document.addEventListener('DOMContentLoaded', function () {
-  // Set initial theme based on system preference
-  const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  const darkRadio = document.getElementById('color-scheme-dark')
+  const lightRadio = document.getElementById('color-scheme-light')
 
-  if (isDarkMode) {
-    document.getElementById('color-scheme-dark').checked = true
-  } else {
-    document.getElementById('color-scheme-light').checked = true
+  // Theme setting functions
+  function setDarkTheme() {
+    darkRadio.checked = true
+    localStorage.setItem('theme-preference', 'dark')
+    updateGradients()
+  }
+
+  function setLightTheme() {
+    lightRadio.checked = true
+    localStorage.setItem('theme-preference', 'light')
+    updateGradients()
   }
 
   // Function to update gradient appearance when theme changes
   function updateGradients() {
     // Force animation restart to update colors
-    const wrapper = document.querySelector('.h1-gradient-wrapper');
+    const wrapper = document.querySelector('.h1-gradient-wrapper')
     if (wrapper) {
-      const animation = wrapper.style.animation;
-      wrapper.style.animation = 'none';
-      void wrapper.offsetWidth; // Trigger reflow
-      wrapper.style.animation = animation;
+      const animation = wrapper.style.animation
+      wrapper.style.animation = 'none'
+      void wrapper.offsetWidth // Trigger reflow
+      wrapper.style.animation = animation
     }
   }
 
-  // Listen for system preference changes
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (e.matches) {
-      document.getElementById('color-scheme-dark').checked = true
-      updateGradients();
+  // Check for saved preference first
+  const savedTheme = localStorage.getItem('theme-preference')
+
+  if (savedTheme === 'dark') {
+    // User previously selected dark theme
+    setDarkTheme()
+  } else if (savedTheme === 'light') {
+    // User previously selected light theme
+    setLightTheme()
+  } else {
+    // No saved preference, use system preference
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    if (systemPrefersDark) {
+      setDarkTheme()
     } else {
-      document.getElementById('color-scheme-light').checked = true
-      updateGradients();
+      setLightTheme()
+    }
+  }
+
+  // Listen for theme change by user
+  lightRadio.addEventListener('change', function () {
+    if (this.checked) {
+      setLightTheme()
     }
   })
 
-  // Listen for manual theme changes
-  document.querySelectorAll('input[name="color-scheme"]').forEach(input => {
-    input.addEventListener('change', updateGradients);
-  });
+  darkRadio.addEventListener('change', function () {
+    if (this.checked) {
+      setDarkTheme()
+    }
+  })
+
+  // System preference changes only apply if user hasn't set a preference
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    // Only follow system if no user preference is saved
+    if (!localStorage.getItem('theme-preference')) {
+      if (e.matches) {
+        setDarkTheme()
+      } else {
+        setLightTheme()
+      }
+    }
+  })
 })

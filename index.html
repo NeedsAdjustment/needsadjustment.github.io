@@ -13,37 +13,41 @@
   </head>
   <body>
     <h1>Joshua Soong</h1>
-    <tera id="glyphOutput"></tera>
-    <fieldset class="toggle-group" id="colorScheme">
-      <label title="Light Mode">
-        <input type="radio" name="color-scheme" id="color-scheme-light" value="0" data-sr />
-        <div class="icon-container">
-          <i class="ph ph-sun regular-icon"></i>
-          <i class="ph-fill ph-sun filled-icon"></i>
-        </div>
-        <span data-sr>Light</span>
-      </label>
-      <label title="Dark Mode">
-        <input type="radio" name="color-scheme" id="color-scheme-dark" value="1" data-sr />
-        <div class="icon-container">
-          <i class="ph ph-moon regular-icon"></i>
-          <i class="ph-fill ph-moon filled-icon"></i>
-        </div>
-        <span data-sr>Dark</span>
-      </label>
-    </fieldset>
+    <h2>
+      <tera class="category" id="leftCreature"></tera>
+      <span class="category">design<a>6</a></span>
+      <span class="category">coding<a>3</a></span>
+      <span class="category">prose<a>0</a></span>
+      <span class="category">music<a>1</a></span>
+      <tera class="category" id="rightCreature"></tera>
+    </h2>
+
+    <div class="tag">
+      <fieldset class="toggle-group" id="colorScheme">
+        <label title="Light Mode">
+          <input type="radio" name="color-scheme" id="color-scheme-light" value="0" data-sr />
+          <div class="icon-container">
+            <i class="ph ph-sun regular-icon"></i>
+            <i class="ph-fill ph-sun filled-icon"></i>
+          </div>
+          <span data-sr>Light</span>
+        </label>
+        <label title="Dark Mode">
+          <input type="radio" name="color-scheme" id="color-scheme-dark" value="1" data-sr />
+          <div class="icon-container">
+            <i class="ph ph-moon regular-icon"></i>
+            <i class="ph-fill ph-moon filled-icon"></i>
+          </div>
+          <span data-sr>Dark</span>
+        </label>
+      </fieldset>
+      made with love
+    </div>
   </body>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      function generateGlyph() {
-        const numChars = 4
-        const direction = 'right'
-        const portals = false
-        const glyph = teranoptise(numChars, direction, portals)
-        document.getElementById('glyphOutput').innerText = glyph
-      }
-
-      generateGlyph()
+      document.getElementById('leftCreature').innerText = teranoptise(4, 'left', false)
+      document.getElementById('rightCreature').innerText = teranoptise(4, 'right', false)
     })
   </script>
 </html>
