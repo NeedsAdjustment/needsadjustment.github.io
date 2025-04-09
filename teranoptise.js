@@ -114,3 +114,44 @@ function teranoptise(numChars, direction, portals = false) {
     return result
   }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  let currentCreatureWidth = getCreatureWidth()
+  updateCreatures(true)
+  window.addEventListener('resize', function () {
+    updateCreatures(false)
+  })
+
+  function getCreatureWidth() {
+    const viewportWidth = window.innerWidth
+    if (viewportWidth < 400) {
+      return 0
+    } else if (viewportWidth < 500) {
+      return 1
+    } else if (viewportWidth < 600) {
+      return 2
+    } else if (viewportWidth < 700) {
+      return 3
+    } else {
+      return 4
+    }
+  }
+
+  function updateCreatures(isInitialRender) {
+    const newCreatureWidth = getCreatureWidth()
+    if (isInitialRender || newCreatureWidth !== currentCreatureWidth) {
+      const leftCreature = document.getElementById('leftCreature')
+      const rightCreature = document.getElementById('rightCreature')
+      if (newCreatureWidth === 0) {
+        leftCreature.style.display = 'none'
+        rightCreature.style.display = 'none'
+      } else {
+        leftCreature.style.display = ''
+        rightCreature.style.display = ''
+        leftCreature.innerText = teranoptise(newCreatureWidth, 'left', false)
+        rightCreature.innerText = teranoptise(newCreatureWidth, 'right', false)
+      }
+      currentCreatureWidth = newCreatureWidth
+    }
+  }
+})

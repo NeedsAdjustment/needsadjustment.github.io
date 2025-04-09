@@ -2,6 +2,7 @@
  * Theme initialization and persistence
  * Remembers user preferences across sessions
  */
+
 document.addEventListener('DOMContentLoaded', function () {
   const darkRadio = document.getElementById('color-scheme-dark')
   const lightRadio = document.getElementById('color-scheme-light')
@@ -11,12 +12,14 @@ document.addEventListener('DOMContentLoaded', function () {
     darkRadio.checked = true
     localStorage.setItem('theme-preference', 'dark')
     updateGradients()
+    revealPage() // Show page after theme is applied
   }
 
   function setLightTheme() {
     lightRadio.checked = true
     localStorage.setItem('theme-preference', 'light')
     updateGradients()
+    revealPage() // Show page after theme is applied
   }
 
   // Function to update gradient appearance when theme changes
@@ -29,6 +32,14 @@ document.addEventListener('DOMContentLoaded', function () {
       void wrapper.offsetWidth // Trigger reflow
       wrapper.style.animation = animation
     }
+  }
+
+  // Function to reveal the page once theme is ready
+  function revealPage() {
+    // Short timeout to ensure CSS has been applied
+    setTimeout(() => {
+      document.documentElement.classList.remove('theme-initializing')
+    }, 50)
   }
 
   // Check for saved preference first

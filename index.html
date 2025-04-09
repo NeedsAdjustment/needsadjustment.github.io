@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="theme-initializing">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,10 +15,10 @@
     <h1>Joshua Soong</h1>
     <h2>
       <tera class="category" id="leftCreature"></tera>
-      <span class="category">design<a>0</a></span>
-      <span class="category">coding<a>0</a></span>
-      <span class="category">prose<a>0</a></span>
-      <span class="category">music<a>0</a></span>
+      <a class="category">design<num>0</num></a>
+      <a class="category">coding<num>0</num></a>
+      <a class="category">prose<num>0</num></a>
+      <a class="category">music<num>0</num></a>
       <tera class="category" id="rightCreature"></tera>
     </h2>
 
@@ -44,10 +44,4 @@
       under construction
     </div>
   </body>
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      document.getElementById('leftCreature').innerText = teranoptise(4, 'left', false)
-      document.getElementById('rightCreature').innerText = teranoptise(4, 'right', false)
-    })
-  </script>
 </html>

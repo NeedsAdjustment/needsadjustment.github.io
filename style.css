@@ -8,14 +8,14 @@
   --text-color: #6f6e68;
   --secondary-background: #d4d0c8;
   --ui-border: #b7b3ad;
-  --accent-red: #d14d41;
-  --accent-orange: #da702c;
-  --accent-yellow: #d0a215;
-  --accent-green: #879a39;
-  --accent-cyan: #3aa99f;
-  --accent-blue: #4385be;
-  --accent-magenta: #ce5d97;
-  --accent-purple: #8b7ec8;
+  --accent-red: #af3029;
+  --accent-orange: #bc5214;
+  --accent-yellow: #ad8302;
+  --accent-green: #66800c;
+  --accent-cyan: #24837b;
+  --accent-blue: #205ea6;
+  --accent-magenta: #a02f6f;
+  --accent-purple: #5f409d;
   --link-colour: var(--accent-green);
   --toggle-accent-color: var(--accent-yellow);
   --grain-opacity: 0.2;
@@ -107,6 +107,12 @@
 }
 
 /* User selected theme overrides */
+html.theme-initializing {
+  filter: brightness(0); /* This turns everything black */
+  opacity: 1; /* Keep visible but black */
+  transition: filter 1s ease;
+}
+
 html:has(#color-scheme-light:checked) {
   --darkmode: 0;
 }
@@ -151,9 +157,10 @@ html:has(#color-scheme-dark:checked) {
 }
 
 @font-face {
-  font-family: 'Space Grotesk';
-  font-weight: 300 700;
-  src: url(fonts/SpaceGrotesk-Variable.ttf);
+  font-family: 'Trispace';
+  font-weight: 100 800;
+  font-stretch: 75 125;
+  src: url(fonts/Trispace-Variable.ttf);
 }
 
 @font-face {
@@ -190,7 +197,9 @@ body {
   background-color: var(--background-color);
   color: var(--text-color);
   color-scheme: light dark;
-  font-family: Abordage;
+  width: 90%;
+  max-width: 1600px;
+  justify-self: center;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -204,15 +213,22 @@ body {
 /* ===== Title & Heading Styles ===== */
 h1 {
   font-family: Unbounded;
-  font-size: clamp(1rem, 10vw, 7rem);
+  font-size: clamp(1rem, 10vw, 7.4rem);
   position: relative;
   margin: 0;
   text-align: center;
+  white-space: nowrap;
+}
+
+tera {
+  font-family: 'Teranoptia';
+  align-self: center;
+  font-size: 1.5em;
 }
 
 /* Update the letter styling with the layered gradients */
-h1 .letter {
-  display: inline-block;
+h1 .letter,
+tera {
   font-weight: 300;
   transition: font-weight 0.15s cubic-bezier(0.25, 0.1, 0.25, 1), filter 0.3s ease;
   position: relative;
@@ -247,34 +263,37 @@ h1 .letter.space {
   }
 }
 
+/* Base h2 styling */
 h2 {
-  font-family: 'Space Grotesk';
-  font-size: clamp(1.5rem, 2vw, 4rem);
-  font-weight: 400;
+  font-family: 'Trispace';
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-weight: 300;
+  /* Remove global font-stretch */
   margin: 0;
   display: flex;
-  width: 80%;
+  width: 99%;
   justify-content: space-around;
+  align-items: center;
 }
 
 h2 a {
+  cursor: pointer;
+}
+
+num {
   font-family: 'Unbounded';
-  font-weight: 200;
+  font-weight: 400;
+  font-size: 0.8em;
   vertical-align: sub;
   font-feature-settings: 'ss02';
   text-decoration: none;
   color: inherit;
-  transition: color 0.5s ease, font-feature-settings 0.5s ease;
+  transition: color 0.5s ease;
 }
 
-h2 a:hover {
-  cursor: pointer;
+num:hover {
   color: var(--link-colour);
   font-feature-settings: 'ss04';
-}
-
-tera {
-  font-family: 'Teranoptia';
 }
 
 .tag {

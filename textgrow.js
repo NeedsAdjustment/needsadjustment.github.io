@@ -202,3 +202,41 @@ document.addEventListener('DOMContentLoaded', () => {
   // When mouse leaves the window, reset all letters
   document.addEventListener('mouseleave', resetMouseAffected)
 })
+
+document.addEventListener('DOMContentLoaded', function () {
+  const categorySpans = document.querySelectorAll('h2 a.category')
+
+  // Initial update
+  updateFontStretch()
+
+  // Update on resize
+  window.addEventListener('resize', updateFontStretch)
+
+  function updateFontStretch() {
+    const viewportWidth = window.innerWidth
+
+    // Calculate stretch from 75% at 320px to 125% at 1200px
+    const minWidth = 700
+    const maxWidth = 1200
+    const minStretch = 75
+    const maxStretch = 125
+
+    // Clamped percentage value
+    let stretchPercentage
+
+    if (viewportWidth <= minWidth) {
+      stretchPercentage = minStretch
+    } else if (viewportWidth >= maxWidth) {
+      stretchPercentage = maxStretch
+    } else {
+      // Linear interpolation
+      const ratio = (viewportWidth - minWidth) / (maxWidth - minWidth)
+      stretchPercentage = minStretch + ratio * (maxStretch - minStretch)
+    }
+
+    // Apply to each category span
+    categorySpans.forEach((span) => {
+      span.style.fontStretch = stretchPercentage + '%'
+    })
+  }
+})
