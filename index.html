@@ -1,39 +1,53 @@
 <!DOCTYPE html>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <html lang="en">
   <head>
-    <link rel="stylesheet" href="./style.css" />
-    <script src="./p5.min.js"></script>
-    <script src="./topo.js"></script>
-    <script src="./settings.js" defer></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75849532-2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || []
-      function gtag() {
-        dataLayer.push(arguments)
-      }
-      gtag('js', new Date())
-      gtag('config', 'UA-75849532-2')
-    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="darkreader-lock" />
     <title>Joshua Soong</title>
-    <link rel="shortcut icon" href="caret.ico" type="image/x-icon" />
-    <script src="https://kit.fontawesome.com/33c1c2873d.js"></script>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./inittheme.js" defer></script>
+    <script src="./textgrow.js" defer></script>
+    <script src="teranoptise.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2" defer></script>
   </head>
   <body>
-    <div id="background">
-      <div id="topbar">
-        <div id="something"></div>
-      </div>
-    </div>
-    <div id="content">
-      <div id="bottombar">
-        <div id="me">Joshua Soong</div>
-        <div id="who">under construction</div>
-        <div id="link">
-          <a href="https://read.cv/spren">→</a>
-        </div>
-      </div>
+    <h1>Joshua Soong</h1>
+    <h2>
+      <tera class="category" id="leftCreature"></tera>
+      <span class="category">design<a>0</a></span>
+      <span class="category">coding<a>0</a></span>
+      <span class="category">prose<a>0</a></span>
+      <span class="category">music<a>0</a></span>
+      <tera class="category" id="rightCreature"></tera>
+    </h2>
+
+    <div class="tag">
+      <fieldset class="toggle-group" id="colorScheme">
+        <label title="Light Mode">
+          <input type="radio" name="color-scheme" id="color-scheme-light" value="0" data-sr />
+          <div class="icon-container">
+            <i class="ph ph-sun regular-icon"></i>
+            <i class="ph-fill ph-sun filled-icon"></i>
+          </div>
+          <span data-sr>Light</span>
+        </label>
+        <label title="Dark Mode">
+          <input type="radio" name="color-scheme" id="color-scheme-dark" value="1" data-sr />
+          <div class="icon-container">
+            <i class="ph ph-moon regular-icon"></i>
+            <i class="ph-fill ph-moon filled-icon"></i>
+          </div>
+          <span data-sr>Dark</span>
+        </label>
+      </fieldset>
+      under construction
     </div>
   </body>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('leftCreature').innerText = teranoptise(4, 'left', false)
+      document.getElementById('rightCreature').innerText = teranoptise(4, 'right', false)
+    })
+  </script>
 </html>
