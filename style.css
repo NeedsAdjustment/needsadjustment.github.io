@@ -208,6 +208,7 @@ body {
   min-height: 100vh; /* Ensure body takes full viewport height */
   position: relative; /* For absolute positioning of footer */
   padding-bottom: calc(var(--space-xl) + 1.5rem); /* Add padding at bottom for footer */
+  font-family: 'Trispace';
 }
 
 /* ===== Title & Heading Styles ===== */
@@ -268,7 +269,6 @@ h2 {
   font-family: 'Trispace';
   font-size: clamp(1.2rem, 2vw, 1.5rem);
   font-weight: 300;
-  /* Remove global font-stretch */
   margin: 0;
   display: flex;
   width: 99%;
@@ -294,6 +294,17 @@ num {
 num:hover {
   color: var(--link-colour);
   font-feature-settings: 'ss04';
+}
+
+.intro {
+  width: 90%;
+}
+
+p {
+  line-height: 1.5em;
+  text-align: justify;
+  text-wrap: pretty;
+  padding-top: 2rem;
 }
 
 .tag {
