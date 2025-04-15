@@ -1,0 +1,97 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+:where(html) {
+  container-name: root;
+  container-type: normal;
+  font-size: clamp(18px, 1vw + 0.5rem, 24px);
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.2s ease-in-out,
+    transform 0.2s ease-in-out;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  color-scheme: light dark;
+  width: 90%;
+  max-width: 1600px;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  min-height: 100vh; /* Ensure body takes full viewport height */
+  position: relative; /* For absolute positioning of footer */
+  padding-bottom: calc(var(--space-xl) + 1.5rem); /* Add padding at bottom for footer */
+  font-family: 'Trispace';
+}
+
+/* Update the letter styling with the layered gradients */
+h1 .letter,
+tera {
+  font-weight: 300;
+  transition: font-weight 0.15s cubic-bezier(0.25, 0.1, 0.25, 1), filter 0.3s ease;
+  position: relative;
+  z-index: 1;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  background-image: var(--noise-filter),
+    conic-gradient(
+      from 140deg at calc(var(--bg-1-x) * 1%) calc(var(--bg-1-y) * 1%),
+      var(--gradient-color-1),
+      var(--gradient-color-2),
+      var(--gradient-color-3),
+      var(--gradient-color-1)
+    );
+  background-size: 200px;
+  background-blend-mode: normal;
+  animation: multi-bg 15s linear infinite alternate;
+}
+
+/* Space character styling */
+h1 .letter.space {
+  display: inline-block;
+  width: 0.3em;
+  background-image: none;
+}
+
+/* Variable font support */
+@supports (font-variation-settings: normal) {
+  h1 .letter {
+    transition: font-variation-settings 0.15s ease-out;
+  }
+}
+
+/* Accessibility helpers */
+[data-sr] {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+  transition: none;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  h1 .letter,
+  .toggle-group label .icon-container {
+    animation: none;
+  }
+}

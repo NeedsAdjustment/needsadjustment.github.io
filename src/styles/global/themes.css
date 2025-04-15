@@ -1,0 +1,49 @@
+@media (prefers-color-scheme: dark) {
+  html {
+    --darkmode: 1;
+  }
+}
+
+/* User selected theme overrides */
+html.theme-initializing {
+  filter: brightness(0); /* This turns everything black */
+  opacity: 1; /* Keep visible but black */
+  transition: filter 1s ease;
+}
+
+html:has(#color-scheme-light:checked) {
+  --darkmode: 0;
+}
+
+html:has(#color-scheme-dark:checked) {
+  --darkmode: 1;
+}
+
+/* Dark Theme Variables */
+@container root style(--darkmode: 1) {
+  body {
+    --background-color: #24273a;
+    --text-color: #cad3f5;
+    --secondary-background: #363a4f;
+    --ui-border: #5b6078;
+    --accent-red: #ed8796;
+    --accent-orange: #f5a97f;
+    --accent-yellow: #eed49f;
+    --accent-green: #a6da95;
+    --accent-cyan: #8bd5ca;
+    --accent-blue: #8aadf4;
+    --accent-magenta: #f5bde6;
+    --accent-purple: #c6a0f6;
+    --link-colour: var(--accent-blue);
+    --toggle-accent-color: var(--accent-magenta);
+    --grain-opacity: 0.5;
+    --gradient-color-1: var(--accent-magenta);
+    --gradient-color-2: var(--accent-purple);
+    --gradient-color-3: var(--accent-blue);
+  }
+}
+
+/* Dark theme spotlight effect */
+html:has(#color-scheme-dark:checked) .toggle-group {
+  filter: var(--spotlight-dark-filter);
+}
