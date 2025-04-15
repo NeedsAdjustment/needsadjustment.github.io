@@ -1,0 +1,59 @@
+<header>
+  <h1>Joshua Soong</h1>
+  <h2>
+    <tera class="category" id="leftCreature"></tera>
+    <a class="category">design<num>0</num></a>
+    <a class="category">coding<num>0</num></a>
+    <a class="category">prose<num>0</num></a>
+    <a class="category">music<num>0</num></a>
+    <tera class="category" id="rightCreature"></tera>
+  </h2>
+</header>
+
+<style>
+  h1 {
+    font-family: Unbounded;
+    font-size: clamp(1rem, 10vw, 7.4rem);
+    position: relative;
+    margin: 0;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  tera {
+    font-family: 'Teranoptia';
+    align-self: center;
+    font-size: 1.5em;
+  }
+
+  h2 {
+    font-family: 'Trispace';
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-weight: 300;
+    margin: 0;
+    display: flex;
+    width: 99%;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  h2 a {
+    cursor: pointer;
+  }
+
+  num {
+    font-family: 'Unbounded';
+    font-weight: 400;
+    font-size: 0.8em;
+    vertical-align: sub;
+    font-feature-settings: 'ss02';
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.5s ease;
+  }
+
+  num:hover {
+    color: var(--link-colour);
+    font-feature-settings: 'ss04';
+  }
+</style>

@@ -1,0 +1,24 @@
+---
+import '../styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="en" class="theme-initializing">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="darkreader-lock" />
+    <title>Joshua Soong</title>
+    <link rel="stylesheet" href="../styles/main.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2" defer></script>
+  </head>
+  <body>
+    <slot />
+    <script>
+      // Only import existing scripts, no scroll
+      import '../scripts/inittheme.js';
+      import '../scripts/textgrow.js';
+      import '../scripts/teranoptise.js';
+    </script>
+  </body>
+</html>

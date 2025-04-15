@@ -1,0 +1,22 @@
+@font-face {
+  font-family: 'Teranoptia';
+  src: url(/fonts/Teranoptia-Furiae.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Louise';
+  src: url(/fonts/Louise-Regular.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Trispace';
+  font-weight: 100 800;
+  font-stretch: 75 125;
+  src: url(/fonts/Trispace-Variable.ttf);
+}
+
+@font-face {
+  font-family: 'Unbounded';
+  font-weight: 200 900;
+  src: url(/fonts/Unbounded-Variable.woff2);
+}
