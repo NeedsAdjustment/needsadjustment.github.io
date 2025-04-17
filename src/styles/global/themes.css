@@ -1,26 +1,4 @@
-@media (prefers-color-scheme: dark) {
-  html {
-    --darkmode: 1;
-  }
-}
-
-/* User selected theme overrides */
-html.theme-initializing {
-  filter: brightness(0); /* This turns everything black */
-  opacity: 1; /* Keep visible but black */
-  transition: filter 1s ease;
-}
-
-html:has(#color-scheme-light:checked) {
-  --darkmode: 0;
-}
-
-html:has(#color-scheme-dark:checked) {
-  --darkmode: 1;
-}
-
-/* Dark Theme Variables */
-@container root style(--darkmode: 1) {
+html.dark {
   body {
     --background-color: #24273a;
     --text-color: #cad3f5;
@@ -43,7 +21,6 @@ html:has(#color-scheme-dark:checked) {
   }
 }
 
-/* Dark theme spotlight effect */
-html:has(#color-scheme-dark:checked) .toggle-group {
+html:has(#dark:checked) .toggle-group {
   filter: var(--spotlight-dark-filter);
 }

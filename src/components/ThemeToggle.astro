@@ -1,6 +1,6 @@
 <fieldset class="toggle-group" id="colorScheme">
   <label title="Light Mode">
-    <input type="radio" name="color-scheme" id="color-scheme-light" value="0" data-sr />
+    <input type="radio" name="color-scheme" id="light" value="0" data-sr />
     <div class="icon-container">
       <i class="ph ph-sun regular-icon"></i>
       <i class="ph-fill ph-sun filled-icon"></i>
@@ -8,7 +8,7 @@
     <span data-sr>Light</span>
   </label>
   <label title="Dark Mode">
-    <input type="radio" name="color-scheme" id="color-scheme-dark" value="1" data-sr />
+    <input type="radio" name="color-scheme" id="dark" value="1" data-sr />
     <div class="icon-container">
       <i class="ph ph-moon regular-icon"></i>
       <i class="ph-fill ph-moon filled-icon"></i>
@@ -57,12 +57,15 @@
     font-size: clamp(0.75rem, 1vw + 0.25rem, 0.9rem);
     align-items: center;
     justify-content: center;
-    color: var(--text-color);
     line-height: 1;
     box-sizing: border-box;
     position: relative;
-    z-index: 1;
+   
+  }
+
+  :global(.toggle-group label:has(input)) {
     background-color: transparent;
+    color: var(--text-color);
   }
 
   /* Selected label styles */
@@ -70,7 +73,6 @@
     background-color: var(--toggle-accent-color);
     color: var(--background-color);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 2;
   }
 
   /* Icon container styling */

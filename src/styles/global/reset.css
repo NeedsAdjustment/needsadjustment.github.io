@@ -27,7 +27,7 @@ body {
   color-scheme: light dark;
   width: 90%;
   max-width: 1600px;
-  justify-self: center;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;

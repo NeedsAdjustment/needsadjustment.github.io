@@ -1,88 +1,64 @@
-/**
- * Theme initialization and persistence
- * Remembers user preferences across sessions
- */
-
 document.addEventListener('DOMContentLoaded', function () {
-  const darkRadio = document.getElementById('color-scheme-dark')
-  const lightRadio = document.getElementById('color-scheme-light')
+  const toggle = document.getElementById('colorScheme')
+  const darkRadio = document.getElementById('dark')
+  const lightRadio = document.getElementById('light')
+  const htmlElement = document.documentElement
 
-  // Theme setting functions
-  function setDarkTheme() {
-    darkRadio.checked = true
-    localStorage.setItem('theme-preference', 'dark')
-    updateGradients()
-    revealPage() // Show page after theme is applied
-  }
+  const theme = (() => {
+    const localStorageTheme = localStorage?.getItem('theme') ?? ''
+    if (['light', 'dark'].includes(localStorageTheme)) {
+      return localStorageTheme
+    }
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark'
+    }
+    return 'light'
+  })()
 
-  function setLightTheme() {
-    lightRadio.checked = true
-    localStorage.setItem('theme-preference', 'light')
-    updateGradients()
-    revealPage() // Show page after theme is applied
-  }
-
-  // Function to update gradient appearance when theme changes
   function updateGradients() {
-    // Force animation restart to update colors
     const wrapper = document.querySelector('.h1-gradient-wrapper')
     if (wrapper) {
       const animation = wrapper.style.animation
       wrapper.style.animation = 'none'
-      void wrapper.offsetWidth // Trigger reflow
+      void wrapper.offsetWidth
       wrapper.style.animation = animation
     }
   }
 
-  // Function to reveal the page once theme is ready
-  function revealPage() {
-    // Short timeout to ensure CSS has been applied
-    setTimeout(() => {
-      document.documentElement.classList.remove('theme-initializing')
-    }, 50)
+  // Set CSS variables directly for Firefox
+  function setDarkTheme() {
+    htmlElement.classList.add('dark')
+    htmlElement.classList.add('dark-theme') // Firefox support
+    htmlElement.classList.remove('light-theme')
+    htmlElement.style.setProperty('--darkmode', '1') // Direct CSS variable
+    darkRadio.checked = true
   }
 
-  // Check for saved preference first
-  const savedTheme = localStorage.getItem('theme-preference')
+  function setLightTheme() {
+    htmlElement.classList.remove('dark')
+    htmlElement.classList.remove('dark-theme')
+    htmlElement.classList.add('light-theme') // Firefox support
+    htmlElement.style.setProperty('--darkmode', '0') // Direct CSS variable
+    lightRadio.checked = true
+  }
 
-  if (savedTheme === 'dark') {
-    // User previously selected dark theme
-    setDarkTheme()
-  } else if (savedTheme === 'light') {
-    // User previously selected light theme
+  // Apply initial theme
+  window.localStorage.setItem('theme', theme)
+  if (theme === 'light') {
     setLightTheme()
   } else {
-    // No saved preference, use system preference
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    if (systemPrefersDark) {
-      setDarkTheme()
-    } else {
-      setLightTheme()
-    }
+    setDarkTheme()
   }
 
-  // Listen for theme change by user
-  lightRadio.addEventListener('change', function () {
-    if (this.checked) {
+  // Handle theme toggle
+  toggle.addEventListener('change', function () {
+    if (lightRadio.checked) {
       setLightTheme()
-    }
-  })
-
-  darkRadio.addEventListener('change', function () {
-    if (this.checked) {
+      window.localStorage.setItem('theme', 'light')
+    } else if (darkRadio.checked) {
       setDarkTheme()
+      window.localStorage.setItem('theme', 'dark')
     }
-  })
-
-  // System preference changes only apply if user hasn't set a preference
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    // Only follow system if no user preference is saved
-    if (!localStorage.getItem('theme-preference')) {
-      if (e.matches) {
-        setDarkTheme()
-      } else {
-        setLightTheme()
-      }
-    }
+    updateGradients()
   })
 })
