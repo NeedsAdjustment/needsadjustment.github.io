@@ -1,10 +1,8 @@
-// Utility function to select a random item from an array, excluding already used items
 function randomChoice(arr, used) {
   const available = arr.filter((item) => !used.includes(item))
   return available[Math.floor(Math.random() * available.length)]
 }
 
-// Glyph categories
 const standaloneOddities = ['*', ',', '-']
 const tails = {
   right: ['L', 'A', 'C', 'v', 'F', 'I', 'O', 'S', 'W', 'Ź'],
@@ -32,47 +30,38 @@ const portalEnds = {
 }
 const portalBodySegments = ['«', '»']
 
-// Function to generate a random standalone oddity
 function generateStandaloneOddity(used) {
   return randomChoice(standaloneOddities, used)
 }
 
-// Function to generate a random tail based on direction
 function generateTail(direction, portals, used) {
   const availableTails = portals ? tails[direction].concat(portalEnds[direction]) : tails[direction]
   return randomChoice(availableTails, used)
 }
 
-// Function to generate a random head based on direction
 function generateHead(direction, used) {
   return randomChoice(heads[direction], used)
 }
 
-// Function to generate a random body segment based on direction
 function generateBodySegment(direction, portals, used) {
   const availableBodySegments = portals ? bodySegments[direction].concat(portalBodySegments) : bodySegments[direction]
   return randomChoice(availableBodySegments, used)
 }
 
-// Function to generate a random snake eating head based on direction
 function generateEatingHead(direction, used) {
   if (direction === 'right') {
-    // Check if the snake is eating to the right
     return randomChoice(eatingSegments.right, used) + randomChoice(specialTails.left, used)
   } else if (direction === 'left') {
-    // Check if the snake is eating to the left
     return randomChoice(specialTails.right, used) + randomChoice(eatingSegments.left, used)
   }
 
   return randomChoice(eatingSegments[direction], used)
 }
 
-// Function to generate a random special tail based on direction
 function generateSpecialTail(direction, used) {
   return randomChoice(specialTails[direction], used)
 }
 
-// Main function to generate the glyph string
 function teranoptise(numChars, direction, portals = false) {
   const used = []
 
@@ -82,8 +71,6 @@ function teranoptise(numChars, direction, portals = false) {
   } else {
     let result = ''
     let offset = 2
-
-    // Determine if we should add the snake eating segment
 
     let head = ''
     if (numChars > 3 && Math.random() < 1 / (bodySegments[direction].length + 1)) {
@@ -96,7 +83,6 @@ function teranoptise(numChars, direction, portals = false) {
     const tail = generateTail(direction, portals, used)
     used.push(tail)
 
-    // Generate body segments
     const body = []
     for (let i = 0; i < numChars - offset; i++) {
       let segment = generateBodySegment(direction, portals, used)
@@ -104,7 +90,6 @@ function teranoptise(numChars, direction, portals = false) {
       body.push(segment)
     }
 
-    // Assemble the creature
     if (direction === 'right') {
       result = tail + body.join('') + head
     } else {

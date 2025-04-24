@@ -13,6 +13,10 @@ body {
   height: 100%;
 }
 
+html:has(#dark:checked) .toggle-group {
+  filter: var(--spotlight-dark-filter);
+}
+
 *,
 *::before,
 *::after {
@@ -33,13 +37,12 @@ body {
   align-items: center;
   justify-content: center;
   overflow-x: hidden;
-  min-height: 100vh; /* Ensure body takes full viewport height */
-  position: relative; /* For absolute positioning of footer */
-  padding-bottom: calc(var(--space-xl) + 1.5rem); /* Add padding at bottom for footer */
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: calc(var(--space-xl) + 1.5rem);
   font-family: 'Trispace';
 }
 
-/* Update the letter styling with the layered gradients */
 h1 .letter,
 tera {
   font-weight: 300;
@@ -62,21 +65,18 @@ tera {
   animation: multi-bg 15s linear infinite alternate;
 }
 
-/* Space character styling */
 h1 .letter.space {
   display: inline-block;
   width: 0.3em;
   background-image: none;
 }
 
-/* Variable font support */
 @supports (font-variation-settings: normal) {
   h1 .letter {
     transition: font-variation-settings 0.15s ease-out;
   }
 }
 
-/* Accessibility helpers */
 [data-sr] {
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
@@ -88,7 +88,6 @@ h1 .letter.space {
   transition: none;
 }
 
-/* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   h1 .letter,
   .toggle-group label .icon-container {

@@ -1,8 +1,7 @@
 :root {
-  /* Theme Variables */
   --darkmode: 0;
 
-  /* Flexoki Light Theme (default) */
+  /* Flexoki Light */
   --background-color: #fffcf0;
   --text-color: #6f6e68;
   --secondary-background: #d4d0c8;
@@ -22,11 +21,9 @@
   --gradient-color-2: var(--accent-cyan);
   --gradient-color-3: var(--accent-green);
 
-  /* Grain/Noise Filter */
   --noise-filter: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   --spotlight-dark-filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spotlight-dark' x='-100%25' y='-100%25' width='300%25' height='300%25'%3E%3CfeGaussianBlur in='SourceAlpha' stdDeviation='2' result='blur'/%3E%3CfeSpecularLighting result='specOut' in='blur' specularExponent='16' lighting-color='rgba(245, 189, 230, 0.9)'%3E%3CfePointLight x='82' y='25' z='15'/%3E%3C/feSpecularLighting%3E%3CfeGaussianBlur in='specOut' stdDeviation='4' result='innerGlow'/%3E%3CfeComposite in='innerGlow' in2='blur' operator='in' result='maskedGlow'/%3E%3CfeComposite in='SourceGraphic' in2='maskedGlow' operator='arithmetic' k1='0' k2='1' k3='0.5' k4='0'/%3E%3C/filter%3E%3C/svg%3E#spotlight-dark");
 
-  /* Animation Properties */
   --bg-1-x: 25;
   --bg-1-y: 50;
   --bg-2-x: 35;
@@ -34,21 +31,41 @@
   --bg-3-x: 45;
   --bg-3-y: 45;
 
-  /* Spacing */
   --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);
   --space-sm: clamp(0.5rem, 1vw, 1rem);
   --space-md: clamp(1rem, 2vw, 1.5rem);
   --space-lg: clamp(1.5rem, 3vw, 2.5rem);
   --space-xl: clamp(2rem, 4vw, 4rem);
 
-  /* Border Radius */
   --radius-sm: clamp(0.25rem, 0.5vw, 0.5rem);
   --radius-md: clamp(0.5rem, 1vw, 1rem);
   --radius-lg: clamp(1rem, 1.5vw, 1.5rem);
   --radius-full: 9999px;
 }
 
-/* ===== CSS Custom Property Definitions ===== */
+html.dark {
+  body {
+    --background-color: #24273a;
+    --text-color: #cad3f5;
+    --secondary-background: #363a4f;
+    --ui-border: #5b6078;
+    --accent-red: #ed8796;
+    --accent-orange: #f5a97f;
+    --accent-yellow: #eed49f;
+    --accent-green: #a6da95;
+    --accent-cyan: #8bd5ca;
+    --accent-blue: #8aadf4;
+    --accent-magenta: #f5bde6;
+    --accent-purple: #c6a0f6;
+    --link-colour: var(--accent-blue);
+    --toggle-accent-color: var(--accent-magenta);
+    --grain-opacity: 0.5;
+    --gradient-color-1: var(--accent-magenta);
+    --gradient-color-2: var(--accent-purple);
+    --gradient-color-3: var(--accent-blue);
+  }
+}
+
 @property --bg-shift-x {
   syntax: '<number>';
   inherits: true;
@@ -95,4 +112,53 @@
   syntax: '<number>';
   inherits: true;
   initial-value: 45;
+}
+
+@keyframes multi-bg {
+  0% {
+    --bg-1-x: 25;
+    --bg-1-y: 50;
+    --bg-2-x: 35;
+    --bg-2-y: 40;
+    --bg-3-x: 45;
+    --bg-3-y: 45;
+    filter: hue-rotate(0deg);
+  }
+
+  25% {
+    --bg-1-x: 30;
+    --bg-2-y: 50;
+    --bg-2-x: 80;
+    --bg-3-y: 20;
+    --bg-3-x: 70;
+    filter: hue-rotate(15deg);
+  }
+
+  50% {
+    --bg-1-x: 10;
+    --bg-2-y: 40;
+    --bg-2-x: 30;
+    --bg-3-y: 80;
+    --bg-3-x: 50;
+    filter: hue-rotate(0deg);
+  }
+
+  75% {
+    --bg-1-x: 70;
+    --bg-2-y: 10;
+    --bg-2-x: 50;
+    --bg-3-y: 30;
+    --bg-3-x: 40;
+    filter: hue-rotate(-15deg);
+  }
+
+  100% {
+    --bg-1-x: 25;
+    --bg-1-y: 50;
+    --bg-2-x: 35;
+    --bg-2-y: 40;
+    --bg-3-x: 45;
+    --bg-3-y: 45;
+    filter: hue-rotate(0deg);
+  }
 }
