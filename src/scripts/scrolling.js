@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!header || !intro) return
     if (direction > 0) {
       header.style.transform = 'translateY(-50vh)'
-
       intro.style.opacity = 1
     } else {
       header.style.transform = 'translateY(-50%)'
