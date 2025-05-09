@@ -8,6 +8,10 @@
     <a class="category">music<num>0</num></a>
     <tera class="category" id="rightCreature"></tera>
   </h2>
+  <div class="scroll-indicator">
+    <i class="arrow1 ph-bold ph-caret-down"></i>
+    <i class="arrow2 ph-bold ph-caret-down"></i>
+  </div>
 </header>
 
 <style>
@@ -18,6 +22,9 @@
     width: 100%;
     max-width: 1600px;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   h1 {
@@ -62,4 +69,34 @@
     color: var(--link-colour);
     font-feature-settings: 'ss04';
   }
+
+  .scroll-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1em;
+    padding: var(--space-sm);
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    color: var(--text-color);
+  }
+
+  .arrow1 {
+    margin-bottom: -0.3em;
+    animation: fade-in-out 3s ease-out infinite;
+  }
+
+  .arrow2 {
+    margin-top: -0.3em;
+    animation: fade-in-out 3s ease-out infinite 0.5s;
+  }
+
+  @keyframes fade-in-out {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
 </style>

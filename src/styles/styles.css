@@ -1,3 +1,12 @@
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
 :where(html) {
   container-name: root;
   container-type: normal;
@@ -79,11 +88,4 @@ h1 .letter.space {
   white-space: nowrap;
   width: 1px;
   transition: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  h1 .letter,
-  .toggle-group label .icon-container {
-    animation: none;
-  }
 }
