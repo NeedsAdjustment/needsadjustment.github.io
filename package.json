@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "astro": "5.16.6",
-    "lenis": "^1.3.16"
+    "lenis": "^1.3.17"
   },
   "devDependencies": {
     "@types/bun": "^1.3.5"
