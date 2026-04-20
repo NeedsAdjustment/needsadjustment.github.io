@@ -9,8 +9,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "6.1.5",
-    "lenis": "^1.3.21"
+    "astro": "6.1.8",
+    "lenis": "^1.3.23"
   },
   "devDependencies": {
     "@types/bun": "^1.3.12"
