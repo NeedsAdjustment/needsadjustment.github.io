@@ -129,6 +129,10 @@
     }
   }
 
+  :global(html:has(#dark:checked)) .toggle-group {
+    filter: var(--spotlight-dark-filter);
+  }
+
   @keyframes lazy-wobble-2 {
     1.5% {
       transform: rotate(90deg) scale(0.9);

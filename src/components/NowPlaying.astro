@@ -1,0 +1,177 @@
+<div id="now-playing" class="now-playing">
+  <div class="np-tab">
+    listening
+  </div>
+  <div class="np-inner">
+    <img id="np-art" class="np-art" src="" alt="Album art" />
+    <div class="np-info">
+      <span id="np-track" class="np-track"></span>
+      <span id="np-artist" class="np-artist"></span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .now-playing {
+    position: fixed;
+    bottom: calc(var(--space-md));
+    left: calc(var(--space-md));
+    opacity: 0;
+    font-family: 'Lilex Duo', sans-serif;
+    max-width: 15rem;
+  }
+
+  .now-playing.np-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .now-playing.np-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .np-tab {
+    user-select: none;
+    background: color-mix(in srgb, var(--secondary-background) 85%, transparent);
+    border: 1px solid var(--ui-border);
+    border-bottom: none;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding: var(--space-xs) var(--space-sm) var(--space-md) var(--space-sm);
+    margin-bottom: calc(-1 * var(--radius-lg) + var(--space-xs));
+    width: min-content;
+    font-size: 0.8rem;
+  }
+
+  .np-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md) var(--space-sm) var(--space-sm);
+    background: color-mix(in srgb, var(--secondary-background) 85%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--ui-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .np-art {
+    user-select: none;
+    height: calc(2.4rem + var(--space-xs) + 1.92rem);
+    aspect-ratio: 1 / 1;
+    border-radius: calc(var(--radius-lg) - var(--space-sm));
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .np-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    gap: var(--space-xs);
+  }
+
+  .np-track {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .np-artist {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--accent-green);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @media (max-width: 640px) {
+    .now-playing {
+      top: calc(var(--space-xs));
+      right: calc(var(--space-xs));
+      width: 200px;
+    }
+  }
+</style>
+
+<script>
+  const NOW_PLAYING_PROXY_URL = "https://sprenlastplayed.val.run/";
+  const LS_KEY = "lastPlayedTrack";
+
+  const el = document.querySelector<HTMLElement>(".now-playing")!;
+  const art = document.querySelector<HTMLImageElement>(".np-art");
+  const track = document.querySelector<HTMLElement>(".np-track");
+  const artist = document.querySelector<HTMLElement>(".np-artist");
+
+  /** Check if data has a real track (not null/empty) */
+  function hasTrack(data: { shortenedName: string | null; }) {
+    return data?.shortenedName && data.shortenedName !== "Currently Not Playing";
+  }
+
+  /** Display a track in the widget */
+  function displayTrack(data: { image: string; shortenedName: string | null; formattedArtist: string | null; }, isHistorical = false) {
+    if (!data || !hasTrack(data)) {
+      el?.classList.add("np-hidden");
+      return;
+    }
+
+    if (!art || !track || !artist) return;
+
+    art.src = data.image || "";
+    track.textContent = data.shortenedName;
+    artist.textContent = data.formattedArtist;
+
+    el?.classList.remove("np-hidden", "np-visible");
+    // Force reflow so the transition fires
+    void el?.offsetWidth;
+    el?.classList.add("np-visible");
+  }
+
+  /** Main refresh: fetch from the proxy val */
+  async function refresh() {
+    try {
+      const res = await fetch(NOW_PLAYING_PROXY_URL);
+      const data = await res.json();
+
+      if (hasTrack(data)) {
+        // Cache locally for offline / fast reload
+        localStorage.setItem(LS_KEY, JSON.stringify(data));
+
+        // _lastPlayed flag is set by the val when it's a historical track
+        displayTrack(data, data._lastPlayed === true);
+        return;
+      }
+    } catch {
+      // Network error — fall through to local cache
+    }
+
+    // Remote unavailable or no data — try localStorage
+    try {
+      const local = JSON.parse(localStorage.getItem(LS_KEY) || "null");
+      if (local && hasTrack(local)) {
+        displayTrack(local, true);
+        return;
+      }
+    } catch {
+      // ignore
+    }
+
+    // Nothing at all
+    el?.classList.add("np-hidden");
+  }
+
+  // Kick off after DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", refresh);
+  } else {
+    refresh();
+  }
+</script>

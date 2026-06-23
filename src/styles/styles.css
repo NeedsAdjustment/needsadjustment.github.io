@@ -10,13 +10,9 @@ html::-webkit-scrollbar {
 :where(html) {
   container-name: root;
   container-type: normal;
-  font-size: clamp(18px, 1vw + 0.5rem, 24px);
+  font-size: clamp(0.7rem, 2vw, 1rem);
   box-sizing: border-box;
   height: 100%;
-}
-
-html:has(#dark:checked) .toggle-group {
-  filter: var(--spotlight-dark-filter);
 }
 
 *,
@@ -55,13 +51,11 @@ tera {
   -webkit-background-clip: text;
   color: transparent;
   background-image: var(--noise-filter),
-    conic-gradient(
-      from 140deg at calc(var(--bg-1-x) * 1%) calc(var(--bg-1-y) * 1%),
+    conic-gradient(from 140deg at calc(var(--bg-1-x) * 1%) calc(var(--bg-1-y) * 1%),
       var(--gradient-color-1),
       var(--gradient-color-2),
       var(--gradient-color-3),
-      var(--gradient-color-1)
-    );
+      var(--gradient-color-1));
   background-size: 200px;
   background-blend-mode: normal;
   animation: multi-bg 15s linear infinite alternate;

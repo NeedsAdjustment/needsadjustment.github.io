@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import NowPlaying from '../components/NowPlaying.astro';
 ---
 
 <!DOCTYPE html>
@@ -12,6 +13,7 @@ import '../styles/global.css';
     <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2" defer></script>
   </head>
   <body>
+    <NowPlaying />
     <slot />
     <script>
       import '../scripts/inittheme.js';
