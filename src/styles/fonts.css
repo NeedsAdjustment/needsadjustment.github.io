@@ -9,10 +9,9 @@
 }
 
 @font-face {
-  font-family: 'Trispace';
+  font-family: 'Lilex Duo';
   font-weight: 100 800;
-  font-stretch: 75 125;
-  src: url(/fonts/Trispace-Variable.ttf);
+  src: url(/fonts/LilexDuo[wght].ttf);
 }
 
 @font-face {

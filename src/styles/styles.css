@@ -42,7 +42,7 @@ body {
   min-height: 100vh;
   position: relative;
   padding-bottom: calc(var(--space-xl) + 1.5rem);
-  font-family: 'Trispace';
+  font-family: 'Lilex Duo';
 }
 
 h1 .letter,
