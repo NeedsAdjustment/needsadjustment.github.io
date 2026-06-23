@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import NowPlaying from '../components/NowPlaying.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 ---
 
 <!DOCTYPE html>
@@ -14,6 +15,7 @@ import NowPlaying from '../components/NowPlaying.astro';
   </head>
   <body>
     <NowPlaying />
+    <ThemeToggle />
     <slot />
     <script>
       import '../scripts/inittheme.js';

@@ -1,66 +1,64 @@
-<fieldset class="toggle-group" id="colorScheme">
-  <label title="Light Mode">
-    <input type="radio" name="color-scheme" id="light" value="0" data-sr />
-    <div class="icon-container">
-      <i class="ph ph-sun regular-icon"></i>
-      <i class="ph-fill ph-sun filled-icon"></i>
-    </div>
-    <span data-sr>Light</span>
-  </label>
-  <label title="Dark Mode">
-    <input type="radio" name="color-scheme" id="dark" value="1" data-sr />
-    <div class="icon-container">
-      <i class="ph ph-moon regular-icon"></i>
-      <i class="ph-fill ph-moon filled-icon"></i>
-    </div>
-    <span data-sr>Dark</span>
-  </label>
-</fieldset>
+
+<div class='ThemeToggle'>
+  <fieldset class="toggle-group" id="colorScheme">
+    <label title="Light Mode">
+      <input type="radio" name="color-scheme" id="light" value="0" data-sr />
+      <div class="icon-container">
+        <i class="ph ph-sun regular-icon"></i>
+        <i class="ph-fill ph-sun filled-icon"></i>
+      </div>
+      <span data-sr>Light</span>
+    </label>
+    <label title="Dark Mode">
+      <input type="radio" name="color-scheme" id="dark" value="1" data-sr />
+      <div class="icon-container">
+        <i class="ph ph-moon regular-icon"></i>
+        <i class="ph-fill ph-moon filled-icon"></i>
+      </div>
+      <span data-sr>Dark</span>
+    </label>
+  </fieldset>
+</div>
 
 <style>
-  /* Toggle group styles */
-  .toggle-group {
-    backdrop-filter: blur(16px);
-    background-color: var(--secondary-background);
-    border-radius: var(--radius-full);
-    inline-size: fit-content;
-    padding: var(--space-xs);
-    border: none;
-    position: relative;
-    filter: none;
-    transition: filter 0.8s ease;
-    box-sizing: border-box;
-    max-height: 114px;
-    overflow: visible;
+  .ThemeToggle {
+    position: fixed;
+    bottom: var(--space-md);
+    z-index: 10;
   }
 
-  /* Fieldset styling */
-  fieldset.toggle-group {
-    border: none;
+  /* Toggle group — same pill styling as the musicbox chip */
+  .toggle-group {
+    inline-size: fit-content;
     padding: var(--space-xs);
     margin: 0;
+    border: 1px solid var(--ui-border);
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--secondary-background) 85%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    filter: none;
+    transition: filter 0.8s ease;
   }
 
-  /* Toggle label styling */
+  /* Each label is a clickable icon button inside the pill */
   .toggle-group label {
-    border-radius: var(--radius-full);
+    border-radius: 9999px;
     cursor: pointer;
     display: inline-flex;
-    padding: var(--space-xs);
-    width: 2.5em;
-    height: 2.5em;
-    text-align: center;
-    user-select: none;
-    font-size: clamp(0.75rem, 1vw + 0.25rem, 0.9rem);
+    width: 2.5rem;
+    height: 2.5rem;
     align-items: center;
     justify-content: center;
+    user-select: none;
     line-height: 1;
-    box-sizing: border-box;
     position: relative;
-   
+    transition: background 0.3s ease, box-shadow 0.3s ease;
   }
 
   :global(.toggle-group label:has(input)) {
@@ -68,14 +66,14 @@
     color: var(--text-color);
   }
 
-  /* Selected label styles */
+  /* Selected label — filled accent background */
   :global(.toggle-group label:has(input:checked)) {
     background-color: var(--toggle-accent-color);
     color: var(--background-color);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  /* Icon container styling */
+  /* Icon container */
   .icon-container {
     position: relative;
     width: 1.5em;
@@ -87,9 +85,9 @@
     transform-origin: center;
   }
 
-  /* Phosphor icons styling */
+  /* Phosphor icons — layered for regular/filled swap */
   .toggle-group .ph {
-    font-size: 1.2em;
+    font-size: 1.25rem;
     position: absolute;
     line-height: 1;
   }
@@ -110,8 +108,8 @@
     opacity: 1;
     filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.2));
   }
-  
-  /* Icon animations */
+
+  /* Hover wobble on the unselected icon */
   :global(.toggle-group label:not(:has(input:checked)):hover .icon-container) {
     animation: lazy-wobble 1s ease-in-out 1;
   }
@@ -121,33 +119,19 @@
   }
 
   @keyframes lazy-wobble {
-    33% {
-      transform: rotate(-20deg);
-    }
-    67% {
-      transform: rotate(20deg);
-    }
+    33% { transform: rotate(-20deg); }
+    67% { transform: rotate(20deg); }
+  }
+
+  @keyframes lazy-wobble-2 {
+    1.5% { transform: rotate(90deg) scale(0.9); }
+    3% { transform: rotate(180deg) scale(1.1); }
+    4.5% { transform: rotate(270deg) scale(0.9); }
+    6% { transform: rotate(360deg) scale(1); }
+    100% { transform: rotate(360deg); }
   }
 
   :global(html:has(#dark:checked)) .toggle-group {
     filter: var(--spotlight-dark-filter);
-  }
-
-  @keyframes lazy-wobble-2 {
-    1.5% {
-      transform: rotate(90deg) scale(0.9);
-    }
-    3% {
-      transform: rotate(180deg) scale(1.1);
-    }
-    4.5% {
-      transform: rotate(270deg) scale(0.9);
-    }
-    6% {
-      transform: rotate(360deg) scale(1);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
   }
 </style>

@@ -28,6 +28,7 @@
   }
 
   h1 {
+    cursor: default;
     font-family: 'Unbounded';
     font-size: clamp(1rem, 10vw, 7.4rem);
     margin: 0;
@@ -51,8 +52,23 @@
     align-items: center;
   }
 
-  h2 a {
+  h2 a.category {
     cursor: pointer;
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--ui-border);
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--secondary-background) 85%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  h2 a.category:hover {
+    background: color-mix(in srgb, var(--secondary-background) 70%, transparent);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   }
 
   num {
