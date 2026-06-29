@@ -136,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function () {
         leftCreature.innerText = teranoptise(newCreatureWidth, 'left', false)
         rightCreature.innerText = teranoptise(newCreatureWidth, 'right', false)
         if (newCreatureWidth === 1) {
+          // Flip right oddity
           rightCreature.style.transform = 'scaleX(-1)'
         } else {
           rightCreature.style.transform = ''

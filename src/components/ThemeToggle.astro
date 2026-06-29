@@ -22,8 +22,6 @@
 
 <style>
 
-
-  /* Toggle group — same pill styling as the musicbox chip */
   .toggle-group {
     inline-size: fit-content;
     padding: var(--space-xs);
@@ -42,7 +40,6 @@
     transition: filter 0.8s ease;
   }
 
-  /* Each label is a clickable icon button inside the pill */
   .toggle-group label {
     border-radius: 9999px;
     cursor: pointer;
@@ -62,14 +59,12 @@
     color: var(--text-color);
   }
 
-  /* Selected label — filled accent background */
   :global(.toggle-group label:has(input:checked)) {
     background-color: var(--toggle-accent-color);
     color: var(--background-color);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  /* Icon container */
   .icon-container {
     position: relative;
     width: 1.5em;
@@ -81,7 +76,6 @@
     transform-origin: center;
   }
 
-  /* Phosphor icons — layered for regular/filled swap */
   .toggle-group .ph {
     font-size: 1.25rem;
     position: absolute;
@@ -105,7 +99,6 @@
     filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.2));
   }
 
-  /* Hover wobble on the unselected icon */
   :global(.toggle-group label:not(:has(input:checked)):hover .icon-container) {
     animation: lazy-wobble 1s ease-in-out 1;
   }
