@@ -135,6 +135,11 @@ document.addEventListener('DOMContentLoaded', function () {
         rightCreature.style.display = ''
         leftCreature.innerText = teranoptise(newCreatureWidth, 'left', false)
         rightCreature.innerText = teranoptise(newCreatureWidth, 'right', false)
+        if (newCreatureWidth === 1) {
+          rightCreature.style.transform = 'scaleX(-1)'
+        } else {
+          rightCreature.style.transform = ''
+        }
       }
       currentCreatureWidth = newCreatureWidth
     }

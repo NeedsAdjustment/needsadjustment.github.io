@@ -3,7 +3,7 @@
   <h2>
     <tera class="category" id="leftCreature"></tera>
     <a class="category">design<num>0</num></a>
-    <a class="category">coding<num>0</num></a>
+    <a class="category" href='https://github.com/NeedsAdjustment'>coding<num>0</num></a>
     <a class="category">prose<num>0</num></a>
     <a class="category">music<num>0</num></a>
     <tera class="category" id="rightCreature"></tera>
@@ -20,11 +20,13 @@
     top: 50%;
     transform: translateY(-50%);
     width: 100%;
-    max-width: 1600px;
+    max-width: 1200px;
     z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: center;
+    -webkit-user-select: none; /* Safari */
+    user-select: none;
   }
 
   h1 {
@@ -34,6 +36,9 @@
     margin: 0;
     text-align: center;
     white-space: nowrap;
+    overflow: hidden;
+    max-height: 20rem;
+    transition: opacity 0.4s ease, max-height 0.4s ease, margin 0.4s ease, padding 0.4s ease;
   }
 
   tera {
@@ -44,12 +49,14 @@
 
   h2 {
     font-size: clamp(1.2rem, 2vw, 1.5rem);
-    font-weight: 300;
+    font-weight: 400;
     margin: 0;
+    padding-top: 0;
     display: flex;
     width: 99%;
     justify-content: space-around;
     align-items: center;
+    transition: padding-top 0.4s ease;
   }
 
   h2 a.category {
@@ -117,3 +124,31 @@
   }
 
 </style>
+
+<script>
+  const GITHUB_USERNAME = "NeedsAdjustment";
+  const DRIBBBLE_PROXY_URL = "https://spren-dribbleshotsgrabber.val.run/";
+
+  function updateNum(category: string, value: number | string) {
+    const links = document.querySelectorAll('h2 a.category');
+    for (const link of links) {
+      const num = link.querySelector('num');
+      if (num && link.textContent?.trim().startsWith(category)) {
+        num.textContent = String(value);
+        break;
+      }
+    }
+  }
+
+  // GitHub — coding
+  fetch(`https://api.github.com/users/${GITHUB_USERNAME}`)
+    .then((r) => r.json())
+    .then((data) => updateNum('coding', data.public_repos))
+    .catch(() => {});
+
+  // Dribbble — design
+  fetch(DRIBBBLE_PROXY_URL)
+    .then((r) => r.json())
+    .then((data) => updateNum('design', data.shots_count))
+    .catch(() => {});
+</script>

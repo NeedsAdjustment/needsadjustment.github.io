@@ -21,55 +21,99 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   h1.innerHTML = newContent
+  h1.style.display = 'flex'
+  h1.style.justifyContent = 'center'
+
+  // Variables for ripple animation — traveling wave
+  let wavePos = 0
+  const waveSpeed = 0.0004
+  const rippleAmplitude = 400
+  const defaultWeight = 300
+  const maxWeight = 900
+  const minWeight = 300
 
   // Get all letter spans
   const letters = document.querySelectorAll('.letter:not(.space)')
+  const lockMaxWeight = Math.min(defaultWeight + rippleAmplitude, maxWeight)
+
+  // Measure each span's width at its heaviest weight, then fix the
+  // width so letters never push neighbors around (eliminates reflow jitter).
+  function lockWidth(span) {
+    const savedTransition = span.style.transition
+    span.style.transition = 'none'
+    span.style.display = 'inline-block'
+    span.style.textAlign = 'center'
+    span.style.overflow = 'visible'
+    span.style.fontWeight = String(lockMaxWeight)
+    void span.offsetWidth
+    const maxW = span.offsetWidth - 3
+    span.style.width = maxW + 'px'
+    span.style.fontWeight = String(defaultWeight)
+    span.style.transition = savedTransition
+  }
+
+  document.querySelectorAll('.letter.space').forEach(lockWidth)
 
   // Set initial weight for all letters
   letters.forEach((letter) => {
-    letter.style.fontWeight = '300'
+    lockWidth(letter)
     letter.dataset.mouseAffected = 'false'
     letter.dataset.transitionStart = '0'
     letter.dataset.transitionStartWeight = '300'
     letter.dataset.rippleWeight = '300'
   })
 
-  // Variables for ripple animation
-  let rippleFrame = 50
-  const rippleSpeed = -0.0015
-  const rippleAmplitude = 700
-  const waveFrequency = 0.45
-  const defaultWeight = 300
-  const maxWeight = 900
-  const minWeight = 300
+  // Re-lock widths on resize so letters scale live with the viewport
+  let rafId = null
+  window.addEventListener('resize', () => {
+    if (rafId) return
+    rafId = requestAnimationFrame(() => {
+      rafId = null
+      document.querySelectorAll('.letter').forEach((letter) => {
+        const savedTransition = letter.style.transition
+        letter.style.transition = 'none'
+        letter.style.width = ''
+        void letter.offsetWidth
+        const currentWeight = letter.style.fontWeight
+        letter.style.fontWeight = String(lockMaxWeight)
+        void letter.offsetWidth
+        const maxW = letter.offsetWidth
+        letter.style.width = maxW + 'px'
+        letter.style.fontWeight = currentWeight
+        letter.style.transition = savedTransition
+      })
+    })
+  })
 
   const transitioningLetters = new Set()
 
-  function getRippleWeight(index) {
-    const phase = rippleFrame + index * waveFrequency
-    const sine = Math.sin(phase)
-    const weight = Math.round(defaultWeight + sine * rippleAmplitude)
+  function getRippleWeight(index, total) {
+    // Position of this letter in 0-1 range
+    const letterPos = index / total
+    // Wrapping distance from the wave peak
+    let dist = letterPos - wavePos
+    if (dist < 0) dist += 1
+    // Sine wave — smooth transitions, natural ease at the ends
+    const phase = dist * 2 * Math.PI
+    const weight = Math.round(defaultWeight + Math.sin(phase) * rippleAmplitude)
     return Math.max(minWeight, Math.min(maxWeight, weight))
   }
 
   function animateRipple() {
     letters.forEach((letter, i) => {
-      const rippleWeight = getRippleWeight(i)
+      const rippleWeight = getRippleWeight(i, letters.length)
       letter.dataset.rippleWeight = rippleWeight.toString()
 
       if (transitioningLetters.has(letter)) {
         const now = performance.now()
-        const progress = Math.min(1, (now - parseFloat(letter.dataset.transitionStart)) / 300) // 300ms transition
+        const progress = Math.min(1, (now - parseFloat(letter.dataset.transitionStart)) / 300)
 
         const startWeight = parseFloat(letter.dataset.transitionStartWeight)
         const targetWeight = rippleWeight
 
-        if (targetWeight >= startWeight) {
-          const currentWeight = Math.round(startWeight + (targetWeight - startWeight) * progress)
-          letter.style.fontWeight = currentWeight
-        } else {
-          letter.style.fontWeight = startWeight
-        }
+        const eased = 1 - Math.pow(1 - progress, 3)
+        const currentWeight = Math.round(startWeight + (targetWeight - startWeight) * eased)
+        letter.style.fontWeight = currentWeight
 
         if (progress >= 1) {
           transitioningLetters.delete(letter)
@@ -80,7 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     })
 
-    rippleFrame += rippleSpeed
+    wavePos += waveSpeed
+    if (wavePos >= 1) wavePos -= 1
     requestAnimationFrame(animateRipple)
   }
 

@@ -15,28 +15,14 @@ document.addEventListener('DOMContentLoaded', function () {
     return 'light'
   })()
 
-  function updateGradients() {
-    const wrapper = document.querySelector('.h1-gradient-wrapper')
-    if (wrapper) {
-      const animation = wrapper.style.animation
-      wrapper.style.animation = 'none'
-      void wrapper.offsetWidth
-      wrapper.style.animation = animation
-    }
-  }
-
   function setDarkTheme() {
     htmlElement.classList.add('dark')
-    htmlElement.classList.add('dark-theme')
-    htmlElement.classList.remove('light-theme')
     htmlElement.style.setProperty('--darkmode', '1')
     darkRadio.checked = true
   }
 
   function setLightTheme() {
     htmlElement.classList.remove('dark')
-    htmlElement.classList.remove('dark-theme')
-    htmlElement.classList.add('light-theme')
     htmlElement.style.setProperty('--darkmode', '0')
     lightRadio.checked = true
   }
@@ -56,6 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
       setDarkTheme()
       window.localStorage.setItem('theme', 'dark')
     }
-    updateGradients()
+
   })
 })

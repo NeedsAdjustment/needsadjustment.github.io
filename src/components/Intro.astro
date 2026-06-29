@@ -1,6 +1,14 @@
 <div class="intro">
   <p>
-    Josh(ua) is a developer and designer from Aotearoa NZ.
+    Joshua is a software developer and multi-disciplinary designer.
+  </p>
+  <p>
+    He lives in Aotearoa NZ with his wife, Emily, and their cat, Storm.
+    In his spare time, he enjoys music (that is: playing, composing, listening), reading, writing (especially in the third-person), and exploring the outdoors.
+    That's a non-exhaustive list.
+  </p>
+  <p>
+    You can contact him via email at <span class="email">joshua@<!--lie.--><span>email.</span><span>soong.</span><span>lie.</span>nz</span>.
   </p>
 </div>
 
@@ -20,4 +28,17 @@
     text-wrap: pretty;
     padding-top: 2rem;
   }
+
+  p::selection {
+    background: var(--secondary-background);
+    color: var(--selection-text);
+  }
+
+  span.email {
+    display: inline;
+  }
+
+  span.email > span:nth-child(odd) {
+	display: none;
+}
 </style>

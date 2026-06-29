@@ -1,7 +1,5 @@
 ---
 import '../styles/global.css';
-import NowPlaying from '../components/NowPlaying.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
 ---
 
 <!DOCTYPE html>
@@ -14,8 +12,6 @@ import ThemeToggle from '../components/ThemeToggle.astro';
     <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2" defer></script>
   </head>
   <body>
-    <NowPlaying />
-    <ThemeToggle />
     <slot />
     <script>
       import '../scripts/inittheme.js';

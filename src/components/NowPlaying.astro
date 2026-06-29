@@ -13,9 +13,6 @@
 
 <style>
   .now-playing {
-    position: fixed;
-    bottom: calc(var(--space-md));
-    left: calc(var(--space-md));
     opacity: 0;
     font-family: 'Lilex Duo', sans-serif;
     max-width: 15rem;
@@ -42,6 +39,13 @@
     margin-bottom: calc(-1 * var(--radius-lg) + var(--space-xs));
     width: min-content;
     font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .np-tab:hover {
+    background: color-mix(in srgb, var(--secondary-background) 70%, transparent);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   }
 
   .np-inner {
@@ -55,6 +59,13 @@
     border: 1px solid var(--ui-border);
     border-radius: var(--radius-lg);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: background 0.3s ease, box-shadow 0.3s ease, max-height 0.4s ease, opacity 0.4s ease, padding 0.4s ease, gap 0.4s ease, border-width 0.4s ease, margin 0.4s ease;
+  }
+
+  .np-inner:hover {
+    background: color-mix(in srgb, var(--secondary-background) 70%, transparent);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   }
 
   .np-art {
@@ -71,6 +82,10 @@
     flex-direction: column;
     line-height: 1.2;
     gap: var(--space-xs);
+  }
+
+  .np-info::selection {
+    background: var(--background-color);
   }
 
   .np-track {
@@ -93,11 +108,55 @@
     overflow: hidden;
   }
 
-  @media (max-width: 640px) {
-    .now-playing {
-      top: calc(var(--space-xs));
-      right: calc(var(--space-xs));
-      width: 200px;
+  @media (max-width: 500px) {
+    .np-tab {
+      border-bottom: 1px solid var(--ui-border);
+      border-radius: var(--radius-lg);
+      margin-bottom: var(--space-xs);
+      padding: var(--space-xs) var(--space-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease, border-bottom 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+    }
+
+    .now-playing.np-open .np-tab {
+      border-bottom: none;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      margin-bottom: calc(-1 * var(--radius-lg) + var(--space-xs));
+      padding: var(--space-xs) var(--space-sm) var(--space-md) var(--space-sm);
+      transition-delay: 0.2s;
+    }
+
+    .np-inner {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      padding: 0;
+      gap: 0;
+      border-width: 0;
+      margin: 0;
+      pointer-events: none;
+      transition-delay: 0.2s;
+    }
+
+    .now-playing.np-open .np-inner {
+      max-height: 20rem;
+      opacity: 1;
+      padding: var(--space-sm) var(--space-md) var(--space-sm) var(--space-sm);
+      gap: var(--space-md);
+      border-width: 1px;
+      margin: 0;
+      pointer-events: auto;
+    }
+
+    .np-info {
+      opacity: 0;
+    }
+
+    .now-playing.np-open .np-info {
+      opacity: 1;
+      transition: opacity 0.2s ease 0.4s;
     }
   }
 </style>
@@ -107,9 +166,28 @@
   const LS_KEY = "lastPlayedTrack";
 
   const el = document.querySelector<HTMLElement>(".now-playing")!;
+  const npInner = document.querySelector<HTMLElement>(".np-inner");
   const art = document.querySelector<HTMLImageElement>(".np-art");
   const track = document.querySelector<HTMLElement>(".np-track");
   const artist = document.querySelector<HTMLElement>(".np-artist");
+
+  // Track the current track data for the click handler
+  let currentTrack = "";
+  let currentArtist = "";
+
+  const npTab = document.querySelector<HTMLElement>(".np-tab");
+
+  npInner?.addEventListener("click", () => {
+    if (!currentTrack) return;
+    const query = encodeURIComponent(`${currentTrack} - ${currentArtist}`);
+    window.open(`https://www.youtube.com/results?search_query=${query}`, "_blank");
+  });
+
+  npTab?.addEventListener("click", () => {
+    if (window.innerWidth <= 500) {
+      el?.classList.toggle("np-open");
+    }
+  });
 
   /** Check if data has a real track (not null/empty) */
   function hasTrack(data: { shortenedName: string | null; }) {
@@ -128,6 +206,8 @@
     art.src = data.image || "";
     track.textContent = data.shortenedName;
     artist.textContent = data.formattedArtist;
+    currentTrack = data.shortenedName || "";
+    currentArtist = data.formattedArtist || "";
 
     el?.classList.remove("np-hidden", "np-visible");
     // Force reflow so the transition fires

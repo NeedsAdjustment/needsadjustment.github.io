@@ -1,10 +1,50 @@
-<div>
-</div>
+---
+import NowPlaying from './NowPlaying.astro';
+import ThemeToggle from './ThemeToggle.astro';
+---
+
+<footer>
+  <div class="footer-left">
+    <NowPlaying />
+  </div>
+  <div class="footer-center">
+    <ThemeToggle />
+  </div>
+</footer>
 
 <style>
   footer {
     position: fixed;
     bottom: 0;
-    z-index: 1;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  footer > * {
+    pointer-events: auto;
+  }
+
+  .footer-left {
+    position: absolute;
+    left: var(--space-md);
+    bottom: var(--space-md);
+  }
+
+  .footer-center {
+    padding-bottom: var(--space-md);
+  }
+
+  @media (max-width: 500px) {
+    .footer-center {
+      position: absolute;
+      right: var(--space-md);
+      bottom: var(--space-md);
+      padding-bottom: 0;
+    }
   }
 </style>

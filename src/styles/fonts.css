@@ -4,11 +4,6 @@
 }
 
 @font-face {
-  font-family: 'Louise';
-  src: url(/fonts/Louise-Regular.woff2) format('woff2');
-}
-
-@font-face {
   font-family: 'Lilex Duo';
   font-weight: 100 800;
   src: url(/fonts/LilexDuo[wght].ttf);
