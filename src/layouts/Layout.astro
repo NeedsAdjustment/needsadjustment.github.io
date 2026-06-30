@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Gallery from '../components/Gallery.astro';
 ---
 
 <!DOCTYPE html>
@@ -13,6 +14,7 @@ import '../styles/global.css';
   </head>
   <body>
     <slot />
+    <Gallery />
     <script>
       import '../scripts/inittheme.js';
       import '../scripts/textgrow.js';

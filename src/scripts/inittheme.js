@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+function initTheme() {
   const toggle = document.getElementById('colorScheme')
   const darkRadio = document.getElementById('dark')
   const lightRadio = document.getElementById('light')
@@ -18,13 +18,13 @@ document.addEventListener('DOMContentLoaded', function () {
   function setDarkTheme() {
     htmlElement.classList.add('dark')
     htmlElement.style.setProperty('--darkmode', '1')
-    darkRadio.checked = true
+    if (darkRadio) darkRadio.checked = true
   }
 
   function setLightTheme() {
     htmlElement.classList.remove('dark')
     htmlElement.style.setProperty('--darkmode', '0')
-    lightRadio.checked = true
+    if (lightRadio) lightRadio.checked = true
   }
 
   window.localStorage.setItem('theme', theme)
@@ -34,14 +34,19 @@ document.addEventListener('DOMContentLoaded', function () {
     setDarkTheme()
   }
 
-  toggle.addEventListener('change', function () {
-    if (lightRadio.checked) {
-      setLightTheme()
-      window.localStorage.setItem('theme', 'light')
-    } else if (darkRadio.checked) {
-      setDarkTheme()
-      window.localStorage.setItem('theme', 'dark')
-    }
+  if (toggle) {
+    toggle.addEventListener('change', function () {
+      if (lightRadio?.checked) {
+        setLightTheme()
+        window.localStorage.setItem('theme', 'light')
+      } else if (darkRadio?.checked) {
+        setDarkTheme()
+        window.localStorage.setItem('theme', 'dark')
+      }
+    })
+  }
+}
 
-  })
-})
+if (document.readyState !== 'loading') initTheme()
+else document.addEventListener('DOMContentLoaded', initTheme)
+document.addEventListener('astro:page-load', initTheme)

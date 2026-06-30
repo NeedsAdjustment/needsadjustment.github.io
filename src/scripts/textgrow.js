@@ -1,10 +1,20 @@
+/**
+ * Font weight animation based on mouse position and continuous ripple effect
+ * With smooth transitions between mouse and ripple control
+ * Mouse proximity can only increase weight, never decrease it
+ */
 document.addEventListener('DOMContentLoaded', () => {
+  // Get the H1 element
   const h1 = document.querySelector('h1')
-  if (!h1) return
+  if (!h1) return // Exit if h1 doesn't exist
 
   const originalText = h1.textContent
 
-  // Wait for the variable font to be loaded before measuring char widths
+  // --- Wait for the variable font to be loaded before measuring ---
+  // If lockWidth() runs before 'Unbounded' is available, the browser measures
+  // the fallback font where all weights have the same width, resulting in
+  // permanently cramped letter widths. Refreshing hides the issue because
+  // the font is then cached.
   const fontReady =
     document.fonts && document.fonts.ready
       ? document.fonts.ready.then(() => {
@@ -15,13 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   fontReady
     .catch(() => {
-      // Font failed to load
+      // Font failed to load — proceed anyway so the page isn't broken
     })
     .then(() => {
       // Clear the h1 and add individual spans for each letter
       let newContent = ''
       for (let i = 0; i < originalText.length; i++) {
         if (originalText[i] === ' ') {
+          // Add a special space span with width
           newContent += `<span class="letter space">&nbsp;</span>`
         } else {
           newContent += `<span class="letter">${originalText[i]}</span>`
@@ -31,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
       h1.style.display = 'flex'
       h1.style.justifyContent = 'center'
 
+      // Variables for ripple animation — traveling wave
       let wavePos = 0
       const waveSpeed = 0.0004
       const rippleAmplitude = 400
@@ -38,9 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const maxWeight = 900
       const minWeight = 300
 
+      // Get all letter spans
       const letters = document.querySelectorAll('.letter:not(.space)')
       const lockMaxWeight = Math.min(defaultWeight + rippleAmplitude, maxWeight)
 
+      // Measure each span's width at its heaviest weight, then fix the
+      // width so letters never push neighbors around (eliminates reflow jitter).
       function lockWidth(span) {
         const savedTransition = span.style.transition
         span.style.transition = 'none'
@@ -57,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       document.querySelectorAll('.letter.space').forEach(lockWidth)
 
+      // Set initial weight for all letters
       letters.forEach((letter) => {
         lockWidth(letter)
         letter.dataset.mouseAffected = 'false'
@@ -65,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         letter.dataset.rippleWeight = '300'
       })
 
-      // Handle viewport resize
+      // Re-lock widths on resize so letters scale live with the viewport
       let rafId = null
       window.addEventListener('resize', () => {
         if (rafId) return
@@ -90,11 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const transitioningLetters = new Set()
 
       function getRippleWeight(index, total) {
-        // Position of this letter from 0-1
+        // Position of this letter in 0-1 range
         const letterPos = index / total
-        // Distance from peak
+        // Wrapping distance from the wave peak
         let dist = letterPos - wavePos
         if (dist < 0) dist += 1
+        // Sine wave — smooth transitions, natural ease at the ends
         const phase = dist * 2 * Math.PI
         const weight = Math.round(defaultWeight + Math.sin(phase) * rippleAmplitude)
         return Math.max(minWeight, Math.min(maxWeight, weight))
@@ -152,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const mousePosX = e.clientX
         const mousePosY = e.clientY
 
-        // Check for mouse
+        // Check if mouse is over or near the heading
         const h1Rect = h1.getBoundingClientRect()
         const isNearHeading =
           mousePosX >= h1Rect.left - 100 && mousePosX <= h1Rect.right + 100 && mousePosY >= h1Rect.top - 100 && mousePosY <= h1Rect.bottom + 100
@@ -202,8 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
         })
       })
       document.addEventListener('mouseleave', resetMouseAffected)
-    })
-})
+    }) // end .then()
+}) // end DOMContentLoaded
 
 document.addEventListener('DOMContentLoaded', function () {
   const categorySpans = document.querySelectorAll('h2 a.category')

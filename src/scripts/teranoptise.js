@@ -100,7 +100,7 @@ function teranoptise(numChars, direction, portals = false) {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+function initTeranoptise() {
   let currentCreatureWidth = getCreatureWidth()
   updateCreatures(true)
   window.addEventListener('resize', function () {
@@ -127,6 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (isInitialRender || newCreatureWidth !== currentCreatureWidth) {
       const leftCreature = document.getElementById('leftCreature')
       const rightCreature = document.getElementById('rightCreature')
+      if (!leftCreature || !rightCreature) return
       if (newCreatureWidth === 0) {
         leftCreature.style.display = 'none'
         rightCreature.style.display = 'none'
@@ -145,4 +146,8 @@ document.addEventListener('DOMContentLoaded', function () {
       currentCreatureWidth = newCreatureWidth
     }
   }
-})
+}
+
+if (document.readyState !== 'loading') initTeranoptise()
+else document.addEventListener('DOMContentLoaded', initTeranoptise)
+document.addEventListener('astro:page-load', initTeranoptise)

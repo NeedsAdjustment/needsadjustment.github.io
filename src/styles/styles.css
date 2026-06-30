@@ -42,7 +42,8 @@ body {
 }
 
 h1 .letter,
-tera {
+tera,
+.snaps-spinner {
   font-weight: 300;
   transition: font-weight 0.15s cubic-bezier(0.25, 0.1, 0.25, 1), filter 0.3s ease;
   position: relative;
