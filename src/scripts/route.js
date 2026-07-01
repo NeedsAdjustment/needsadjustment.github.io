@@ -49,6 +49,8 @@ document.addEventListener('astro:after-swap', () => {
     header.classList.toggle('scrolled', target)
   }
   prevScrolled = null
+  // Re-measure once the header settles in its new position.
+  setTimeout(syncHeaderHeight, 450)
 })
 
 // ── Header active-button + initial scrolled state ────────────────────
@@ -63,6 +65,29 @@ function applyActive() {
 function applyInitialScrolled() {
   const header = document.querySelector('header.hero')
   if (header) header.classList.toggle('scrolled', scrolledTarget())
+}
+
+// ── Global --header-height ───────────────────────────────────────────
+// Measures the header (through its h2) and exposes the distance from the top
+// of the viewport to the bottom of the nav as a global CSS variable on <html>,
+// so any full-screen overlay (snaps gallery, scraps view, …) can align to it.
+// The measurement is taken with transitions suppressed so the value reflects
+// the header's resting position, not a mid-animation frame.
+function syncHeaderHeight() {
+  const hero = document.querySelector('header')
+  const h2 = document.querySelector('h2')
+  if (!hero || !h2) return
+  hero.setAttribute('data-measuring', 'true')
+  const bottom = Math.ceil(h2.getBoundingClientRect().bottom)
+  hero.removeAttribute('data-measuring')
+  document.documentElement.style.setProperty('--header-height', `${bottom}px`)
+}
+
+let headerHeightBound = false
+function bindHeaderHeight() {
+  if (headerHeightBound) return
+  headerHeightBound = true
+  window.addEventListener('resize', syncHeaderHeight)
 }
 
 // ── Nav button wiring ────────────────────────────────────────────────
@@ -130,6 +155,8 @@ function init() {
   if (!hasNavigated) applyInitialScrolled() // don't clobber the swap animation
   fetchCounts()
   applyCachedCounts()
+  bindHeaderHeight()
+  syncHeaderHeight()
 }
 
 init()

@@ -86,19 +86,19 @@ const { scrapCount = 0, hero = false, scrolled = false } = Astro.props
     font-size: clamp(1rem, 2vw, 1.5rem);
     font-weight: 400;
     margin: 0;
+    width: 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;
     transition: padding-top 0.4s ease;
-    gap: 1rem;
   }
 
   header.hero.scrolled h2 {
     padding-top: 1rem;
   }
 
-  header[data-snaps-measuring],
-  header[data-snaps-measuring] * {
+  header[data-measuring],
+  header[data-measuring] * {
     transition: none !important;
   }
 

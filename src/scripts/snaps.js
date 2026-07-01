@@ -164,17 +164,6 @@ function renderGrid() {
   }
 }
 
-// ─── --snaps-top measurement (aligns shadows under the header) ───────
-function syncSnapsTop() {
-  const hero = document.querySelector('header')
-  const h2 = document.querySelector('h2')
-  if (!hero || !h2) return
-  hero.setAttribute('data-snaps-measuring', 'true')
-  const top = Math.ceil(h2.getBoundingClientRect().bottom)
-  hero.removeAttribute('data-snaps-measuring')
-  overlay.style.setProperty('--snaps-top', `${top}px`)
-}
-
 // ─── Open / close ───────────────────────────────────────────────────
 async function openGallery() {
   _closeToken++ // invalidate any pending close
@@ -185,7 +174,6 @@ async function openGallery() {
     rendered = true
   }
   overlay.style.display = 'flex'
-  syncSnapsTop()
   requestAnimationFrame(() => {
     overlay.style.opacity = '1'
   })
@@ -211,6 +199,3 @@ function handleRoute() {
 }
 
 document.addEventListener('astro:page-load', handleRoute)
-window.addEventListener('resize', () => {
-  if (isGalleryOpen()) syncSnapsTop()
-})
