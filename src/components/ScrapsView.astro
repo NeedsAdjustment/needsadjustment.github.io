@@ -1,15 +1,17 @@
 ---
 import { getCollection, render } from 'astro:content';
 
-const { initialSlug } = Astro.props;
+// If `slug` is provided we render a single scrap (detail view); otherwise we
+// render the full list. Only the content that is actually shown is rendered,
+// so each page stays lightweight.
+const { slug } = Astro.props as { slug?: string };
 
 const allScraps = await getCollection('scraps');
-const scraps = allScraps
-  .sort((a, b) => {
-    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
-    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
-    return dateB - dateA;
-  });
+const scraps = allScraps.sort((a, b) => {
+  const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+  const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+  return dateB - dateA;
+});
 
 function stripMarkdown(text: string): string {
   return text
@@ -28,44 +30,63 @@ function formatDate(date: string | undefined): string | undefined {
   return d.toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-// Pre-render scrap content
-const renderedScraps = await Promise.all(
-  scraps.map(async (scrap) => {
-    const { Content } = await render(scrap);
-    const bodyText = scrap.data.excerpt ?? stripMarkdown(scrap.body ?? '');
-    const date = formatDate(scrap.data.date);
-    const isDetail = initialSlug === scrap.data.slug;
-    return { data: scrap.data, Content, bodyText, date, isDetail };
-  })
-);
+// Detail view data
+const index = slug ? scraps.findIndex((s) => s.data.slug === slug) : -1;
+const current = index >= 0 ? scraps[index] : null;
+const rendered = current ? await render(current) : null;
+// Sorted newest-first, so "prev" (older) is the next index, "next" (newer) is the previous index.
+const prevSlug = current && index < scraps.length - 1 ? scraps[index + 1].data.slug : null;
+const nextSlug = current && index > 0 ? scraps[index - 1].data.slug : null;
+const detailDate = current ? formatDate(current.data.date) : undefined;
+
+// List view data
+const listItems = scraps.map((s) => ({
+  slug: s.data.slug,
+  title: s.data.title,
+  excerpt: s.data.excerpt ?? stripMarkdown(s.body ?? ''),
+  date: formatDate(s.data.date),
+}));
 ---
 
-<div id="view-scraps" data-lenis-prevent style={initialSlug ? 'display:block' : undefined}>
-  <div class="scrap-list">
-    {
-      renderedScraps.map((scrap) => (
-        <article
-          class={'scrap-item' + (scrap.isDetail ? ' detail' : '')}
-          data-slug={scrap.data.slug}
-          style={initialSlug && !scrap.isDetail ? 'display:none' : undefined}
-        >
-          <div class="scrap-left">
-            <b>{scrap.data.title}</b>
-            <span class="scrap-excerpt" style={scrap.isDetail ? 'display:none' : undefined}> — {scrap.bodyText}</span>
-          </div>
-          {scrap.date && <time class="scrap-date">{scrap.date}</time>}
-          <div class="scrap-body" style={scrap.isDetail ? undefined : 'display:none'}>
-            <scrap.Content />
-          </div>
-        </article>
-      ))
-    }
-  </div>
+<div id="view-scraps" data-lenis-prevent transition:animate="fade">
+  {
+    current && rendered ? (
+      <article class="scrap-item detail">
+        <div class="scrap-nav">
+          <span class="scrap-nav-prev">
+            {prevSlug ? <a href={`/scraps/${prevSlug}/`}>← prev</a> : <a data-disabled>← prev</a>}
+          </span>
+          <span class="scrap-nav-list"><a href="/scraps/">list</a></span>
+          <span class="scrap-nav-next">
+            {nextSlug ? <a href={`/scraps/${nextSlug}/`}>next →</a> : <a data-disabled>next →</a>}
+          </span>
+        </div>
+        <div class="scrap-left">
+          <b>{current.data.title}</b>
+        </div>
+        {detailDate && <time class="scrap-date">{detailDate}</time>}
+        <div class="scrap-body">
+          <rendered.Content />
+        </div>
+      </article>
+    ) : (
+      <div class="scrap-list">
+        {listItems.map((item) => (
+          <a class="scrap-item" href={`/scraps/${item.slug}/`}>
+            <div class="scrap-left">
+              <b>{item.title}</b>
+              <span class="scrap-excerpt"> — {item.excerpt}</span>
+            </div>
+            {item.date && <time class="scrap-date">{item.date}</time>}
+          </a>
+        ))}
+      </div>
+    )
+  }
 </div>
 
 <style is:global>
   #view-scraps {
-    display: none;
     position: fixed;
     opacity: 1;
     width: 80%;
@@ -75,31 +96,38 @@ const renderedScraps = await Promise.all(
     overflow-y: auto;
   }
 
+  .scrap-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
   .scrap-item {
-    padding-top: 2rem;
     display: flex;
     flex-wrap: wrap;
+    gap: 1rem;
+    text-decoration: none;
+    color: inherit;
   }
-  .scrap-item:first-child {
-    padding-top: 0;
+  a.scrap-item {
+    cursor: pointer;
   }
 
   .scrap-left {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: var(--text-secondary, var(--text-color));
+    color: var(--text-color);
     opacity: 0.75;
     flex: 1;
     min-width: 0;
-    cursor: pointer;
   }
 
   .scrap-left > b {
     color: var(--text-color);
     opacity: 1;
   }
-  .scrap-item:hover > .scrap-left > b {
+  a.scrap-item:hover > .scrap-left > b {
     color: var(--link-colour);
   }
 
@@ -109,13 +137,6 @@ const renderedScraps = await Promise.all(
 
   .scrap-body {
     flex-basis: 100%;
-  }
-
-  .scrap-item.detail .scrap-excerpt {
-    display: none;
-  }
-
-  .scrap-body {
     line-height: 1.5rem;
     text-align: justify;
     text-wrap: pretty;
@@ -123,6 +144,31 @@ const renderedScraps = await Promise.all(
 
   .scrap-body .email span:nth-child(odd) {
     display: none;
+  }
+
+  .scrap-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    flex-basis: 100%;
+  }
+  .scrap-nav a {
+    cursor: pointer;
+    color: var(--link-colour);
+    text-decoration: none;
+  }
+  .scrap-nav a:hover {
+    text-decoration: underline;
+  }
+  .scrap-nav a[data-disabled] {
+    color: var(--ui-border);
+    cursor: default;
+  }
+  .scrap-nav a[data-disabled]:hover {
+    text-decoration: none;
+  }
+  .scrap-nav-list {
+    text-align: center;
   }
 
   @media (max-width: 500px) {

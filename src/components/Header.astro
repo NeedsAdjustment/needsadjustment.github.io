@@ -1,16 +1,16 @@
 ---
 
-const { scrapCount = 0, hero = false } = Astro.props
+const { scrapCount = 0, hero = false, scrolled = false } = Astro.props
 
 ---
 
-<header class:list={{ hero }}>
+<header class:list={{ hero, scrolled }}>
   <h1>Joshua Soong</h1>
   <h2>
     <tera class="category" id="leftCreature"></tera>
     <a class="category" data-count-key="coding" href='https://github.com/NeedsAdjustment'>coding<num>0</num></a>
-    <a class="category" data-scraps>scraps<num>{scrapCount}</num></a>
-    <a class="category" data-snaps>snaps<num>0</num></a>
+    <a class="category" data-scraps href="/scraps/">scraps<num>{scrapCount}</num></a>
+    <a class="category" data-snaps href="/snaps/">snaps<num>0</num></a>
     <a class="category" data-count-key="design" href='https://dribbble.com/NeedsAdjustment'>design<num>0</num></a>
     <tera class="category" id="rightCreature"></tera>
   </h2>
@@ -19,6 +19,9 @@ const { scrapCount = 0, hero = false } = Astro.props
     <i class="arrow2 ph-bold ph-caret-down"></i>
   </div>
 </header>
+
+{/* Count fetching + re-application lives in route.js so the numbers survive
+    ClientRouter navigations even if the header isn't persisted. */}
 
 <style>
   header {
@@ -33,6 +36,7 @@ const { scrapCount = 0, hero = false } = Astro.props
     -webkit-user-select: none;
     user-select: none;
     transition: transform 0.4s ease;
+    gap: clamp(0.1rem, 0.5rem, 20px);
   }
 
   header.hero {
@@ -79,19 +83,14 @@ const { scrapCount = 0, hero = false } = Astro.props
   }
 
   h2 {
-    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    font-size: clamp(1rem, 2vw, 1.5rem);
     font-weight: 400;
     margin: 0;
-    padding-top: 2rem;
     display: flex;
-    width: 99%;
     justify-content: space-around;
     align-items: center;
     transition: padding-top 0.4s ease;
-  }
-
-  header.hero h2 {
-    padding-top: 0;
+    gap: 1rem;
   }
 
   header.hero.scrolled h2 {
@@ -178,25 +177,3 @@ const { scrapCount = 0, hero = false } = Astro.props
   }
 
 </style>
-
-<script>
-  const GITHUB_USERNAME = "NeedsAdjustment";
-  const DRIBBBLE_PROXY_URL = "https://spren-dribbleshotsgrabber.val.run/";
-
-  function updateNum(category: string, value: number | string) {
-    const num = document.querySelector(`h2 a.category[data-count-key="${category}"] num`);
-    if (num) {
-      num.textContent = String(value);
-    }
-  }
-
-  fetch(`https://api.github.com/users/${GITHUB_USERNAME}`)
-    .then((r) => r.json())
-    .then((data) => updateNum('coding', data.public_repos))
-    .catch(() => {});
-
-  fetch(DRIBBBLE_PROXY_URL)
-    .then((r) => r.json())
-    .then((data) => updateNum('design', data.shots_count))
-    .catch(() => {});
-</script>

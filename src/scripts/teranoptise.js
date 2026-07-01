@@ -153,6 +153,18 @@ function initTeranoptise() {
   }
 }
 
-if (document.readyState !== 'loading') initTeranoptise()
-else document.addEventListener('DOMContentLoaded', initTeranoptise)
-document.addEventListener('astro:page-load', initTeranoptise)
+// Idempotent ensure: populate creatures if they're missing (fresh header)
+// while leaving them alone if they were persisted (text already there).
+function ensureCreatures() {
+  const left = document.getElementById('leftCreature')
+  const right = document.getElementById('rightCreature')
+  if (!left || !right) return
+  // If creatures already have content, they survived via persist — leave them.
+  if (left.dataset.teraInit === '1') return
+  left.dataset.teraInit = '1'
+  initTeranoptise()
+}
+
+if (document.readyState !== 'loading') ensureCreatures()
+else document.addEventListener('DOMContentLoaded', ensureCreatures)
+document.addEventListener('astro:page-load', ensureCreatures)

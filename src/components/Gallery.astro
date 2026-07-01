@@ -1,11 +1,11 @@
-<div class="snaps-overlay" role="dialog" aria-label="Photo gallery" data-lenis-prevent>
+<div class="snaps-overlay" role="dialog" aria-label="Photo gallery" data-lenis-prevent transition:persist="snaps-overlay">
   <div class="snaps-shadow-top"></div>
   <masonry-grid-lanes min-column-width=175 gap=16>
   </masonry-grid-lanes>
   <div class="snaps-shadow-bottom"></div>
 </div>
 
-<div class="snaps-lightbox">
+<div class="snaps-lightbox" transition:persist="snaps-lightbox">
   <img class="snaps-lightbox-img" alt="">
   <i class="snaps-spinner"></i>
   <button class="snaps-prev" aria-label="Previous">
@@ -49,12 +49,12 @@
   .snaps-shadow-top {
     top: 0;
     height: calc(var(--snaps-top) + 1rem);
-    background: linear-gradient(to bottom, black, transparent);
+    background: linear-gradient(to bottom, var(--base-color), transparent);
   }
   .snaps-shadow-bottom {
     bottom: 0;
     height: var(--snaps-top);
-    background: linear-gradient(to top, black, transparent);
+    background: linear-gradient(to top, var(--base-color), transparent);
   }
 
   masonry-grid-lanes {

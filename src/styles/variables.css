@@ -2,6 +2,7 @@
   --darkmode: 0;
 
   /* Flexoki Light */
+  --base-color: white;
   --background-color: #fffcf0;
   --text-color: #6f6e68;
   --secondary-background: #d4d0c8;
@@ -45,6 +46,7 @@
 
 html.dark {
   body {
+    --base-color: black;
     --background-color: #24273a;
     --text-color: #cad3f5;
     --secondary-background: #363a4f;

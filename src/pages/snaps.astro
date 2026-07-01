@@ -1,16 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import HomeShell from '../components/HomeShell.astro';
-import { getCollection } from 'astro:content';
-
-const allScraps = await getCollection('scraps');
-const scrapCount = allScraps.length;
 ---
 
-<Layout>
-  <HomeShell scrapCount={scrapCount} />
-</Layout>
-
-<script>
-  window.__activeView = 'snaps';
-</script>
+<Layout />

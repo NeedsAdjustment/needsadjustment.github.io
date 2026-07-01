@@ -1,0 +1,18 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ScrapsView from '../../components/ScrapsView.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allScraps = await getCollection('scraps');
+  return allScraps.map((s) => ({
+    params: { slug: s.data.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+---
+
+<Layout>
+  <ScrapsView slug={slug} />
+</Layout>

@@ -1,6 +1,17 @@
 ---
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import { getCollection } from 'astro:content';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import Gallery from '../components/Gallery.astro';
+
+const allScraps = await getCollection('scraps');
+const scrapCount = allScraps.length;
+
+// Home page shows the full hero; scraps/snaps pages start in the compact state.
+const path = Astro.url.pathname;
+const isHome = path === '/';
 ---
 
 <!DOCTYPE html>
@@ -10,14 +21,42 @@ import Gallery from '../components/Gallery.astro';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="darkreader-lock" />
     <title>Joshua Soong</title>
-    <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2" defer></script>
+    {/* Phosphor icons via static stylesheets (not the JS loader) so the styles
+        live in every page's <head> and survive ClientRouter head swaps. */}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css" />
+    {/* Blocking theme script — applies the theme class before first paint so
+        there is never a flash of the wrong theme (on load or after a swap). */}
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem('theme');
+        const theme =
+          stored === 'light' || stored === 'dark'
+            ? stored
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        localStorage.setItem('theme', theme);
+        const html = document.documentElement;
+        html.classList.toggle('dark', theme === 'dark');
+        html.style.setProperty('--darkmode', theme === 'dark' ? '1' : '0');
+      })();
+    </script>
+    <ClientRouter />
   </head>
   <body>
+    <Header hero={true} scrapCount={scrapCount} scrolled={!isHome} transition:persist="site-header" />
     <slot />
+    <Footer transition:persist="site-footer" />
+    {/* Gallery's two root elements carry their own explicit persist names. */}
     <Gallery />
     <script>
       import '../scripts/inittheme.js';
-      import '../scripts/scraps.js';
+      import '../scripts/route.js';
+      import '../scripts/scrolling.js';
+      import '../scripts/textgrow.js';
+      import '../scripts/teranoptise.js';
     </script>
   </body>
 </html>

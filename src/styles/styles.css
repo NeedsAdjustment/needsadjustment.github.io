@@ -10,7 +10,7 @@ html::-webkit-scrollbar {
 :where(html) {
   container-name: root;
   container-type: normal;
-  font-size: clamp(0.7rem, 2vw, 1rem);
+  font-size: 1rem;
   box-sizing: border-box;
   height: 100%;
 }
