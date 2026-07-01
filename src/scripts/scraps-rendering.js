@@ -28,7 +28,12 @@ export function showScrapList(viewScraps, pushUrl, push = true) {
 export function showScrapDetail(viewScraps, pushUrl, slug, push = true) {
   if (!viewScraps) return
   document.querySelectorAll('.scrap-item').forEach((item) => {
-    setScrapItemState(item, item.dataset.slug === slug)
+    if (item.dataset.slug === slug) {
+      setScrapItemState(item, true)
+    } else {
+      setScrapItemState(item, false)
+      item.style.display = 'none'
+    }
   })
   viewScraps.scrollTop = 0
   if (push) pushUrl(`/scraps/${slug}/`)

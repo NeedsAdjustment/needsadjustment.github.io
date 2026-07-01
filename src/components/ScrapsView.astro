@@ -77,7 +77,6 @@ const renderedScraps = await Promise.all(
 
   .scrap-item {
     padding-top: 2rem;
-    cursor: pointer;
     display: flex;
     flex-wrap: wrap;
   }
@@ -93,6 +92,7 @@ const renderedScraps = await Promise.all(
     opacity: 0.75;
     flex: 1;
     min-width: 0;
+    cursor: pointer;
   }
 
   .scrap-left > b {
@@ -119,6 +119,10 @@ const renderedScraps = await Promise.all(
     line-height: 1.5rem;
     text-align: justify;
     text-wrap: pretty;
+  }
+
+  .scrap-body .email span:nth-child(odd) {
+    display: none;
   }
 
   @media (max-width: 500px) {

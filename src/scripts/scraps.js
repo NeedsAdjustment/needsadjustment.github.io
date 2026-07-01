@@ -90,6 +90,7 @@ function restoreFromPath() {
   if (!viewScraps) return
   const slug = getScrapSlug()
   if (location.pathname === '/scraps/') {
+    window.__resetScrollAtTop?.()
     openScrapsList(false)
   } else if (slug) {
     openScrapsDetail(slug, false)
@@ -107,6 +108,7 @@ if (scrapsBtn) {
       e.preventDefault()
       if (window.__activeView === 'scraps') {
         if (getScrapSlug()) {
+          window.__resetScrollAtTop?.()
           openScrapsList()
         } else {
           enterHomeMode()
@@ -123,6 +125,9 @@ if (scrapsBtn) {
       if (!slug) return
       const body = item.querySelector('.scrap-body')
       if (body && body.style.display === 'block') {
+        // Detail is open — only clicking scrap-left (title area) goes back to list
+        if (!e.target.closest('.scrap-left')) return
+        window.__resetScrollAtTop?.()
         openScrapsList()
       } else {
         openScrapsDetail(slug)
