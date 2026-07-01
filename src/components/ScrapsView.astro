@@ -1,0 +1,129 @@
+---
+import { getCollection, render } from 'astro:content';
+
+const { initialSlug } = Astro.props;
+
+const allScraps = await getCollection('scraps');
+const scraps = allScraps
+  .sort((a, b) => {
+    const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
+    const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
+    return dateB - dateA;
+  });
+
+function stripMarkdown(text: string): string {
+  return text
+    .replace(/!\[.*?\]\(.*?\)/g, '')
+    .replace(/\[([^\]]*)\]\(.*?\)/g, '$1')
+    .replace(/[#*_~`>|]/g, '')
+    .replace(/\n+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function formatDate(date: string | undefined): string | undefined {
+  if (!date) return undefined;
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return date;
+  return d.toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+// Pre-render scrap content
+const renderedScraps = await Promise.all(
+  scraps.map(async (scrap) => {
+    const { Content } = await render(scrap);
+    const bodyText = scrap.data.excerpt ?? stripMarkdown(scrap.body ?? '');
+    const date = formatDate(scrap.data.date);
+    const isDetail = initialSlug === scrap.data.slug;
+    return { data: scrap.data, Content, bodyText, date, isDetail };
+  })
+);
+---
+
+<div id="view-scraps" data-lenis-prevent style={initialSlug ? 'display:block' : undefined}>
+  <div class="scrap-list">
+    {
+      renderedScraps.map((scrap) => (
+        <article
+          class={'scrap-item' + (scrap.isDetail ? ' detail' : '')}
+          data-slug={scrap.data.slug}
+          style={initialSlug && !scrap.isDetail ? 'display:none' : undefined}
+        >
+          <div class="scrap-left">
+            <b>{scrap.data.title}</b>
+            <span class="scrap-excerpt" style={scrap.isDetail ? 'display:none' : undefined}> — {scrap.bodyText}</span>
+          </div>
+          {scrap.date && <time class="scrap-date">{scrap.date}</time>}
+          <div class="scrap-body" style={scrap.isDetail ? undefined : 'display:none'}>
+            <scrap.Content />
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</div>
+
+<style is:global>
+  #view-scraps {
+    display: none;
+    position: fixed;
+    opacity: 1;
+    width: 80%;
+    max-width: 1600px;
+    z-index: 5;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  .scrap-item {
+    padding-top: 2rem;
+    cursor: pointer;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .scrap-item:first-child {
+    padding-top: 0;
+  }
+
+  .scrap-left {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-secondary, var(--text-color));
+    opacity: 0.75;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .scrap-left > b {
+    color: var(--text-color);
+    opacity: 1;
+  }
+  .scrap-item:hover > .scrap-left > b {
+    color: var(--link-colour);
+  }
+
+  .scrap-date {
+    flex-shrink: 0;
+  }
+
+  .scrap-body {
+    flex-basis: 100%;
+  }
+
+  .scrap-item.detail .scrap-excerpt {
+    display: none;
+  }
+
+  .scrap-body {
+    line-height: 1.5rem;
+    text-align: justify;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 500px) {
+    .scrap-excerpt {
+      display: none;
+    }
+  }
+</style>

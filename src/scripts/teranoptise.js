@@ -3,6 +3,8 @@ function randomChoice(arr, used) {
   return available[Math.floor(Math.random() * available.length)]
 }
 
+let resizeHandler
+
 const standaloneOddities = ['*', ',', '-']
 const tails = {
   right: ['L', 'A', 'C', 'v', 'F', 'I', 'O', 'S', 'W', 'Ź'],
@@ -101,11 +103,16 @@ function teranoptise(numChars, direction, portals = false) {
 }
 
 function initTeranoptise() {
+  if (resizeHandler) {
+    window.removeEventListener('resize', resizeHandler)
+  }
+
   let currentCreatureWidth = getCreatureWidth()
   updateCreatures(true)
-  window.addEventListener('resize', function () {
+  resizeHandler = function () {
     updateCreatures(false)
-  })
+  }
+  window.addEventListener('resize', resizeHandler)
 
   function getCreatureWidth() {
     const viewportWidth = window.innerWidth
@@ -128,12 +135,10 @@ function initTeranoptise() {
       const leftCreature = document.getElementById('leftCreature')
       const rightCreature = document.getElementById('rightCreature')
       if (!leftCreature || !rightCreature) return
-      if (newCreatureWidth === 0) {
-        leftCreature.style.display = 'none'
-        rightCreature.style.display = 'none'
-      } else {
-        leftCreature.style.display = ''
-        rightCreature.style.display = ''
+      const showCreatures = newCreatureWidth !== 0
+      leftCreature.style.display = showCreatures ? '' : 'none'
+      rightCreature.style.display = showCreatures ? '' : 'none'
+      if (showCreatures) {
         leftCreature.innerText = teranoptise(newCreatureWidth, 'left', false)
         rightCreature.innerText = teranoptise(newCreatureWidth, 'right', false)
         if (newCreatureWidth === 1) {

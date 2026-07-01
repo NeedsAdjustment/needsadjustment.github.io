@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Get the H1 element
   const h1 = document.querySelector('h1')
   if (!h1) return // Exit if h1 doesn't exist
+  const header = h1.closest('header')
+  if (header && !header.classList.contains('hero')) return // Only needed on homepage hero
 
   const originalText = h1.textContent
 

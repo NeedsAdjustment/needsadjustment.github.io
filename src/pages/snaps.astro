@@ -3,7 +3,6 @@ import Layout from '../layouts/Layout.astro';
 import HomeShell from '../components/HomeShell.astro';
 import { getCollection } from 'astro:content';
 
-// Count scrap files
 const allScraps = await getCollection('scraps');
 const scrapCount = allScraps.length;
 ---
@@ -11,3 +10,7 @@ const scrapCount = allScraps.length;
 <Layout>
   <HomeShell scrapCount={scrapCount} />
 </Layout>
+
+<script>
+  window.__activeView = 'snaps';
+</script>

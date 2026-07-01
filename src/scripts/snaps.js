@@ -4,36 +4,67 @@
  * HTML structure and CSS live in the SnapsGallery.astro component.
  */
 import { adoptMasonryGridLanesStyles, defineMasonryGridLanes } from '@schalkneethling/masonry-gridlanes-wc'
+import { isSnapsPath, pushUrl } from './navigation.js'
 
 const SNAPS_PROXY_URL = 'https://spren-immichgrabber.val.run/'
 
 // ─── State ──────────────────────────────────────────────────────────
 let assets = []
 let currentIndex = -1
+let _closeToken = 0
 
 // ─── DOM refs (elements provided by SnapsGallery.astro) ─────────────
 const overlay = document.querySelector('.snaps-overlay')
 const grid = overlay?.querySelector('masonry-grid-lanes')
-const closeBtn = document.querySelector('.snaps-close')
 const lightbox = document.querySelector('.snaps-lightbox')
 const lightboxImg = lightbox?.querySelector('.snaps-lightbox-img')
 const lightboxSpinner = lightbox?.querySelector('.snaps-spinner')
 const prevBtn = lightbox?.querySelector('.snaps-prev')
 const nextBtn = lightbox?.querySelector('.snaps-next')
 
-if (!overlay || !grid || !closeBtn || !lightbox || !lightboxImg || !lightboxSpinner || !prevBtn || !nextBtn) {
+if (!overlay || !grid || !lightbox || !lightboxImg || !lightboxSpinner || !prevBtn || !nextBtn) {
   throw new Error('SnapsGallery: required DOM elements not found — is SnapsGallery.astro included in the page?')
+}
+
+function getSnapsButton() {
+  return document.querySelector('h2 a.category[data-snaps]')
+}
+
+function setSnapsButtonActive(active) {
+  getSnapsButton()?.classList.toggle('active', active)
+}
+
+function isGalleryOpen() {
+  return overlay.style.display === 'flex' || getComputedStyle(overlay).display === 'flex'
+}
+
+function setBodyScrollLocked(locked) {
+  document.body.style.overflow = locked ? 'hidden' : ''
+}
+
+function setSnapsCount(value) {
+  const num = getSnapsButton()?.querySelector('num')
+  if (num) num.textContent = String(value)
+}
+
+async function loadAlbum() {
+  const data = await fetchAlbum()
+  if (!data) return false
+
+  if (typeof data.assetCount === 'number') {
+    setSnapsCount(data.assetCount)
+  }
+  if (data.assets) {
+    assets = data.assets
+  }
+
+  return assets.length > 0
 }
 
 // ─── Init web component ─────────────────────────────────────────────
 defineMasonryGridLanes()
 
 // ─── Event listeners ───────────────────────────────────────────────
-closeBtn.addEventListener('click', () => {
-  if (lightbox.style.display !== 'none') closeLightbox()
-  else closeGallery()
-})
-
 lightbox.addEventListener('click', (e) => {
   if (e.target === lightbox) closeLightbox()
 })
@@ -60,28 +91,8 @@ document.addEventListener('keydown', (e) => {
   }
 })
 
-// ─── Initial state ─────────────────────────────────────────────────
-closeBtn.style.display = 'none'
-
 // ─── Gallery open / close ───────────────────────────────────────────
-function openGallery() {
-  overlay.style.display = 'flex'
-  closeBtn.style.display = ''
-  requestAnimationFrame(() => {
-    overlay.style.opacity = '1'
-  })
-  document.body.style.overflow = 'hidden'
-}
-
-function closeGallery() {
-  overlay.style.opacity = '0'
-  closeLightbox()
-  setTimeout(() => {
-    overlay.style.display = 'none'
-    closeBtn.style.display = 'none'
-    document.body.style.overflow = ''
-  }, 300)
-}
+// (URL-synced openGallery/closeGallery are defined below)
 
 function showLightbox(index) {
   if (!assets.length) return
@@ -155,6 +166,91 @@ async function fetchAlbum() {
   }
 }
 
+// ─── URL helpers ────────────────────────────────────────────────────
+// ─── Global helper for other modules ────────────────────────────────
+window.closeSnapsGallery = function () {
+  if (isGalleryOpen()) {
+    closeGallery(false)
+  }
+}
+
+// ─── Hero visibility helpers ─────────────────────────────────────────
+function moveHeaderUp() {
+  window.__headerState?.(false)
+}
+
+function restoreHeader() {
+  if (window.__activeView === 'scraps') return
+  window.__headerState?.(true)
+}
+
+function syncSnapsTop() {
+  const hero = document.querySelector('header.hero')
+  const h2 = document.querySelector('h2')
+  if (!hero || !h2) return
+
+  hero.setAttribute('data-snaps-measuring', 'true')
+  const top = Math.ceil(h2.getBoundingClientRect().bottom)
+  hero.removeAttribute('data-snaps-measuring')
+  overlay.style.setProperty('--snaps-top', `${top}px`)
+}
+
+// ─── Gallery open / close with URL sync ─────────────────────────────
+function openGallery(push = true) {
+  _closeToken++ // invalidate any pending close timeout
+  overlay.style.display = 'flex'
+  window.__activeView = 'snaps'
+  setSnapsButtonActive(true)
+
+  moveHeaderUp()
+  syncSnapsTop()
+  requestAnimationFrame(() => {
+    overlay.style.opacity = '1'
+  })
+  setBodyScrollLocked(true)
+  if (push) pushUrl('/snaps/')
+}
+
+function closeGallery(push = true) {
+  const token = ++_closeToken
+  overlay.style.opacity = '0'
+  closeLightbox()
+  window.__activeView = 'home'
+  window.__resetScrollAtTop?.()
+  setSnapsButtonActive(false)
+  if (push) {
+    window.__resetScrapsView?.()
+  }
+  restoreHeader()
+  setTimeout(() => {
+    if (_closeToken !== token) return // gallery was re-opened since close
+    overlay.style.display = 'none'
+    setBodyScrollLocked(false)
+  }, 300)
+  if (push) pushUrl('/')
+}
+
+// ─── Restore from path ──────────────────────────────────────────────
+function restoreFromPath() {
+  if (isSnapsPath()) {
+    // If assets aren't loaded yet, fetch and open
+    if (!assets.length) {
+      fetchAlbum().then((data) => {
+        if (data && data.assets) {
+          assets = data.assets
+          renderGrid()
+          openGallery(false)
+        }
+      })
+    } else {
+      renderGrid()
+      openGallery(false)
+    }
+  } else {
+    if (overlay.style.display !== 'none') closeGallery(false)
+  }
+}
+
 // ─── Init ───────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
   // Find the snaps button
@@ -167,31 +263,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     await document.fonts.ready
   }
 
-  // Load count on page load
-  fetchAlbum().then((data) => {
-    if (data && typeof data.assetCount === 'number') {
-      const num = snapsBtn.querySelector('num')
-      if (num) num.textContent = String(data.assetCount)
-      if (data.assets) assets = data.assets
-    }
-  })
+  // Fetch album data
+  await loadAlbum()
 
-  // Open gallery on click
+  // Auto-open if on /snaps/
+  if (isSnapsPath()) {
+    window.__headerState?.(false)
+    if (assets.length) {
+      renderGrid()
+      openGallery(false)
+    }
+  }
+
+  // Open/close gallery on click
   snapsBtn.addEventListener('click', async (e) => {
     e.preventDefault()
 
-    // If we don't have assets yet, fetch them now
-    if (!assets.length) {
-      const data = await fetchAlbum()
-      if (data && data.assets) {
-        assets = data.assets
-        const num = snapsBtn.querySelector('num')
-        if (num) num.textContent = String(data.assetCount ?? assets.length)
-      }
+    const galleryOpen = isGalleryOpen()
+
+    if (galleryOpen) {
+      closeGallery()
+      return
     }
+
+    // Exit scraps mode if active
+    if (typeof window.exitScrapsMode === 'function') {
+      window.exitScrapsMode()
+    }
+
+    if (!assets.length) await loadAlbum()
 
     if (!assets.length) return
     renderGrid()
     openGallery()
   })
+
+  window.addEventListener('resize', () => {
+    if (isGalleryOpen()) syncSnapsTop()
+  })
+
+  // Back/forward navigation
+  window.addEventListener('popstate', restoreFromPath)
 })

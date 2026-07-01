@@ -1,11 +1,17 @@
-<header>
+---
+
+const { scrapCount = 0, hero = false } = Astro.props
+
+---
+
+<header class:list={{ hero }}>
   <h1>Joshua Soong</h1>
   <h2>
     <tera class="category" id="leftCreature"></tera>
-    <a class="category" href='https://github.com/NeedsAdjustment'>coding<num>0</num></a>
-    <a class="category">scraps<num>0</num></a>
+    <a class="category" data-count-key="coding" href='https://github.com/NeedsAdjustment'>coding<num>0</num></a>
+    <a class="category" data-scraps>scraps<num>{scrapCount}</num></a>
     <a class="category" data-snaps>snaps<num>0</num></a>
-    <a class="category" href='https://dribbble.com/NeedsAdjustment'>design<num>0</num></a>
+    <a class="category" data-count-key="design" href='https://dribbble.com/NeedsAdjustment'>design<num>0</num></a>
     <tera class="category" id="rightCreature"></tera>
   </h2>
   <div class="scroll-indicator">
@@ -17,16 +23,30 @@
 <style>
   header {
     position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0;
     width: 100%;
     max-width: 1200px;
     z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: center;
-    -webkit-user-select: none; /* Safari */
+    -webkit-user-select: none;
     user-select: none;
+    transition: transform 0.4s ease;
+  }
+
+  header.hero {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  header.hero.scrolled {
+    transform: translateY(-50vh);
+  }
+
+  header:not(.hero) h1,
+  header:not(.hero) .scroll-indicator {
+    display: none;
   }
 
   h1 {
@@ -41,6 +61,17 @@
     transition: opacity 0.4s ease, max-height 0.4s ease, margin 0.4s ease, padding 0.4s ease;
   }
 
+  header.hero.scrolled h1 {
+    opacity: 0;
+    max-height: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  header.hero.scrolled .scroll-indicator {
+    display: none;
+  }
+
   tera {
     user-select: none;
     font-family: 'Teranoptia';
@@ -51,12 +82,25 @@
     font-size: clamp(1.2rem, 2vw, 1.5rem);
     font-weight: 400;
     margin: 0;
-    padding-top: 0;
+    padding-top: 2rem;
     display: flex;
     width: 99%;
     justify-content: space-around;
     align-items: center;
     transition: padding-top 0.4s ease;
+  }
+
+  header.hero h2 {
+    padding-top: 0;
+  }
+
+  header.hero.scrolled h2 {
+    padding-top: 1rem;
+  }
+
+  header[data-snaps-measuring],
+  header[data-snaps-measuring] * {
+    transition: none !important;
   }
 
   h2 a.category {
@@ -76,6 +120,16 @@
   h2 a.category:hover {
     background: color-mix(in srgb, var(--secondary-background) 70%, transparent);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  h2 a.category.active {
+    background: var(--link-colour);
+    border-color: var(--link-colour);
+    color: var(--background-color);
+  }
+  h2 a.category.active num {
+    color: var(--background-color);
+    font-feature-settings: 'ss04';
   }
 
   num {
@@ -130,13 +184,9 @@
   const DRIBBBLE_PROXY_URL = "https://spren-dribbleshotsgrabber.val.run/";
 
   function updateNum(category: string, value: number | string) {
-    const links = document.querySelectorAll('h2 a.category');
-    for (const link of links) {
-      const num = link.querySelector('num');
-      if (num && link.textContent?.trim().startsWith(category)) {
-        num.textContent = String(value);
-        break;
-      }
+    const num = document.querySelector(`h2 a.category[data-count-key="${category}"] num`);
+    if (num) {
+      num.textContent = String(value);
     }
   }
 
