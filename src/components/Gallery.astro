@@ -26,7 +26,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: calc(100vw - 2rem);
     height: 100dvh;
     z-index: 5;
     display: none;
@@ -37,6 +37,8 @@
     transition: opacity 0.3s ease;
     /* Top padding pushes content below the fixed top shadow. */
     padding-top: var(--header-height);
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
   .snaps-shadow-top,
@@ -59,11 +61,11 @@
   }
 
   masonry-grid-lanes {
+    max-width: 100%;
+    overflow-x: hidden;
     display: block;
     box-sizing: border-box;
-    margin: 0 12px calc(var(--header-height) * 2);
     position: relative;
-    max-width: 100%;
   }
 
   .snaps-lightbox {
