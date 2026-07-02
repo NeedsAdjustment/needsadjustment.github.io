@@ -1,91 +1,45 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
+import ScrapsList from './ScrapsList.astro';
+import ScrapsDetail from './ScrapsDetail.astro';
+import { sortScrapsNewestFirst } from '../lib/scraps.ts';
 
-// If `slug` is provided we render a single scrap (detail view); otherwise we
-// render the full list. Only the content that is actually shown is rendered,
-// so each page stays lightweight.
-const { slug } = Astro.props as { slug?: string };
+interface Props {
+  slug?: string;
+}
+
+const { slug } = Astro.props;
 
 const allScraps = await getCollection('scraps');
-const scraps = allScraps.sort((a, b) => {
-  const dateA = a.data.date ? new Date(a.data.date).getTime() : 0;
-  const dateB = b.data.date ? new Date(b.data.date).getTime() : 0;
-  return dateB - dateA;
-});
-
-function stripMarkdown(text: string): string {
-  return text
-    .replace(/!\[.*?\]\(.*?\)/g, '')
-    .replace(/\[([^\]]*)\]\(.*?\)/g, '$1')
-    .replace(/[#*_~`>|]/g, '')
-    .replace(/\n+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function formatDate(date: string | undefined): string | undefined {
-  if (!date) return undefined;
-  const d = new Date(date);
-  if (isNaN(d.getTime())) return date;
-  return d.toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-// Detail view data
-const index = slug ? scraps.findIndex((s) => s.data.slug === slug) : -1;
-const current = index >= 0 ? scraps[index] : null;
-const rendered = current ? await render(current) : null;
-// Sorted newest-first, so "prev" (older) is the next index, "next" (newer) is the previous index.
-const prevSlug = current && index < scraps.length - 1 ? scraps[index + 1].data.slug : null;
-const nextSlug = current && index > 0 ? scraps[index - 1].data.slug : null;
-const detailDate = current ? formatDate(current.data.date) : undefined;
-
-// List view data
-const listItems = scraps.map((s) => ({
-  slug: s.data.slug,
-  title: s.data.title,
-  excerpt: s.data.excerpt ?? stripMarkdown(s.body ?? ''),
-  date: formatDate(s.data.date),
-}));
+const scraps = sortScrapsNewestFirst(allScraps);
 ---
 
-<div id="view-scraps" data-lenis-prevent transition:animate="fade">
-  {
-    current && rendered ? (
-      <article class="scrap-item detail">
-        <div class="scrap-nav">
-          <span class="scrap-nav-prev">
-            {prevSlug ? <a href={`/scraps/${prevSlug}/`}>← prev</a> : <a data-disabled>← prev</a>}
-          </span>
-          <span class="scrap-nav-list"><a href="/scraps/">list</a></span>
-          <span class="scrap-nav-next">
-            {nextSlug ? <a href={`/scraps/${nextSlug}/`}>next →</a> : <a data-disabled>next →</a>}
-          </span>
-        </div>
-        <div class="scrap-left">
-          <b>{current.data.title}</b>
-        </div>
-        {detailDate && <time class="scrap-date">{detailDate}</time>}
-        <div class="scrap-body">
-          <rendered.Content />
-        </div>
-      </article>
-    ) : (
-      <div class="scrap-list">
-        {listItems.map((item) => (
-          <a class="scrap-item" href={`/scraps/${item.slug}/`}>
-            <div class="scrap-left">
-              <b>{item.title}</b>
-              <span class="scrap-excerpt"> — {item.excerpt}</span>
-            </div>
-            {item.date && <time class="scrap-date">{item.date}</time>}
-          </a>
-        ))}
-      </div>
-    )
-  }
+<div id="view-scraps" class="view-scraps-hidden" data-lenis-prevent transition:animate="fade">
+  {slug ? <ScrapsDetail scraps={scraps} slug={slug} /> : <ScrapsList scraps={scraps} />}
 </div>
 
+<script>
+  function showScraps() {
+    const view = document.getElementById('view-scraps')
+    if (!view) return
+    // Always wait for header-settled — it fires immediately on initial load
+    // and after the flip animation completes on navigations, so
+    // --header-height is always correct when the content appears.
+    document.addEventListener('header-settled', function onSettled() {
+      document.removeEventListener('header-settled', onSettled)
+      view.classList.remove('view-scraps-hidden')
+    })
+  }
+  showScraps()
+  document.addEventListener('astro:page-load', showScraps)
+</script>
+
 <style is:global>
+  #view-scraps.view-scraps-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
   #view-scraps {
     position: fixed;
     width: 100vw;

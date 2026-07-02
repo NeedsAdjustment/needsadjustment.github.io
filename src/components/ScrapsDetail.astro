@@ -1,0 +1,46 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import { formatDate } from '../lib/scraps.ts';
+
+interface Props {
+  scraps: CollectionEntry<'scraps'>[];
+  slug: string;
+}
+
+const { scraps, slug } = Astro.props;
+
+const index = scraps.findIndex((s) => s.data.slug === slug);
+const current = index >= 0 ? scraps[index] : null;
+const rendered = current ? await render(current) : null;
+
+// Sorted newest-first, so "older" is the next index, "newer" is the previous index.
+const olderSlug = current && index < scraps.length - 1 ? scraps[index + 1].data.slug : null;
+const newerSlug = current && index > 0 ? scraps[index - 1].data.slug : null;
+const detailDate = current ? formatDate(current.data.date) : undefined;
+---
+
+{
+  current && rendered ? (
+    <article class="scrap-item detail">
+      <div class="scrap-nav">
+        <span class="scrap-nav-prev">
+          {olderSlug ? <a href={`/scraps/${olderSlug}/`}>← older</a> : <a data-disabled>← older</a>}
+        </span>
+        <span class="scrap-nav-list"><a href="/scraps/">list</a></span>
+        <span class="scrap-nav-next">
+          {newerSlug ? <a href={`/scraps/${newerSlug}/`}>newer →</a> : <a data-disabled>newer →</a>}
+        </span>
+      </div>
+      <div class="scrap-left">
+        <b>{current.data.title}</b>
+      </div>
+      {detailDate && <time class="scrap-date">{detailDate}</time>}
+      <div class="scrap-body">
+        <rendered.Content />
+      </div>
+    </article>
+  ) : (
+    <p>Scrap not found.</p>
+  )
+}

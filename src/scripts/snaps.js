@@ -36,7 +36,7 @@ function isSnapsPath(p = location.pathname) {
 }
 
 function isGalleryOpen() {
-  return overlay.style.display === 'flex' || getComputedStyle(overlay).display === 'flex'
+  return overlay.style.display === 'block' || getComputedStyle(overlay).display === 'block'
 }
 
 function setBodyScrollLocked(locked) {
@@ -151,16 +151,40 @@ function renderGrid() {
     const j = Math.floor(Math.random() * (i + 1))
     ;[assets[i], assets[j]] = [assets[j], assets[i]]
   }
+  // Phase 1: populate the grid with placeholder cells so the masonry
+  // layout is established before any images start loading.
+  // We already have width/height from the Immich metadata, so each
+  // figure starts with the correct aspect-ratio — no transition needed.
   for (const [i, asset] of assets.entries()) {
     const fig = document.createElement('figure')
     fig.className = 'snaps-figure'
     fig.addEventListener('click', () => showLightbox(i))
-    const img = document.createElement('img')
-    img.loading = 'lazy'
-    img.alt = asset.originalFileName ?? ''
-    img.src = `${SNAPS_PROXY_URL}thumb/${asset.id}`
-    fig.appendChild(img)
+    if (asset.width && asset.height) {
+      fig.style.aspectRatio = `${asset.width} / ${asset.height}`
+    }
     grid.appendChild(fig)
+  }
+  // Phase 2: load each image asynchronously.  When one finishes, insert
+  // it into its figure — the masonry grid's ResizeObserver will notice
+  // the size change and re-layout automatically.
+  loadImages()
+}
+
+function loadImages() {
+  for (const [i, asset] of assets.entries()) {
+    const fig = grid.children[i]
+    const img = document.createElement('img')
+    img.alt = asset.originalFileName ?? ''
+    img.addEventListener('load', () => {
+      fig.classList.add('loaded')
+    }, { once: true })
+    img.addEventListener('error', () => {
+      fig.classList.add('loaded')
+    }, { once: true })
+    // Insert into the DOM *before* setting src so the browser can
+    // evaluate visibility and start the fetch.
+    fig.appendChild(img)
+    img.src = `${SNAPS_PROXY_URL}thumb/${asset.id}`
   }
 }
 
@@ -173,11 +197,26 @@ async function openGallery() {
     renderGrid()
     rendered = true
   }
-  overlay.style.display = 'flex'
-  requestAnimationFrame(() => {
-    overlay.style.opacity = '1'
-  })
+  overlay.style.display = 'block'
   setBodyScrollLocked(true)
+
+  // Wait for header-settled — it fires immediately on initial load and
+  // after the flip animation completes on navigations, so --header-height
+  // is always correct when the gallery fades in.
+  const openToken = _closeToken
+  const reveal = () => {
+    if (_closeToken !== openToken) return // was closed during wait
+    overlay.style.opacity = '1'
+  }
+  // If header-settled already fired, reveal right away.
+  if (document.documentElement.dataset.headerSettled !== undefined) {
+    reveal()
+  } else {
+    document.addEventListener('header-settled', function onSettled() {
+      document.removeEventListener('header-settled', onSettled)
+      reveal()
+    })
+  }
 }
 
 function closeGallery() {
@@ -199,3 +238,15 @@ function handleRoute() {
 }
 
 document.addEventListener('astro:page-load', handleRoute)
+
+// Close the gallery before a navigation starts so the fade-out doesn't
+// overlap with the header animation or new page render (which can cause
+// a visible "shift" as --header-height updates mid-fade).
+document.addEventListener('astro:before-swap', () => {
+  if (!isGalleryOpen()) return
+  _closeToken++
+  closeLightbox()
+  setBodyScrollLocked(false)
+  overlay.style.opacity = '0'
+  overlay.style.display = 'none'
+})

@@ -1,0 +1,29 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate, stripMarkdown } from '../lib/scraps.ts';
+
+interface Props {
+  scraps: CollectionEntry<'scraps'>[];
+}
+
+const { scraps } = Astro.props;
+
+const items = scraps.map((s) => ({
+  slug: s.data.slug,
+  title: s.data.title,
+  excerpt: s.data.excerpt ?? stripMarkdown(s.body ?? ''),
+  date: formatDate(s.data.date),
+}));
+---
+
+<div class="scrap-list">
+  {items.map((item) => (
+    <a class="scrap-item" href={`/scraps/${item.slug}/`}>
+      <div class="scrap-left">
+        <b>{item.title}</b>
+        <span class="scrap-excerpt"> — {item.excerpt}</span>
+      </div>
+      {item.date && <time class="scrap-date">{item.date}</time>}
+    </a>
+  ))}
+</div>

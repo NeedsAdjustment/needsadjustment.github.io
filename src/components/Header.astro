@@ -35,8 +35,12 @@ const { scrapCount = 0, hero = false, scrolled = false } = Astro.props
     align-items: center;
     -webkit-user-select: none;
     user-select: none;
-    transition: transform 0.4s ease;
+    transition: transform 0.4s ease, top 0.4s ease;
     gap: clamp(0.1rem, 0.5rem, 20px);
+  }
+
+  header.scrolled {
+    gap: 0;
   }
 
   header.hero {
@@ -45,7 +49,8 @@ const { scrapCount = 0, hero = false, scrolled = false } = Astro.props
   }
 
   header.hero.scrolled {
-    transform: translateY(-50vh);
+    top: 0;
+    transform: none;
   }
 
   header:not(.hero) h1,
@@ -94,7 +99,8 @@ const { scrapCount = 0, hero = false, scrolled = false } = Astro.props
   }
 
   header.hero.scrolled h2 {
-    padding-top: 1rem;
+    margin: clamp(0rem, 2vw, 1rem);
+    padding-bottom: clamp(0rem, 2vw, 1rem);
   }
 
   header[data-measuring],

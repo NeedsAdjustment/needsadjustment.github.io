@@ -42,15 +42,17 @@ document.addEventListener('astro:after-swap', () => {
   if (prevScrolled !== null && prevScrolled !== target) {
     header.classList.toggle('scrolled', prevScrolled) // start in the "from" state (pre-paint)
     void header.offsetWidth // force reflow so the next change is a transition
-    requestAnimationFrame(() =>
-      requestAnimationFrame(() => header.classList.toggle('scrolled', target))
-    )
+    requestAnimationFrame(() => requestAnimationFrame(() => header.classList.toggle('scrolled', target)))
   } else {
     header.classList.toggle('scrolled', target)
   }
   prevScrolled = null
-  // Re-measure once the header settles in its new position.
-  setTimeout(syncHeaderHeight, 450)
+  // Re-measure and signal once the header settles in its new position.
+  setTimeout(() => {
+    syncHeaderHeight()
+    document.documentElement.dataset.headerSettled = ''
+    document.dispatchEvent(new CustomEvent('header-settled'))
+  }, 480)
 })
 
 // ── Header active-button + initial scrolled state ────────────────────
@@ -112,6 +114,29 @@ function wireButtons() {
       else navigate('/snaps/')
     })
   }
+
+  // Tera creatures: click to go home, no-op on home itself
+  ;['leftCreature', 'rightCreature'].forEach((id) => {
+    const tera = document.getElementById(id)
+    if (tera && !tera.dataset.wired) {
+      tera.dataset.wired = '1'
+      // Re-apply cursor on each page load so it matches the current route
+      tera.addEventListener('click', (e) => {
+        if (!isHomePath()) navigate('/')
+      })
+    }
+  })
+}
+
+function isHomePath(p = location.pathname) {
+  return p === '/'
+}
+
+function applyTeraCursor() {
+  ;['leftCreature', 'rightCreature'].forEach((id) => {
+    const tera = document.getElementById(id)
+    if (tera) tera.style.cursor = isHomePath() ? 'default' : 'pointer'
+  })
 }
 
 // ── Dynamic counts ───────────────────────────────────────────────────
@@ -152,11 +177,19 @@ function fetchCounts() {
 function init() {
   wireButtons()
   applyActive()
-  if (!hasNavigated) applyInitialScrolled() // don't clobber the swap animation
+  applyTeraCursor()
+  if (!hasNavigated) {
+    applyInitialScrolled() // don't clobber the swap animation
+    syncHeaderHeight() // measure once on the initial page load
+    // On initial load the header is already in its final position.
+    document.documentElement.dataset.headerSettled = ''
+    document.dispatchEvent(new CustomEvent('header-settled'))
+  }
+  // On navigations, syncHeaderHeight + header-settled are handled by the
+  // astro:after-swap handler after the flip animation completes.
   fetchCounts()
   applyCachedCounts()
   bindHeaderHeight()
-  syncHeaderHeight()
 }
 
 init()

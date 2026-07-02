@@ -1,4 +1,4 @@
-<div id="now-playing" class="now-playing">
+<div id="now-playing" class="now-playing" transition:persist="now-playing">
   <div class="np-tab">
     listening
   </div>
@@ -108,56 +108,55 @@
     overflow: hidden;
   }
 
-  @media (max-width: 500px) {
-    .np-tab {
-      border-bottom: 1px solid var(--ui-border);
-      border-radius: var(--radius-lg);
-      margin-bottom: var(--space-xs);
-      padding: var(--space-xs) var(--space-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease, border-bottom 0.3s ease, margin 0.3s ease, padding 0.3s ease;
-    }
+  /* Collapsible state (mobile + desktop when enabled) */
+  .now-playing.np-collapsible .np-tab {
+    border-bottom: 1px solid var(--ui-border);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease, border-bottom 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+  }
 
-    .now-playing.np-open .np-tab {
-      border-bottom: none;
-      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-      margin-bottom: calc(-1 * var(--radius-lg) + var(--space-xs));
-      padding: var(--space-xs) var(--space-sm) var(--space-md) var(--space-sm);
-      transition-delay: 0.2s;
-    }
+  .now-playing.np-collapsible.np-open .np-tab {
+    border-bottom: none;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    margin-bottom: calc(-1 * var(--radius-lg) + var(--space-xs));
+    padding: var(--space-xs) var(--space-sm) var(--space-md) var(--space-sm);
+    transition-delay: 0.2s;
+  }
 
-    .np-inner {
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      padding: 0;
+  .now-playing.np-collapsible .np-inner {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0;
       gap: 0;
-      border-width: 0;
-      margin: 0;
-      pointer-events: none;
-      transition-delay: 0.2s;
-    }
+    border-width: 0;
+    margin: 0;
+    pointer-events: none;
+    transition-delay: 0.2s;
+  }
 
-    .now-playing.np-open .np-inner {
-      max-height: 20rem;
-      opacity: 1;
-      padding: var(--space-sm) var(--space-md) var(--space-sm) var(--space-sm);
-      gap: var(--space-md);
-      border-width: 1px;
-      margin: 0;
-      pointer-events: auto;
-    }
+  .now-playing.np-collapsible.np-open .np-inner {
+    max-height: 20rem;
+    opacity: 1;
+    padding: var(--space-sm) var(--space-md) var(--space-sm) var(--space-sm);
+    gap: var(--space-md);
+    border-width: 1px;
+    margin: 0;
+    pointer-events: auto;
+  }
 
-    .np-info {
-      opacity: 0;
-    }
+  .now-playing.np-collapsible .np-info {
+    opacity: 0;
+  }
 
-    .now-playing.np-open .np-info {
-      opacity: 1;
-      transition: opacity 0.2s ease 0.4s;
-    }
+  .now-playing.np-collapsible.np-open .np-info {
+    opacity: 1;
+    transition: opacity 0.2s ease 0.4s;
   }
 </style>
 
@@ -176,18 +175,6 @@
   let currentArtist = "";
 
   const npTab = document.querySelector<HTMLElement>(".np-tab");
-
-  npInner?.addEventListener("click", () => {
-    if (!currentTrack) return;
-    const query = encodeURIComponent(`${currentTrack} - ${currentArtist}`);
-    window.open(`https://www.youtube.com/results?search_query=${query}`, "_blank");
-  });
-
-  npTab?.addEventListener("click", () => {
-    if (window.innerWidth <= 500) {
-      el?.classList.toggle("np-open");
-    }
-  });
 
   /** Check if data has a real track (not null/empty) */
   function hasTrack(data: { shortenedName: string | null; }) {
@@ -248,10 +235,68 @@
     el?.classList.add("np-hidden");
   }
 
-  // Kick off after DOM is ready
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", refresh);
-  } else {
+  // Wire event listeners once (idempotent)
+  function wireNowPlaying() {
+    if (!npInner || npInner.dataset.wired) return;
+    npInner.dataset.wired = '1';
+
+    npInner.addEventListener("click", () => {
+      if (!currentTrack) return;
+      const query = encodeURIComponent(`${currentTrack} - ${currentArtist}`);
+      window.open(`https://www.youtube.com/results?search_query=${query}`, "_blank");
+    });
+
+    npTab?.addEventListener("click", () => {
+      // Only toggle if collapsible (not on home page desktop)
+      if (el?.classList.contains('np-collapsible')) {
+        const isOpen = el.classList.toggle("np-open");
+        sessionStorage.setItem('np-open', isOpen ? '1' : '0');
+      }
+    });
+  }
+
+  function isHome() {
+    return location.pathname === '/';
+  }
+
+  function updateCollapsible() {
+    if (!el) return;
+    const home = isHome();
+    if (home) {
+      // On home: expanded, not collapsible
+      el.classList.remove('np-collapsible');
+      el.classList.add('np-open');
+      sessionStorage.removeItem('np-open');
+    } else {
+      // Not on home: collapsible
+      el.classList.add('np-collapsible');
+      // Restore previous open state, default to closed
+      const wasOpen = sessionStorage.getItem('np-open');
+      if (wasOpen === '1') {
+        el.classList.add('np-open');
+      } else if (wasOpen === '0') {
+        el.classList.remove('np-open');
+      } else {
+        // First time on non-home: closed by default
+        el.classList.remove('np-open');
+      }
+    }
+  }
+
+  function init() {
+    wireNowPlaying();
+    updateCollapsible();
     refresh();
   }
+
+  if (document.readyState !== 'loading') init();
+  else document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('astro:page-load', init);
+  // Re-apply collapsible state after swap
+  document.addEventListener('astro:after-swap', () => {
+    updateCollapsible();
+    refresh();
+  });
 </script>
+
+

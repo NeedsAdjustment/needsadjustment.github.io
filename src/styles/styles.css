@@ -19,8 +19,21 @@ html::-webkit-scrollbar {
 *::before,
 *::after {
   box-sizing: inherit;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.2s ease-in-out,
-    transform 0.2s ease-in-out;
+}
+
+/* Theme transitions scoped to elements that actually change with the theme */
+body,
+header,
+footer,
+.snaps-overlay,
+#view-scraps,
+.np-inner,
+.np-tab,
+.toggle-group,
+h2 a.category,
+.scrap-item,
+.scrap-nav a {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 body {

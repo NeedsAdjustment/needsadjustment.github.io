@@ -116,13 +116,13 @@ function initTeranoptise() {
 
   function getCreatureWidth() {
     const viewportWidth = window.innerWidth
-    if (viewportWidth < 400) {
+    if (viewportWidth < 500) {
       return 0
-    } else if (viewportWidth < 500) {
-      return 1
     } else if (viewportWidth < 600) {
-      return 2
+      return 1
     } else if (viewportWidth < 700) {
+      return 2
+    } else if (viewportWidth < 800) {
       return 3
     } else {
       return 4

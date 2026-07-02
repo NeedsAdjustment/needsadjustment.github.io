@@ -30,25 +30,26 @@
     height: 100dvh;
     z-index: 5;
     display: none;
-    flex-direction: column;
     background: var(--background-color);
     opacity: 0;
     overflow-y: auto;
+    overflow-x: hidden;
     transition: opacity 0.3s ease;
+    /* Top padding pushes content below the fixed top shadow. */
+    padding-top: var(--header-height);
   }
 
   .snaps-shadow-top,
   .snaps-shadow-bottom {
-    position: sticky;
+    position: fixed;
     left: 0;
     width: 100%;
     pointer-events: none;
-    z-index: 1;
-    flex-shrink: 0;
+    z-index: 6;
   }
   .snaps-shadow-top {
     top: 0;
-    height: calc(var(--header-height) + 1rem);
+    height: var(--header-height);
     background: linear-gradient(to bottom, var(--base-color), transparent);
   }
   .snaps-shadow-bottom {
@@ -60,8 +61,9 @@
   masonry-grid-lanes {
     display: block;
     box-sizing: border-box;
-    margin: 12px;
+    margin: 0 12px calc(var(--header-height) * 2);
     position: relative;
+    max-width: 100%;
   }
 
   .snaps-lightbox {
@@ -118,13 +120,14 @@
   .snaps-prev:hover,
   .snaps-next:hover { color: var(--text-color); }
 
-  /* Thumbnail figures rendered by JS */
+  /* ── Thumbnail figures ─────────────────────────────── */
   .snaps-figure {
     margin: 0;
     border-radius: 1rem;
     overflow: hidden;
     cursor: pointer;
     position: relative;
+    aspect-ratio: 1/1;
     transition: transform 0.2s ease;
   }
   .snaps-figure:hover {
@@ -132,9 +135,64 @@
   }
   .snaps-figure img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
     display: block;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Placeholder background shown while image loads */
+  .snaps-figure::before {
+    content: '';
+    display: block;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--secondary-background);
+    z-index: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  /* Rotating glow on the border */
+  @property --glow-angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+  }
+
+  .snaps-figure::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    padding: 2px;
+    background: conic-gradient(from var(--glow-angle),
+      transparent 0deg,
+      transparent 70deg,
+      var(--link-colour) 80deg,
+      transparent 100deg,
+      transparent 360deg);
+    -webkit-mask:
+      linear-gradient(black, black) content-box,
+      linear-gradient(black, black);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(black, black) content-box,
+      linear-gradient(black, black);
+    mask-composite: exclude;
+    animation: glow-spin 2s linear infinite;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+
+  /* Hide placeholders once the image has loaded */
+  .snaps-figure.loaded::before,
+  .snaps-figure.loaded::after {
+    opacity: 0;
+  }
+
+  @keyframes glow-spin {
+    to { --glow-angle: 360deg; }
   }
 
   @keyframes snaps-spin {
