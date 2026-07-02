@@ -175,12 +175,20 @@ function loadImages() {
     const fig = grid.children[i]
     const img = document.createElement('img')
     img.alt = asset.originalFileName ?? ''
-    img.addEventListener('load', () => {
-      fig.classList.add('loaded')
-    }, { once: true })
-    img.addEventListener('error', () => {
-      fig.classList.add('loaded')
-    }, { once: true })
+    img.addEventListener(
+      'load',
+      () => {
+        fig.classList.add('loaded')
+      },
+      { once: true },
+    )
+    img.addEventListener(
+      'error',
+      () => {
+        fig.classList.add('loaded')
+      },
+      { once: true },
+    )
     // Insert into the DOM *before* setting src so the browser can
     // evaluate visibility and start the fetch.
     fig.appendChild(img)
