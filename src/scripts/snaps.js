@@ -158,6 +158,8 @@ function renderGrid() {
   for (const [i, asset] of assets.entries()) {
     const fig = document.createElement('figure')
     fig.className = 'snaps-figure'
+    // Random starting angle so glow animations aren't all in sync
+    fig.style.setProperty('--glow-angle', `${Math.random() * 360}deg`)
     fig.addEventListener('click', () => showLightbox(i))
     if (asset.width && asset.height) {
       fig.style.aspectRatio = `${asset.width} / ${asset.height}`
