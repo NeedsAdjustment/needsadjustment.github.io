@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@schalkneethling/masonry-gridlanes-wc": "^0.1.0",
-    "astro": "7.1.3",
+    "astro": "7.1.6",
     "lenis": "^1.3.25"
   },
   "devDependencies": {
