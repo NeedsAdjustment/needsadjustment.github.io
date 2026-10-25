@@ -39,7 +39,8 @@ document.addEventListener('astro:after-swap', () => {
   const header = document.querySelector('header.hero')
   if (!header) return
   const target = scrolledTarget()
-  if (prevScrolled !== null && prevScrolled !== target) {
+  const animates = prevScrolled !== null && prevScrolled !== target
+  if (animates) {
     header.classList.toggle('scrolled', prevScrolled) // start in the "from" state (pre-paint)
     void header.offsetWidth // force reflow so the next change is a transition
     requestAnimationFrame(() => requestAnimationFrame(() => header.classList.toggle('scrolled', target)))
@@ -47,12 +48,17 @@ document.addEventListener('astro:after-swap', () => {
     header.classList.toggle('scrolled', target)
   }
   prevScrolled = null
-  // Re-measure and signal once the header settles in its new position.
-  setTimeout(() => {
-    syncHeaderHeight()
-    document.documentElement.dataset.headerSettled = ''
-    document.dispatchEvent(new CustomEvent('header-settled'))
-  }, 480)
+  // Re-measure and signal once the header settles in its new position. If the
+  // header didn't move (e.g. scraps list ↔ detail) there's nothing to wait for,
+  // so reveal the destination immediately instead of blanking it for the slide.
+  setTimeout(
+    () => {
+      syncHeaderHeight()
+      document.documentElement.dataset.headerSettled = ''
+      document.dispatchEvent(new CustomEvent('header-settled'))
+    },
+    animates ? 480 : 0,
+  )
 })
 
 // ── Header active-button + initial scrolled state ────────────────────

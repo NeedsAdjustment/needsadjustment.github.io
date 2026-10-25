@@ -14,7 +14,7 @@ const allScraps = await getCollection('scraps');
 const scraps = sortScrapsNewestFirst(allScraps);
 ---
 
-<div id="view-scraps" class="view-scraps-hidden" data-lenis-prevent transition:animate="fade">
+<div id="view-scraps" class="view-scraps-hidden" data-lenis-prevent>
   {slug ? <ScrapsDetail scraps={scraps} slug={slug} /> : <ScrapsList scraps={scraps} />}
 </div>
 
@@ -22,7 +22,13 @@ const scraps = sortScrapsNewestFirst(allScraps);
   function showScraps() {
     const view = document.getElementById('view-scraps')
     if (!view) return
-    // Always wait for header-settled — it fires immediately on initial load
+    // If the header already settled (initial load, or a navigation where it
+    // didn't move), reveal immediately instead of waiting for another event.
+    if (document.documentElement.dataset.headerSettled !== undefined) {
+      view.classList.remove('view-scraps-hidden')
+      return
+    }
+    // Otherwise wait for header-settled — it fires immediately on initial load
     // and after the flip animation completes on navigations, so
     // --header-height is always correct when the content appears.
     document.addEventListener('header-settled', function onSettled() {

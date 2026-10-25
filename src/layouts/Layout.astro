@@ -43,7 +43,25 @@ const isHome = path === '/';
         html.style.setProperty('--darkmode', theme === 'dark' ? '1' : '0');
       })();
     </script>
-    <ClientRouter />
+    {/* Route animations are hand-authored (see scripts/route.js and
+        components/ScrapsView.astro). Native View Transitions snapshot the page
+        before the after-swap header slide starts, which double-exposes the old
+        and new headers and leaves the content blank until it settles. Disable
+        the API before ClientRouter initialises so it uses its deterministic
+        fallback path and the site's own choreography runs in every browser.
+        Inline + first so it runs before the ClientRouter module. */}
+    <script is:inline>
+      // The site animates routes itself; stop ClientRouter from handing them
+      // to the native View Transitions API.
+      try {
+        Object.defineProperty(Document.prototype, 'startViewTransition', {
+          value: undefined,
+          configurable: true,
+          writable: true,
+        });
+      } catch {}
+    </script>
+    <ClientRouter fallback="swap" />
   </head>
   <body>
     <Header hero={true} scrapCount={scrapCount} scrolled={!isHome} transition:persist="site-header" />
