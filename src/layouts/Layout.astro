@@ -72,9 +72,9 @@ const isHome = path === '/';
     <ClientRouter fallback="swap" />
   </head>
   <body>
-    <Header hero={true} scrapCount={scrapCount} scrolled={!isHome} transition:persist="site-header" />
+    <Header hero={true} scrapCount={scrapCount} scrolled={!isHome} />
     <slot />
-    <Footer transition:persist="site-footer" />
+    <Footer />
     {/* Gallery's two root elements carry their own explicit persist names. */}
     <Gallery />
     <script>

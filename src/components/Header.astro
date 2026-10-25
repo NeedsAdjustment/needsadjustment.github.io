@@ -4,7 +4,7 @@ const { scrapCount = 0, hero = false, scrolled = false } = Astro.props
 
 ---
 
-<header class:list={{ hero, scrolled }}>
+<header class:list={{ hero, scrolled }} transition:persist="site-header">
   <h1>Joshua Soong</h1>
   <h2>
     <tera class="category" id="leftCreature"></tera>
@@ -21,7 +21,7 @@ const { scrapCount = 0, hero = false, scrolled = false } = Astro.props
 </header>
 
 {/* Count fetching + re-application lives in route.js so the numbers survive
-    ClientRouter navigations even if the header isn't persisted. */}
+    ClientRouter navigations. */}
 
 <style>
   header {
