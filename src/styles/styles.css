@@ -1,4 +1,7 @@
 html {
+  /* Root background so unpainted frames / body swaps show the theme colour
+     instead of the browser's white canvas. */
+  background-color: var(--background-color);
   scrollbar-width: none;
   -ms-overflow-style: none;
 }

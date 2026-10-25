@@ -19,6 +19,7 @@ const isHome = path === '/';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#24273a" />
     <meta name="darkreader-lock" />
     <title>Joshua Soong</title>
     {/* Phosphor icons via static stylesheets (not the JS loader) so the styles
@@ -39,8 +40,15 @@ const isHome = path === '/';
               : 'light';
         localStorage.setItem('theme', theme);
         const html = document.documentElement;
+        // These mirror --background-color in variables.css. Set inline so the
+        // very first paint (before the stylesheet loads) is already the theme
+        // colour instead of white.
+        const background = theme === 'dark' ? '#24273a' : '#fffcf0';
         html.classList.toggle('dark', theme === 'dark');
         html.style.setProperty('--darkmode', theme === 'dark' ? '1' : '0');
+        html.style.backgroundColor = background;
+        html.style.colorScheme = theme;
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', background);
       })();
     </script>
     {/* Route animations are hand-authored (see scripts/route.js and

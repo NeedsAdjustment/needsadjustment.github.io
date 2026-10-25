@@ -11,8 +11,14 @@ function currentTheme() {
 
 function applyTheme(theme) {
   const html = document.documentElement
+  // Mirrors --background-color in variables.css; also applied inline so the
+  // canvas is never left white while the new page's styles settle.
+  const background = theme === 'dark' ? '#24273a' : '#fffcf0'
   html.classList.toggle('dark', theme === 'dark')
   html.style.setProperty('--darkmode', theme === 'dark' ? '1' : '0')
+  html.style.backgroundColor = background
+  html.style.colorScheme = theme
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', background)
   localStorage.setItem('theme', theme)
 }
 
