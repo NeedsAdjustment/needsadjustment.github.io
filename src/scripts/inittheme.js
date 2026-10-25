@@ -9,22 +9,45 @@ function currentTheme() {
   return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
 }
 
-function applyTheme(theme) {
-  const html = document.documentElement
+function themeStyles(theme) {
   // Mirrors --background-color in variables.css; also applied inline so the
   // canvas is never left white while the new page's styles settle.
-  const background = theme === 'dark' ? '#24273a' : '#fffcf0'
+  return {
+    background: theme === 'dark' ? '#24273a' : '#fffcf0',
+    scheme: theme === 'dark' ? 'dark' : 'light',
+    darkmode: theme === 'dark' ? '1' : '0',
+  }
+}
+
+function applyTheme(theme) {
+  const html = document.documentElement
+  const { background, scheme, darkmode } = themeStyles(theme)
   html.classList.toggle('dark', theme === 'dark')
-  html.style.setProperty('--darkmode', theme === 'dark' ? '1' : '0')
+  html.style.setProperty('--darkmode', darkmode)
   html.style.backgroundColor = background
-  html.style.colorScheme = theme
+  html.style.colorScheme = scheme
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', background)
   localStorage.setItem('theme', theme)
 }
 
-// After a ClientRouter swap the <html> attributes are replaced with the newly
-// loaded document's (which has no theme class), so re-apply before paint to
-// prevent a flash back to light.
+// Astro replaces <html>'s attributes with the incoming document's, which is
+// SSR'd without the theme class. Copy the current theme state onto the incoming
+// <html> before the swap so it is applied in the same step, rather than letting
+// the new body lay out in the light theme for a frame and then fade to dark via
+// its background-color transition (the body-shaped white flash).
+document.addEventListener('astro:before-swap', (event) => {
+  const next = event.newDocument?.documentElement
+  if (!next) return
+  const theme = currentTheme()
+  const { background, scheme, darkmode } = themeStyles(theme)
+  next.classList.toggle('dark', theme === 'dark')
+  next.style.backgroundColor = background
+  next.style.colorScheme = scheme
+  next.style.setProperty('--darkmode', darkmode)
+  next.querySelector('meta[name="theme-color"]')?.setAttribute('content', background)
+})
+
+// Re-apply after the swap as a safety net (e.g. if a transition is interrupted).
 document.addEventListener('astro:after-swap', () => applyTheme(currentTheme()))
 
 function syncRadios() {
