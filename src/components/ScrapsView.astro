@@ -23,18 +23,13 @@ const scraps = sortScrapsNewestFirst(allScraps);
     const view = document.getElementById('view-scraps')
     if (!view) return
     // If the header already settled (initial load, or a navigation where it
-    // didn't move), reveal immediately instead of waiting for another event.
+    // didn't move), reveal immediately. Otherwise wait for it so
+    // --header-height is correct when the content appears.
     if (document.documentElement.dataset.headerSettled !== undefined) {
       view.classList.remove('view-scraps-hidden')
       return
     }
-    // Otherwise wait for header-settled — it fires immediately on initial load
-    // and after the flip animation completes on navigations, so
-    // --header-height is always correct when the content appears.
-    document.addEventListener('header-settled', function onSettled() {
-      document.removeEventListener('header-settled', onSettled)
-      view.classList.remove('view-scraps-hidden')
-    })
+    document.addEventListener('header-settled', () => view.classList.remove('view-scraps-hidden'), { once: true })
   }
   showScraps()
   document.addEventListener('astro:page-load', showScraps)

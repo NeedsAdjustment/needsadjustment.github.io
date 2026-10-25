@@ -19,7 +19,6 @@ const isHome = path === '/';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#24273a" />
     <meta name="darkreader-lock" />
     <title>Joshua Soong</title>
     {/* Phosphor icons via static stylesheets (not the JS loader) so the styles
@@ -40,32 +39,21 @@ const isHome = path === '/';
               : 'light';
         localStorage.setItem('theme', theme);
         const html = document.documentElement;
-        // These mirror --background-color in variables.css. Set inline so the
-        // very first paint (before the stylesheet loads) is already the theme
-        // colour instead of white.
-        const background = theme === 'dark' ? '#24273a' : '#fffcf0';
-        html.classList.toggle('dark', theme === 'dark');
-        html.style.setProperty('--darkmode', theme === 'dark' ? '1' : '0');
-        html.style.backgroundColor = background;
-        html.style.colorScheme = theme;
-        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', background);
+        const dark = theme === 'dark';
+        html.classList.toggle('dark', dark);
+        // Mirrors --background-color in variables.css. Inline so the first paint
+        // (before the stylesheet loads) is the theme colour, not white.
+        html.style.backgroundColor = dark ? '#24273a' : '#fffcf0';
       })();
     </script>
-    {/* Route animations are hand-authored (see scripts/route.js and
-        components/ScrapsView.astro). Native View Transitions snapshot the page
-        before the after-swap header slide starts, which double-exposes the old
-        and new headers and leaves the content blank until it settles. Disable
-        the API before ClientRouter initialises so it uses its deterministic
-        fallback path and the site's own choreography runs in every browser.
-        Inline + first so it runs before the ClientRouter module. */}
+    {/* Route transitions are hand-authored (see scripts/route.js). Disable the
+        native API before ClientRouter initialises so it swaps the DOM directly
+        instead of crossfading snapshots over the site's own animations. */}
     <script is:inline>
-      // The site animates routes itself; stop ClientRouter from handing them
-      // to the native View Transitions API.
       try {
         Object.defineProperty(Document.prototype, 'startViewTransition', {
           value: undefined,
           configurable: true,
-          writable: true,
         });
       } catch {}
     </script>

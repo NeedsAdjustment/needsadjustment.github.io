@@ -20,12 +20,9 @@ function scrolledTarget(p = location.pathname) {
 }
 
 // ── Hero slide animation ─────────────────────────────────────────────
-// The header persists across navigations, but the destination is rendered in
-// its final scrolled state — so toggling to that state produces no motion.
-// We capture the scrolled state before the swap and, after the swap (before
-// paint), pin the header to that "from" state, then flip to the target on the
-// next frame so the CSS transform transition actually plays. This works whether
-// the header was persisted (same node) or freshly rendered.
+// The header persists across navigations, but the swapped page is rendered in
+// its final scrolled state. Capture the old state before the swap, then animate
+// the header from it to the target after the swap.
 let hasNavigated = false
 let prevScrolled = null
 let headerAnimation = null
@@ -52,11 +49,10 @@ document.addEventListener('astro:after-swap', () => {
     header.classList.toggle('scrolled', prevScrolled) // start in the "from" state (pre-paint)
     void header.offsetWidth // force reflow so the children's transitions start
 
-    // Animate the container explicitly rather than relying on the CSS
-    // transition being committed after the swap; some Chromium builds
-    // (Helium) otherwise batch the pin/flip and jump straight to the target.
+    // Animate explicitly; Helium doesn't reliably commit the CSS transition's
+    // start state after the swap.
     if (typeof header.animate === 'function') {
-      headerAnimation = header.animate([from, to], { duration: 400, easing: 'ease', fill: 'both' })
+      headerAnimation = header.animate([from, to], { duration: 400, easing: 'ease' })
     }
 
     // Flip to the target so the h1/h2 transitions play too.
