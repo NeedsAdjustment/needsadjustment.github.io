@@ -28,6 +28,7 @@ function scrolledTarget(p = location.pathname) {
 // the header was persisted (same node) or freshly rendered.
 let hasNavigated = false
 let prevScrolled = null
+let headerAnimation = null
 
 document.addEventListener('astro:before-swap', () => {
   const header = document.querySelector('header.hero')
@@ -40,10 +41,26 @@ document.addEventListener('astro:after-swap', () => {
   if (!header) return
   const target = scrolledTarget()
   const animates = prevScrolled !== null && prevScrolled !== target
+  headerAnimation?.cancel()
+  headerAnimation = null
   if (animates) {
+    const hero = { top: '50%', transform: 'translateY(-50%)' }
+    const scrolled = { top: '0px', transform: 'none' }
+    const from = prevScrolled ? scrolled : hero
+    const to = target ? scrolled : hero
+
     header.classList.toggle('scrolled', prevScrolled) // start in the "from" state (pre-paint)
-    void header.offsetWidth // force reflow so the next change is a transition
-    requestAnimationFrame(() => requestAnimationFrame(() => header.classList.toggle('scrolled', target)))
+    void header.offsetWidth // force reflow so the children's transitions start
+
+    // Animate the container explicitly rather than relying on the CSS
+    // transition being committed after the swap; some Chromium builds
+    // (Helium) otherwise batch the pin/flip and jump straight to the target.
+    if (typeof header.animate === 'function') {
+      headerAnimation = header.animate([from, to], { duration: 400, easing: 'ease', fill: 'both' })
+    }
+
+    // Flip to the target so the h1/h2 transitions play too.
+    header.classList.toggle('scrolled', target)
   } else {
     header.classList.toggle('scrolled', target)
   }
