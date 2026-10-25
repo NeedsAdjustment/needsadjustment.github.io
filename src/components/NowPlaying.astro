@@ -1,4 +1,4 @@
-<div id="now-playing" class="now-playing" transition:persist="now-playing">
+<div id="now-playing" class="now-playing">
   <div class="np-tab">
     listening
   </div>
@@ -106,6 +106,12 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  /* Route changes sync this state instantly; only user clicks animate. */
+  .now-playing.np-instant,
+  .now-playing.np-instant * {
+    transition: none !important;
   }
 
   /* Collapsible state (mobile + desktop when enabled) */
@@ -261,6 +267,7 @@
 
   function updateCollapsible() {
     if (!el) return;
+    el.classList.add('np-instant');
     const home = isHome();
     if (home) {
       // On home: expanded, not collapsible
@@ -281,6 +288,8 @@
         el.classList.remove('np-open');
       }
     }
+    void el.offsetWidth;
+    requestAnimationFrame(() => el.classList.remove('np-instant'));
   }
 
   function init() {
