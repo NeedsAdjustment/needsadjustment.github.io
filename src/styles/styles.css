@@ -28,6 +28,11 @@ footer,
   transition: var(--theme-transition);
 }
 
+/* Keep the landmark without changing flex or fixed-position origins. */
+main {
+  display: contents;
+}
+
 body {
   background-color: var(--background-color);
   color: var(--text-color);
