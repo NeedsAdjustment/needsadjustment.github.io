@@ -238,10 +238,8 @@
     el?.classList.add("np-hidden");
   }
 
-  // Wire event listeners once (idempotent)
   function wireNowPlaying() {
-    if (!npInner || npInner.dataset.wired) return;
-    npInner.dataset.wired = '1';
+    if (!npInner) return;
 
     npInner.addEventListener("click", () => {
       if (!currentTrack) return;
@@ -298,26 +296,14 @@
     }
   }
 
-  let firstRun = true;
-  function init() {
-    wireNowPlaying();
-    if (firstRun) {
-      firstRun = false;
-      updateCollapsible(false);
-    } else {
-      // After a swap: wait a frame so the persisted element is stable and the
-      // collapse/expand transition can actually run.
-      requestAnimationFrame(() => updateCollapsible());
-    }
-    refresh();
-  }
+  wireNowPlaying();
+  updateCollapsible(false);
+  refresh();
 
-  if (document.readyState !== 'loading') init();
-  else document.addEventListener('DOMContentLoaded', init);
-  document.addEventListener('astro:page-load', init);
-  // Refresh track data after swap; the collapsible state is synced on page-load
-  // once the persisted footer is stable.
-  document.addEventListener('astro:after-swap', refresh);
+  document.addEventListener('astro:after-swap', () => {
+    requestAnimationFrame(() => updateCollapsible());
+    refresh();
+  });
 </script>
 
 

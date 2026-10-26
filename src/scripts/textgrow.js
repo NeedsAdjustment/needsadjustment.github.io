@@ -1,20 +1,6 @@
-/**
- * Font-weight ripple + mouse-proximity animation for the hero <h1>.
- *
- * Designed to be persist-friendly: if the header was preserved across a
- * ClientRouter navigation the split letters are already present and we do
- * nothing (the animation keeps running uninterrupted). If the header was
- * re-rendered we rebuild the letters and keep the single animation loop /
- * global listeners pointing at the fresh nodes. Either way there is no
- * re-triggered intro animation.
- */
-
-// Module-level mutable state so the (single) animation loop and global
-// listeners always operate on the current letters/h1.
-let h1 = null
+/** Font-weight ripple and mouse-proximity animation for the hero <h1>. */
+const h1 = document.querySelector('header.hero h1')
 let letters = []
-let loopStarted = false
-let listenersBound = false
 
 const waveSpeed = 0.0004
 const rippleAmplitude = 400
@@ -41,19 +27,16 @@ function lockWidth(span) {
 }
 
 function buildLetters() {
-  const originalText = h1.dataset.text || h1.textContent
-  h1.dataset.text = originalText // remember for future rebuilds
-
   let html = ''
-  for (const ch of originalText) {
+  for (const ch of h1.textContent) {
     html += ch === ' ' ? '<span class="letter space">&nbsp;</span>' : `<span class="letter">${ch}</span>`
   }
   h1.innerHTML = html
   h1.style.display = 'flex'
   h1.style.justifyContent = 'center'
 
-  document.querySelectorAll('.letter.space').forEach(lockWidth)
-  letters = Array.from(document.querySelectorAll('.letter:not(.space)'))
+  h1.querySelectorAll('.letter.space').forEach(lockWidth)
+  letters = Array.from(h1.querySelectorAll('.letter:not(.space)'))
   letters.forEach((letter) => {
     lockWidth(letter)
     letter.dataset.mouseAffected = 'false'
@@ -111,9 +94,6 @@ function resetMouseAffected() {
 }
 
 function bindGlobalListeners() {
-  if (listenersBound) return
-  listenersBound = true
-
   window.addEventListener('resize', () => {
     letters.forEach((letter) => {
       const savedTransition = letter.style.transition
@@ -187,31 +167,18 @@ function updateFontStretch() {
   spans.forEach((span) => (span.style.fontStretch = stretch + '%'))
 }
 
-let stretchBound = false
 function bindStretch() {
   updateFontStretch()
-  if (stretchBound) return
-  stretchBound = true
   window.addEventListener('resize', updateFontStretch)
 }
 
-// ── Init (idempotent) ────────────────────────────────────────────────
-function ensure() {
-  const current = document.querySelector('header.hero h1')
-  bindStretch()
-  if (!current) return
+bindStretch()
 
-  // If this h1 already has split letters (persisted header), just keep going.
-  if (current === h1 && current.querySelector('.letter')) return
-
-  h1 = current
+if (h1) {
   const run = () => {
     buildLetters()
     bindGlobalListeners()
-    if (!loopStarted) {
-      loopStarted = true
-      animateRipple()
-    }
+    animateRipple()
   }
 
   if (document.fonts?.ready) {
@@ -220,7 +187,3 @@ function ensure() {
     run()
   }
 }
-
-if (document.readyState !== 'loading') ensure()
-else document.addEventListener('DOMContentLoaded', ensure)
-document.addEventListener('astro:page-load', ensure)

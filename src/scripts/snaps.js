@@ -45,26 +45,17 @@ function setBodyScrollLocked(locked) {
 }
 
 const snapsBtn = document.querySelector('h2 a.category[data-snaps]')
-let snapsUnavailable = false
 
 function setSnapsUnavailable(value) {
-  snapsUnavailable = value
   if (!snapsBtn) return
   snapsBtn.classList.toggle('unavailable', value)
   snapsBtn.href = value ? TAILSCALE_ISSUE_URL : '/snaps/'
 }
 
-let cachedSnapsCount = null
 function setSnapsCount(value) {
   if (value == null) return
-  cachedSnapsCount = value
   const num = snapsBtn?.querySelector('num')
   if (num) num.textContent = String(value)
-}
-function reapplySnapsCount() {
-  if (cachedSnapsCount == null) return
-  const num = snapsBtn?.querySelector('num')
-  if (num) num.textContent = String(cachedSnapsCount)
 }
 
 // ─── Album loading ──────────────────────────────────────────────────
@@ -256,10 +247,7 @@ function closeGallery() {
   }, 300)
 }
 
-// ─── Route-driven lifecycle ─────────────────────────────────────────
 function handleRoute() {
-  setSnapsUnavailable(snapsUnavailable) // restore the button state if re-rendered
-  reapplySnapsCount() // header may have been re-rendered; restore the count
   if (isSnapsPath()) openGallery()
   else if (isGalleryOpen()) closeGallery()
 }
