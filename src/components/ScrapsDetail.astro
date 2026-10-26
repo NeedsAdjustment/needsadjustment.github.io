@@ -10,14 +10,14 @@ interface Props {
 
 const { scraps, slug } = Astro.props;
 
-const index = scraps.findIndex((s) => s.data.slug === slug);
+const index = scraps.findIndex((s) => s.id === slug);
 const current = index >= 0 ? scraps[index] : null;
 const rendered = current ? await render(current) : null;
 
-// Sorted newest-first, so "older" is the next index, "newer" is the previous index.
-const olderSlug = current && index < scraps.length - 1 ? scraps[index + 1].data.slug : null;
-const newerSlug = current && index > 0 ? scraps[index - 1].data.slug : null;
+const olderSlug = current && index < scraps.length - 1 ? scraps[index + 1].id : null;
+const newerSlug = current && index > 0 ? scraps[index - 1].id : null;
 const detailDate = current ? formatDate(current.data.date) : undefined;
+const detailDatetime = current?.data.date?.toISOString();
 ---
 
 {
@@ -35,7 +35,7 @@ const detailDate = current ? formatDate(current.data.date) : undefined;
       <div class="scrap-left">
         <b>{current.data.title}</b>
       </div>
-      {detailDate && <time class="scrap-date">{detailDate}</time>}
+      {detailDate && <time class="scrap-date" datetime={detailDatetime}>{detailDate}</time>}
       <div class="scrap-body">
         <rendered.Content />
       </div>

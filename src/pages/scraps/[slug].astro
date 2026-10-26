@@ -6,7 +6,7 @@ import { getCollection } from 'astro:content';
 export async function getStaticPaths() {
   const allScraps = await getCollection('scraps');
   return allScraps.map((s) => ({
-    params: { slug: s.data.slug },
+    params: { slug: s.id },
   }));
 }
 

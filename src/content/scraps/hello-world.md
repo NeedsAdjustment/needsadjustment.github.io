@@ -1,6 +1,5 @@
 ---
 title: Hello, World
-slug: hello-world
 date: 2026-06-30
 excerpt: A first test post to make sure the scraps system works.
 ---

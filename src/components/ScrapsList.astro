@@ -9,10 +9,11 @@ interface Props {
 const { scraps } = Astro.props;
 
 const items = scraps.map((s) => ({
-  slug: s.data.slug,
+  slug: s.id,
   title: s.data.title,
   excerpt: s.data.excerpt ?? stripMarkdown(s.body ?? ''),
   date: formatDate(s.data.date),
+  datetime: s.data.date?.toISOString(),
 }));
 ---
 
@@ -23,7 +24,7 @@ const items = scraps.map((s) => ({
         <b>{item.title}</b>
         <span class="scrap-excerpt"> — {item.excerpt}</span>
       </div>
-      {item.date && <time class="scrap-date">{item.date}</time>}
+      {item.date && <time class="scrap-date" datetime={item.datetime}>{item.date}</time>}
     </a>
   ))}
 </div>

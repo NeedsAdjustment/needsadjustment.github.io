@@ -1,6 +1,5 @@
 ---
 title: intro
-slug: intro
 ---
 
 Joshua is a software developer and multi-disciplinary designer.

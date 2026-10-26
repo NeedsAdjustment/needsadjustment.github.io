@@ -277,7 +277,7 @@
     return location.pathname === '/';
   }
 
-  let openHeightTimer;
+  let openHeightTimer: ReturnType<typeof setTimeout> | undefined;
   function setOpenHeight() {
     if (!el) return;
     const inner = el.querySelector('.np-inner');
