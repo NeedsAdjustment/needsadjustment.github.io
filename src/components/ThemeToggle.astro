@@ -49,7 +49,7 @@
     user-select: none;
     line-height: 1;
     position: relative;
-    transition: background 0.3s ease, box-shadow 0.3s ease;
+    transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
   }
 
   :global(.toggle-group label:has(input)) {
@@ -58,8 +58,9 @@
   }
 
   :global(.toggle-group label:has(input:checked)) {
-    background-color: var(--toggle-accent-color);
-    color: var(--background-color);
+    /* Matches the snaps error pill: a translucent accent tint over the
+       secondary surface rather than a solid fill. */
+    background-color: color-mix(in srgb, var(--toggle-accent-color) 18%, color-mix(in srgb, var(--secondary-background) 85%, transparent));
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
