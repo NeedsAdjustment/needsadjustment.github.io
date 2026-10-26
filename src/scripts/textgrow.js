@@ -1,7 +1,7 @@
 const h1 = document.querySelector('header.hero h1')
 let letters = []
 
-const waveSpeed = 0.0012
+const waveSpeed = 0.0004
 const waveCycles = 2
 const rippleAmplitude = 400
 const defaultWeight = 300
