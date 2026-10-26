@@ -158,10 +158,16 @@ const { scrapCount = 0, hero = false, scrolled = false } = Astro.props
     position: relative;
     color: var(--accent-red);
     text-decoration: line-through;
+    background: color-mix(in srgb, var(--accent-red) 12%, var(--secondary-background) 73%, transparent);
+    border-color: color-mix(in srgb, var(--accent-red) 45%, var(--ui-border));
+  }
+
+  h2 a.category.unavailable:hover {
+    background: color-mix(in srgb, var(--accent-red) 18%, var(--secondary-background) 67%, transparent);
   }
 
   h2 a.category.unavailable.active {
-    background: color-mix(in srgb, var(--secondary-background) 85%, transparent);
+    background: color-mix(in srgb, var(--accent-red) 18%, var(--secondary-background) 67%, transparent);
     border-color: var(--accent-red);
     color: var(--accent-red);
   }
