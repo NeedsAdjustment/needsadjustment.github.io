@@ -12,7 +12,7 @@ function setThemeState(html, theme) {
   html.classList.toggle('dark', dark)
   // Mirrors --background-color in variables.css; inline so the canvas is never
   // left white while the new page's styles settle.
-  html.style.backgroundColor = dark ? '#24273a' : '#fffcf0'
+  html.style.backgroundColor = dark ? '#1f1f28' : '#fffcf0'
 }
 
 function applyTheme(theme) {

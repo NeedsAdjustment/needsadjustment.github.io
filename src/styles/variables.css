@@ -21,7 +21,7 @@
   --gradient-color-3: var(--accent-green);
 
   --noise-filter: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  --spotlight-dark-filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spotlight-dark' x='-100%25' y='-100%25' width='300%25' height='300%25'%3E%3CfeGaussianBlur in='SourceAlpha' stdDeviation='2' result='blur'/%3E%3CfeSpecularLighting result='specOut' in='blur' specularExponent='16' lighting-color='rgba(245, 189, 230, 0.9)'%3E%3CfePointLight x='82' y='25' z='15'/%3E%3C/feSpecularLighting%3E%3CfeGaussianBlur in='specOut' stdDeviation='4' result='innerGlow'/%3E%3CfeComposite in='innerGlow' in2='blur' operator='in' result='maskedGlow'/%3E%3CfeComposite in='SourceGraphic' in2='maskedGlow' operator='arithmetic' k1='0' k2='1' k3='0.5' k4='0'/%3E%3C/filter%3E%3C/svg%3E#spotlight-dark");
+  --spotlight-dark-filter: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='spotlight-dark' x='-100%25' y='-100%25' width='300%25' height='300%25'%3E%3CfeGaussianBlur in='SourceAlpha' stdDeviation='2' result='blur'/%3E%3CfeSpecularLighting result='specOut' in='blur' specularExponent='16' lighting-color='rgba(210, 126, 153, 0.9)'%3E%3CfePointLight x='82' y='25' z='15'/%3E%3C/feSpecularLighting%3E%3CfeGaussianBlur in='specOut' stdDeviation='4' result='innerGlow'/%3E%3CfeComposite in='innerGlow' in2='blur' operator='in' result='maskedGlow'/%3E%3CfeComposite in='SourceGraphic' in2='maskedGlow' operator='arithmetic' k1='0' k2='1' k3='0.5' k4='0'/%3E%3C/filter%3E%3C/svg%3E#spotlight-dark");
 
   --bg-1-x: 25;
   --bg-1-y: 50;
@@ -43,19 +43,20 @@
 }
 
 html.dark {
-  --base-color: black;
-  --background-color: #24273a;
-  --text-color: #cad3f5;
-  --secondary-background: #363a4f;
-  --ui-border: #5b6078;
-  --accent-red: #ed8796;
-  --accent-orange: #f5a97f;
-  --accent-yellow: #eed49f;
-  --accent-green: #a6da95;
-  --accent-cyan: #8bd5ca;
-  --accent-blue: #8aadf4;
-  --accent-magenta: #f5bde6;
-  --accent-purple: #c6a0f6;
+  /* Kanagawa Wave */
+  --base-color: #16161d;
+  --background-color: #1f1f28;
+  --text-color: #dcd7ba;
+  --secondary-background: #363646;
+  --ui-border: #54546d;
+  --accent-red: #c34043;
+  --accent-orange: #ffa066;
+  --accent-yellow: #e6c384;
+  --accent-green: #98bb6c;
+  --accent-cyan: #7aa89f;
+  --accent-blue: #7e9cd8;
+  --accent-magenta: #d27e99;
+  --accent-purple: #957fb8;
   --link-colour: var(--accent-blue);
   --toggle-accent-color: var(--accent-magenta);
   --grain-opacity: 0.5;
