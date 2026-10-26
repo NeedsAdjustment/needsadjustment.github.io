@@ -1,7 +1,3 @@
-/**
- * Theme wiring. The blocking inline script in <head> applies the first-paint
- * theme; this module keeps the persisted toggle and route swaps in sync.
- */
 function currentTheme() {
   try {
     const stored = localStorage.getItem('theme')
@@ -23,6 +19,7 @@ function applyTheme(theme) {
   } catch {}
 }
 
+// Let CSS own html/body background transitions once the stylesheet resolves.
 function clearInlineBackground() {
   const html = document.documentElement
   if (!getComputedStyle(html).getPropertyValue('--background-color').trim()) return

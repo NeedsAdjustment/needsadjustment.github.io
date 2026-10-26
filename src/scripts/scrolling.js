@@ -6,16 +6,11 @@ if ('scrollRestoration' in history) {
 }
 window.scrollTo(0, 0)
 
-// The only scrap reachable by a downward gesture on the home page.
 const INTRO_PATH = '/scraps/intro/'
-
-const TOUCH_THRESHOLD = 10 // px of swipe before a touch gesture counts
+const TOUCH_THRESHOLD = 10
 
 let navigating = false
-
-// True only while we're on /scraps/intro/ having arrived there by scrolling
-// down from home. Scroll-up "back to home" is allowed ONLY in this state —
-// never on other scraps pages, and never when intro was opened via a link.
+// Scroll-up may leave intro only when it was entered by the home gesture.
 let arrivedByScroll = false
 
 function isHomePath(p = location.pathname) {
@@ -32,17 +27,12 @@ function go(path, fromScroll = false) {
   navigate(path)
 }
 
-// The intro content scrolls internally (data-lenis-prevent). Only treat an
-// upward gesture as "go home" when that inner content is already at the top.
+// Intro scrolls internally; only leave it once that content is at the top.
 function scrapsAtTop() {
   const view = document.querySelector('#view-scraps')
   return !view || view.scrollTop <= 1
 }
 
-/**
- * Decide whether a vertical gesture should navigate.
- * @param {number} dir  +1 = downward intent, -1 = upward intent
- */
 function handleGesture(dir) {
   const path = location.pathname
   if (isHomePath(path)) {
@@ -50,12 +40,10 @@ function handleGesture(dir) {
   } else if (isIntroPath(path)) {
     if (dir < 0 && arrivedByScroll && scrapsAtTop()) go('/')
   }
-  // Any other page (other scraps, snaps, lists): scrolling never navigates.
 }
 
 const lenis = new Lenis({ autoRaf: true })
 
-// ── Wheel / trackpad ────────────────────────────────────────────────
 window.addEventListener(
   'wheel',
   (e) => {
@@ -65,7 +53,6 @@ window.addEventListener(
   { passive: true },
 )
 
-// ── Touch (swipe) ───────────────────────────────────────────────────
 let touchStartY = null
 window.addEventListener(
   'touchstart',
@@ -86,7 +73,6 @@ window.addEventListener(
   { passive: true },
 )
 
-// ── Scroll indicator (home only) — same intent as scrolling down ─────
 function wireScrollIndicator() {
   const indicator = document.querySelector('.scroll-indicator')
   if (!indicator || indicator.dataset.wired) return
@@ -100,8 +86,6 @@ wireScrollIndicator()
 document.addEventListener('astro:page-load', () => {
   navigating = false
   touchStartY = null
-  // Leaving intro (or landing anywhere that isn't intro-via-scroll) revokes the
-  // scroll-up privilege, so it can't be triggered on unrelated pages.
   if (!isIntroPath()) arrivedByScroll = false
   window.scrollTo(0, 0)
   wireScrollIndicator()

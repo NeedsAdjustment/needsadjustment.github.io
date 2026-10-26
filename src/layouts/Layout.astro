@@ -9,7 +9,6 @@ import Gallery from '../components/Gallery.astro';
 const allScraps = await getCollection('scraps');
 const scrapCount = allScraps.length;
 
-// Home page shows the full hero; scraps/snaps pages start in the compact state.
 const path = Astro.url.pathname;
 const isHome = path === '/';
 ---
@@ -21,13 +20,11 @@ const isHome = path === '/';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="darkreader-lock" />
     <title>Joshua Soong</title>
-    {/* Phosphor icons via static stylesheets (not the JS loader) so the styles
-        live in every page's <head> and survive ClientRouter head swaps. */}
+    {/* Static icon stylesheets survive ClientRouter head swaps. */}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css" />
-    {/* Blocking theme script — applies the theme class before first paint so
-        there is never a flash of the wrong theme (on load or after a swap). */}
+    {/* Apply the theme before first paint to avoid a wrong-theme flash. */}
     <script is:inline>
       (function () {
         let stored = null;
@@ -46,14 +43,11 @@ const isHome = path === '/';
         const html = document.documentElement;
         const dark = theme === 'dark';
         html.classList.toggle('dark', dark);
-        // Mirrors --background-color in variables.css. Inline so the first paint
-        // (before the stylesheet loads) is the theme colour, not white.
+        // Inline so first paint uses the theme colour before CSS loads.
         html.style.backgroundColor = dark ? '#1f1f28' : '#fffcf0';
       })();
     </script>
-    {/* Route transitions are hand-authored (see scripts/route.js). Disable the
-        native API before ClientRouter initialises so it swaps the DOM directly
-        instead of crossfading snapshots over the site's own animations. */}
+    {/* Let the custom route animations own the swap instead of a native crossfade. */}
     <script is:inline>
       try {
         Object.defineProperty(Document.prototype, 'startViewTransition', {
@@ -66,9 +60,8 @@ const isHome = path === '/';
   </head>
   <body>
     <Header scrapCount={scrapCount} scrolled={!isHome} />
-    <slot />
+    <main><slot /></main>
     <Footer />
-    {/* Gallery's two root elements carry their own explicit persist names. */}
     <Gallery />
     <script>
       import '../scripts/inittheme.js';

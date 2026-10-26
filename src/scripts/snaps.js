@@ -1,25 +1,14 @@
-/**
- * Immich Snaps — loads photos from an Immich album via the val.town proxy
- * and displays them in a full-screen gallery overlay using <masonry-grid-lanes>.
- *
- * The overlay lives in Gallery.astro and is `transition:persist`ed, so this
- * module runs once and simply opens/closes the gallery in response to the URL
- * (`/snaps/`) on every `astro:page-load`. Navigation itself is handled by the
- * ClientRouter (the snaps button is wired in route.js).
- */
 import { adoptMasonryGridLanesStyles, defineMasonryGridLanes } from '@schalkneethling/masonry-gridlanes-wc'
 import { navigate } from 'astro:transitions/client'
 
 const SNAPS_PROXY_URL = 'https://spren-immichgrabber.val.run/'
 const TAILSCALE_ISSUE_URL = 'https://github.com/tailscale/tailscale/issues/11849'
 
-// ─── State ──────────────────────────────────────────────────────────
 let assets = []
 let currentIndex = -1
 let _closeToken = 0
 let rendered = false
 
-// ─── DOM refs (elements provided by Gallery.astro) ──────────────────
 const overlay = document.querySelector('.snaps-overlay')
 const grid = overlay?.querySelector('masonry-grid-lanes')
 const lightbox = document.querySelector('.snaps-lightbox')
@@ -58,7 +47,6 @@ function setSnapsCount(value) {
   if (num) num.textContent = String(value)
 }
 
-// ─── Album loading ──────────────────────────────────────────────────
 async function fetchAlbum() {
   try {
     const res = await fetch(SNAPS_PROXY_URL)
@@ -82,7 +70,6 @@ async function loadAlbum() {
   return available
 }
 
-// ─── One-time init ──────────────────────────────────────────────────
 defineMasonryGridLanes()
 
 const ready = (async () => {
@@ -95,7 +82,6 @@ const ready = (async () => {
   }
 })()
 
-// ─── Lightbox ───────────────────────────────────────────────────────
 function showLightbox(index) {
   if (!assets.length) return
   const total = assets.length
@@ -154,22 +140,16 @@ document.addEventListener('keydown', (e) => {
   }
 })
 
-// ─── Masonry render ─────────────────────────────────────────────────
 function renderGrid() {
   grid.innerHTML = ''
-  // Fisher-Yates shuffle
   for (let i = assets.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     ;[assets[i], assets[j]] = [assets[j], assets[i]]
   }
-  // Phase 1: populate the grid with placeholder cells so the masonry
-  // layout is established before any images start loading.
-  // We already have width/height from the Immich metadata, so each
-  // figure starts with the correct aspect-ratio — no transition needed.
+  // Placeholder figures establish the masonry layout before images load.
   for (const [i, asset] of assets.entries()) {
     const fig = document.createElement('figure')
     fig.className = 'snaps-figure'
-    // Random starting angle so glow animations aren't all in sync
     fig.style.setProperty('--glow-angle', `${Math.random() * 360}deg`)
     fig.addEventListener('click', () => showLightbox(i))
     if (asset.width && asset.height) {
@@ -177,9 +157,7 @@ function renderGrid() {
     }
     grid.appendChild(fig)
   }
-  // Phase 2: load each image asynchronously.  When one finishes, insert
-  // it into its figure — the masonry grid's ResizeObserver will notice
-  // the size change and re-layout automatically.
+  // Images load separately so the grid can reflow as each one arrives.
   loadImages()
 }
 
@@ -202,14 +180,11 @@ function loadImages() {
       },
       { once: true },
     )
-    // Insert into the DOM *before* setting src so the browser can
-    // evaluate visibility and start the fetch.
     fig.appendChild(img)
     img.src = `${SNAPS_PROXY_URL}thumb/${asset.id}`
   }
 }
 
-// ─── Open / close ───────────────────────────────────────────────────
 async function openGallery() {
   const token = ++_closeToken
   await ready
@@ -255,9 +230,7 @@ function handleRoute() {
 
 document.addEventListener('astro:page-load', handleRoute)
 
-// Close the gallery before a navigation starts so the fade-out doesn't
-// overlap with the header animation or new page render (which can cause
-// a visible "shift" as --header-height updates mid-fade).
+// Close before the swap so the fade cannot overlap the header animation.
 document.addEventListener('astro:before-swap', () => {
   if (!isGalleryOpen()) return
   _closeToken++

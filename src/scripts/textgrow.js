@@ -1,4 +1,3 @@
-/** Font-weight ripple and mouse-proximity animation for the hero <h1>. */
 const h1 = document.querySelector('header.hero h1')
 let letters = []
 
@@ -155,7 +154,6 @@ function bindGlobalListeners() {
   document.addEventListener('mouseleave', resetMouseAffected)
 }
 
-// ── Category font-stretch (responsive) ───────────────────────────────
 function updateFontStretch() {
   const spans = document.querySelectorAll('h2 a.category')
   const vw = window.innerWidth

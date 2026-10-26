@@ -45,7 +45,6 @@
     box-shadow: var(--pill-shadow-hover);
   }
 
-  /* Clipping wrapper: the card grows/shrinks without reflowing its contents. */
   .np-collapse {
     max-height: var(--np-open-height, 20rem);
     border-radius: var(--radius-lg);
@@ -124,7 +123,6 @@
     overflow: hidden;
   }
 
-  /* Collapsible state (mobile + desktop when enabled) */
   .now-playing.np-collapsible .np-tab {
     border-bottom: var(--pill-border);
     border-radius: var(--radius-lg);
@@ -192,18 +190,15 @@
   const track = document.querySelector<HTMLElement>(".np-track");
   const artist = document.querySelector<HTMLElement>(".np-artist");
 
-  // Track the current track data for the click handler
   let currentTrack = "";
   let currentArtist = "";
 
   const npTab = document.querySelector<HTMLElement>(".np-tab");
 
-  /** Check if data has a real track (not null/empty) */
   function hasTrack(data: { shortenedName: string | null; }) {
     return data?.shortenedName && data.shortenedName !== "Currently Not Playing";
   }
 
-  /** Display a track in the widget */
   function displayTrack(data: { image: string; shortenedName: string | null; formattedArtist: string | null; }) {
     if (!data || !hasTrack(data)) {
       el?.classList.add("np-hidden");
@@ -264,7 +259,6 @@
     });
 
     npTab?.addEventListener("click", () => {
-      // Only toggle if collapsible (not on home page desktop)
       if (el?.classList.contains('np-collapsible')) {
         setOpenHeight();
         const isOpen = el.classList.toggle("np-open");
@@ -282,12 +276,9 @@
     if (!el) return;
     const inner = el.querySelector('.np-inner');
     if (!inner) return;
-    // The inner stays full-size inside the clipping wrapper, so this is the
-    // real open height whether the card is currently open or closed.
+    // The inner stays full-size inside the clipping wrapper.
     el.style.setProperty('--np-open-height', `${inner.getBoundingClientRect().height}px`);
     void el.offsetWidth;
-    // Once open, fall back to the generous CSS ceiling so longer track text
-    // can't be clipped.
     clearTimeout(openHeightTimer);
     openHeightTimer = setTimeout(() => el.style.removeProperty('--np-open-height'), 500);
   }
@@ -298,7 +289,6 @@
     else setOpenHeight();
     const home = isHome();
     if (home) {
-      // On home: expanded, not collapsible
       el.classList.remove('np-collapsible');
       el.classList.add('np-open');
       writeSession('np-open', null);

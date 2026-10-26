@@ -25,11 +25,11 @@ const detailDatetime = current?.data.date?.toISOString();
     <article class="scrap-item detail">
       <div class="scrap-nav">
         <span class="scrap-nav-prev">
-          {olderSlug ? <a href={`/scraps/${olderSlug}/`}>← older</a> : <a data-disabled>← older</a>}
+          {olderSlug ? <a href={`/scraps/${olderSlug}/`}>← older</a> : <span data-disabled>← older</span>}
         </span>
         <span class="scrap-nav-list"><a href="/scraps/">list</a></span>
         <span class="scrap-nav-next">
-          {newerSlug ? <a href={`/scraps/${newerSlug}/`}>newer →</a> : <a data-disabled>newer →</a>}
+          {newerSlug ? <a href={`/scraps/${newerSlug}/`}>newer →</a> : <span data-disabled>newer →</span>}
         </span>
       </div>
       <div class="scrap-left">

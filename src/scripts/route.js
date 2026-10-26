@@ -1,7 +1,3 @@
-/**
- * Route state for the persisted header: hero animation, active buttons,
- * dynamic counts and overlay alignment.
- */
 import { navigate } from 'astro:transitions/client'
 
 function isScrapsPath(p = location.pathname) {

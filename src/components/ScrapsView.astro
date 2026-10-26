@@ -22,9 +22,7 @@ const scraps = sortScrapsNewestFirst(allScraps);
   function showScraps() {
     const view = document.getElementById('view-scraps')
     if (!view) return
-    // If the header already settled (initial load, or a navigation where it
-    // didn't move), reveal immediately. Otherwise wait for it so
-    // --header-height is correct when the content appears.
+    // Wait for the header measurement while it is still moving.
     if (document.documentElement.dataset.headerSettled !== undefined) {
       view.classList.remove('view-scraps-hidden')
       return
@@ -38,6 +36,7 @@ const scraps = sortScrapsNewestFirst(allScraps);
 <style is:global>
   #view-scraps.view-scraps-hidden {
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
   }
 
@@ -126,8 +125,8 @@ const scraps = sortScrapsNewestFirst(allScraps);
   .scrap-nav a:hover {
     text-decoration: underline;
   }
-  .scrap-nav a[data-disabled],
-  .scrap-nav a[data-disabled]:hover {
+  .scrap-nav [data-disabled],
+  .scrap-nav [data-disabled]:hover {
     color: var(--ui-border);
     cursor: default;
     text-decoration: none;
