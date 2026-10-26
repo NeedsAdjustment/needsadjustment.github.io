@@ -128,6 +128,9 @@ function wireButtons() {
   if (snapsBtn && !snapsBtn.dataset.wired) {
     snapsBtn.dataset.wired = '1'
     snapsBtn.addEventListener('click', (e) => {
+      // When Immich is unreachable the href points at the Tailscale issue;
+      // let the browser follow it instead of routing to the gallery.
+      if (snapsBtn.classList.contains('unavailable')) return
       e.preventDefault()
       if (isSnapsPath()) navigate('/')
       else navigate('/snaps/')

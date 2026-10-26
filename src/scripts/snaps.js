@@ -11,6 +11,7 @@ import { adoptMasonryGridLanesStyles, defineMasonryGridLanes } from '@schalkneet
 import { navigate } from 'astro:transitions/client'
 
 const SNAPS_PROXY_URL = 'https://spren-immichgrabber.val.run/'
+const TAILSCALE_ISSUE_URL = 'https://github.com/tailscale/tailscale/issues/11849'
 
 // ─── State ──────────────────────────────────────────────────────────
 let assets = []
@@ -43,16 +44,26 @@ function setBodyScrollLocked(locked) {
   document.body.style.overflow = locked ? 'hidden' : ''
 }
 
+const snapsBtn = document.querySelector('h2 a.category[data-snaps]')
+let snapsUnavailable = false
+
+function setSnapsUnavailable(value) {
+  snapsUnavailable = value
+  if (!snapsBtn) return
+  snapsBtn.classList.toggle('unavailable', value)
+  snapsBtn.href = value ? TAILSCALE_ISSUE_URL : '/snaps/'
+}
+
 let cachedSnapsCount = null
 function setSnapsCount(value) {
   if (value == null) return
   cachedSnapsCount = value
-  const num = document.querySelector('h2 a.category[data-snaps] num')
+  const num = snapsBtn?.querySelector('num')
   if (num) num.textContent = String(value)
 }
 function reapplySnapsCount() {
   if (cachedSnapsCount == null) return
-  const num = document.querySelector('h2 a.category[data-snaps] num')
+  const num = snapsBtn?.querySelector('num')
   if (num) num.textContent = String(cachedSnapsCount)
 }
 
@@ -69,10 +80,15 @@ async function fetchAlbum() {
 
 async function loadAlbum() {
   const data = await fetchAlbum()
-  if (!data) return false
+  if (!data) {
+    setSnapsUnavailable(true)
+    return false
+  }
   if (typeof data.assetCount === 'number') setSnapsCount(data.assetCount)
-  if (data.assets) assets = data.assets
-  return assets.length > 0
+  if (Array.isArray(data.assets)) assets = data.assets
+  const available = assets.length > 0
+  setSnapsUnavailable(!available)
+  return available
 }
 
 // ─── One-time init ──────────────────────────────────────────────────
@@ -242,6 +258,7 @@ function closeGallery() {
 
 // ─── Route-driven lifecycle ─────────────────────────────────────────
 function handleRoute() {
+  setSnapsUnavailable(snapsUnavailable) // restore the button state if re-rendered
   reapplySnapsCount() // header may have been re-rendered; restore the count
   if (isSnapsPath()) openGallery()
   else if (isGalleryOpen()) closeGallery()

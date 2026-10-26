@@ -153,6 +153,48 @@ const { scrapCount = 0, hero = false, scrolled = false } = Astro.props
     font-feature-settings: 'ss04';
   }
 
+  /* Snaps unavailable (Immich unreachable) */
+  h2 a.category.unavailable {
+    position: relative;
+    color: var(--accent-red);
+    text-decoration: line-through;
+  }
+
+  h2 a.category.unavailable.active {
+    background: color-mix(in srgb, var(--secondary-background) 85%, transparent);
+    border-color: var(--accent-red);
+    color: var(--accent-red);
+  }
+
+  h2 a.category.unavailable num {
+    display: none;
+  }
+
+  h2 a.category.unavailable::after {
+    content: 'stupid tailscale';
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    background: var(--accent-red);
+    color: #fff;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    text-decoration: none;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    z-index: 20;
+  }
+
+  h2 a.category.unavailable:hover::after,
+  h2 a.category.unavailable:focus-visible::after {
+    opacity: 1;
+  }
+
   .scroll-indicator {
     display: flex;
     flex-direction: column;
