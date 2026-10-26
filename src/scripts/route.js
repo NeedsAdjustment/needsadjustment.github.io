@@ -133,21 +133,31 @@ function applyTeraCursor() {
 }
 
 function applyCount(key, value) {
-  if (value == null) return
-  const num = document.querySelector(`h2 a.category[data-count-key="${key}"] num`)
-  if (num) num.textContent = String(value)
+  const link = document.querySelector(`h2 a.category[data-count-key="${key}"]`)
+  if (!link) return
+  const label = link.dataset.label ?? key
+  const count = Number(value)
+  if (value == null || !Number.isFinite(count) || count <= 0) {
+    link.dataset.status = 'error'
+    link.setAttribute('aria-label', label)
+    return
+  }
+  link.dataset.status = 'ready'
+  link.setAttribute('aria-label', `${label}, ${count}`)
+  const num = link.querySelector('num')
+  if (num) num.textContent = String(count)
 }
 
 function fetchCounts() {
   fetch('https://api.github.com/users/NeedsAdjustment')
     .then((r) => (r.ok ? r.json() : null))
     .then((d) => applyCount('coding', d?.public_repos))
-    .catch(() => {})
+    .catch(() => applyCount('coding', null))
 
   fetch('https://spren-dribbleshotsgrabber.val.run/')
     .then((r) => (r.ok ? r.json() : null))
     .then((d) => applyCount('design', d?.shots_count))
-    .catch(() => {})
+    .catch(() => applyCount('design', null))
 }
 
 wireButtons()

@@ -38,13 +38,18 @@ const snapsBtn = document.querySelector('h2 a.category[data-snaps]')
 function setSnapsUnavailable(value) {
   if (!snapsBtn) return
   snapsBtn.classList.toggle('unavailable', value)
+  snapsBtn.dataset.status = value ? 'error' : 'ready'
   snapsBtn.href = value ? TAILSCALE_ISSUE_URL : '/snaps/'
+  if (value) snapsBtn.setAttribute('aria-label', `${snapsBtn.dataset.label ?? 'snaps'}, unavailable`)
 }
 
 function setSnapsCount(value) {
-  if (value == null) return
-  const num = snapsBtn?.querySelector('num')
-  if (num) num.textContent = String(value)
+  const count = Number(value)
+  if (!snapsBtn || !Number.isFinite(count) || count <= 0) return
+  snapsBtn.dataset.status = 'ready'
+  snapsBtn.setAttribute('aria-label', `${snapsBtn.dataset.label ?? 'snaps'}, ${count}`)
+  const num = snapsBtn.querySelector('num')
+  if (num) num.textContent = String(count)
 }
 
 async function fetchAlbum() {
@@ -63,9 +68,10 @@ async function loadAlbum() {
     setSnapsUnavailable(true)
     return false
   }
-  if (typeof data.assetCount === 'number') setSnapsCount(data.assetCount)
   if (Array.isArray(data.assets)) assets = data.assets
   const available = assets.length > 0
+  const count = typeof data.assetCount === 'number' && data.assetCount > 0 ? data.assetCount : assets.length
+  setSnapsCount(count)
   setSnapsUnavailable(!available)
   return available
 }

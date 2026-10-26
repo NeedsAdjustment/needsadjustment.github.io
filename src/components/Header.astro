@@ -2,16 +2,19 @@
 
 const { scrapCount = 0, scrolled = false } = Astro.props
 
+const splitLabel = (label: string) =>
+  [...label].map((char, index) => ({ char, index }))
+
 ---
 
 <header class:list={['hero', { scrolled }]} transition:persist="site-header">
   <h1>Joshua Soong</h1>
   <h2>
     <tera class="category" id="leftCreature"></tera>
-    <a class="category" data-count-key="coding" href='https://github.com/NeedsAdjustment'>coding<num>0</num></a>
-    <a class="category" data-scraps href="/scraps/">scraps<num>{scrapCount}</num></a>
-    <a class="category" data-snaps href="/snaps/">snaps<num>0</num></a>
-    <a class="category" data-count-key="design" href='https://dribbble.com/NeedsAdjustment'>design<num>0</num></a>
+    <a class="category" data-count-key="coding" data-label="coding" data-status="loading" aria-label="coding" href='https://github.com/NeedsAdjustment'>{splitLabel('coding').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<num></num></a>
+    <a class="category" data-scraps data-label="scraps" data-status="ready" aria-label={`scraps, ${scrapCount}`} href="/scraps/">{splitLabel('scraps').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<num>{scrapCount}</num></a>
+    <a class="category" data-snaps data-label="snaps" data-status="loading" aria-label="snaps" href="/snaps/">{splitLabel('snaps').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<num></num></a>
+    <a class="category" data-count-key="design" data-label="design" data-status="loading" aria-label="design" href='https://dribbble.com/NeedsAdjustment'>{splitLabel('design').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<num></num></a>
     <tera class="category" id="rightCreature"></tera>
   </h2>
   <div class="scroll-indicator">
@@ -117,6 +120,33 @@ const { scrapCount = 0, scrolled = false } = Astro.props
   h2 a.category:hover {
     background: var(--pill-surface-hover);
     box-shadow: var(--pill-shadow-hover);
+  }
+
+  h2 a.category .label-letter {
+    display: inline-block;
+  }
+
+  h2 a.category[data-status='loading'] .label-letter {
+    animation: pill-loading 1.3s ease-in-out infinite;
+    animation-delay: calc(var(--letter-index) * 90ms);
+    animation-fill-mode: both;
+  }
+
+  h2 a.category[data-status='loading'] num,
+  h2 a.category[data-status='error'] num {
+    display: none;
+  }
+
+  @keyframes pill-loading {
+    0%, 100% { opacity: 0.35; }
+    35%, 65% { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    h2 a.category[data-status='loading'] .label-letter {
+      animation: none;
+      opacity: 1;
+    }
   }
 
   h2 a.category.active {
