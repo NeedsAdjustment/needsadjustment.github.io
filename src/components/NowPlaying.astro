@@ -2,11 +2,13 @@
   <div class="np-tab">
     listening
   </div>
-  <div class="np-inner">
-    <img id="np-art" class="np-art" src="" alt="Album art" />
-    <div class="np-info">
-      <span id="np-track" class="np-track"></span>
-      <span id="np-artist" class="np-artist"></span>
+  <div class="np-collapse">
+    <div class="np-inner">
+      <img id="np-art" class="np-art" src="" alt="Album art" />
+      <div class="np-info">
+        <span id="np-track" class="np-track"></span>
+        <span id="np-artist" class="np-artist"></span>
+      </div>
     </div>
   </div>
 </div>
@@ -48,24 +50,44 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   }
 
+  /* Clipping wrapper: the card grows/shrinks without reflowing its contents. */
+  .np-collapse {
+    max-height: var(--np-open-height, 20rem);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: max-height 0.3s ease;
+  }
+
+  .now-playing:has(.np-inner:hover) .np-collapse {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  }
+
   .np-inner {
     display: flex;
     align-items: center;
     gap: var(--space-md);
     padding: var(--space-sm) var(--space-md) var(--space-sm) var(--space-sm);
-    background: color-mix(in srgb, var(--secondary-background) 85%, transparent);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    /* Opaque mix so the tab's border can't show through the panel. */
+    background: color-mix(in srgb, var(--secondary-background) 85%, var(--background-color));
     border: 1px solid var(--ui-border);
     border-radius: var(--radius-lg);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     cursor: pointer;
-    transition: background 0.3s ease, box-shadow 0.3s ease, max-height 0.4s ease, opacity 0.4s ease, padding 0.4s ease, gap 0.4s ease, border-width 0.4s ease, margin 0.4s ease;
+    transition: background 0.3s ease;
   }
 
   .np-inner:hover {
-    background: color-mix(in srgb, var(--secondary-background) 70%, transparent);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    background: color-mix(in srgb, var(--secondary-background) 70%, var(--background-color));
+  }
+
+  .np-art,
+  .np-info {
+    transition: opacity 0.15s ease;
+  }
+
+  .now-playing.np-instant,
+  .now-playing.np-instant * {
+    transition: none !important;
   }
 
   .np-art {
@@ -108,12 +130,6 @@
     overflow: hidden;
   }
 
-  /* Route changes sync this state instantly; only user clicks animate. */
-  .now-playing.np-instant,
-  .now-playing.np-instant * {
-    transition: none !important;
-  }
-
   /* Collapsible state (mobile + desktop when enabled) */
   .now-playing.np-collapsible .np-tab {
     border-bottom: 1px solid var(--ui-border);
@@ -124,6 +140,7 @@
     align-items: center;
     justify-content: center;
     transition: background 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease, border-bottom 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+    transition-delay: 0.15s;
   }
 
   .now-playing.np-collapsible.np-open .np-tab {
@@ -131,38 +148,28 @@
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     margin-bottom: calc(-1 * var(--radius-lg) + var(--space-xs));
     padding: var(--space-xs) var(--space-sm) var(--space-md) var(--space-sm);
-    transition-delay: 0.2s;
+    transition-delay: 0s;
   }
 
-  .now-playing.np-collapsible .np-inner {
+  .now-playing.np-collapsible .np-collapse {
     max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    padding: 0;
-      gap: 0;
-    border-width: 0;
-    margin: 0;
-    pointer-events: none;
-    transition-delay: 0.2s;
+    transition-delay: 0.15s;
   }
 
-  .now-playing.np-collapsible.np-open .np-inner {
-    max-height: 20rem;
-    opacity: 1;
-    padding: var(--space-sm) var(--space-md) var(--space-sm) var(--space-sm);
-    gap: var(--space-md);
-    border-width: 1px;
-    margin: 0;
-    pointer-events: auto;
+  .now-playing.np-collapsible.np-open .np-collapse {
+    max-height: var(--np-open-height, 20rem);
+    transition-delay: 0s;
   }
 
+  .now-playing.np-collapsible .np-art,
   .now-playing.np-collapsible .np-info {
     opacity: 0;
   }
 
+  .now-playing.np-collapsible.np-open .np-art,
   .now-playing.np-collapsible.np-open .np-info {
     opacity: 1;
-    transition: opacity 0.2s ease 0.4s;
+    transition-delay: 0.3s;
   }
 </style>
 
@@ -255,6 +262,7 @@
     npTab?.addEventListener("click", () => {
       // Only toggle if collapsible (not on home page desktop)
       if (el?.classList.contains('np-collapsible')) {
+        setOpenHeight();
         const isOpen = el.classList.toggle("np-open");
         sessionStorage.setItem('np-open', isOpen ? '1' : '0');
       }
@@ -265,9 +273,25 @@
     return location.pathname === '/';
   }
 
-  function updateCollapsible() {
+  let openHeightTimer;
+  function setOpenHeight() {
     if (!el) return;
-    el.classList.add('np-instant');
+    const inner = el.querySelector('.np-inner');
+    if (!inner) return;
+    // The inner stays full-size inside the clipping wrapper, so this is the
+    // real open height whether the card is currently open or closed.
+    el.style.setProperty('--np-open-height', `${inner.getBoundingClientRect().height}px`);
+    void el.offsetWidth;
+    // Once open, fall back to the generous CSS ceiling so longer track text
+    // can't be clipped.
+    clearTimeout(openHeightTimer);
+    openHeightTimer = setTimeout(() => el.style.removeProperty('--np-open-height'), 500);
+  }
+
+  function updateCollapsible(animate = true) {
+    if (!el) return;
+    if (!animate) el.classList.add('np-instant');
+    else setOpenHeight();
     const home = isHome();
     if (home) {
       // On home: expanded, not collapsible
@@ -288,24 +312,32 @@
         el.classList.remove('np-open');
       }
     }
-    void el.offsetWidth;
-    requestAnimationFrame(() => el.classList.remove('np-instant'));
+    if (!animate) {
+      void el.offsetWidth;
+      requestAnimationFrame(() => el.classList.remove('np-instant'));
+    }
   }
 
+  let firstRun = true;
   function init() {
     wireNowPlaying();
-    updateCollapsible();
+    if (firstRun) {
+      firstRun = false;
+      updateCollapsible(false);
+    } else {
+      // After a swap: wait a frame so the persisted element is stable and the
+      // collapse/expand transition can actually run.
+      requestAnimationFrame(() => updateCollapsible());
+    }
     refresh();
   }
 
   if (document.readyState !== 'loading') init();
   else document.addEventListener('DOMContentLoaded', init);
   document.addEventListener('astro:page-load', init);
-  // Re-apply collapsible state after swap
-  document.addEventListener('astro:after-swap', () => {
-    updateCollapsible();
-    refresh();
-  });
+  // Refresh track data after swap; the collapsible state is synced on page-load
+  // once the persisted footer is stable.
+  document.addEventListener('astro:after-swap', refresh);
 </script>
 
 
