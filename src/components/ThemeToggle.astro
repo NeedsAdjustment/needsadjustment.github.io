@@ -39,6 +39,25 @@
     transition: var(--theme-transition);
   }
 
+  .toggle-group::before {
+    content: '';
+    position: absolute;
+    inset-block-start: var(--space-xs);
+    inset-inline-start: var(--space-xs);
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    border: 1px solid color-mix(in srgb, var(--toggle-accent-color) 45%, var(--ui-border));
+    border-radius: var(--radius-full);
+    background-color: color-mix(in srgb, var(--toggle-accent-color) 18%, var(--pill-surface));
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+    transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .toggle-group:has(#dark:checked)::before {
+    transform: translateX(100%);
+  }
+
   .toggle-group label {
     border-radius: var(--radius-full);
     cursor: pointer;
@@ -50,16 +69,11 @@
     user-select: none;
     line-height: 1;
     position: relative;
+    z-index: 1;
     background-color: transparent;
     color: var(--text-color);
     border: 1px solid transparent;
     transition: var(--theme-transition);
-  }
-
-  .toggle-group label:has(input:checked) {
-    background-color: color-mix(in srgb, var(--toggle-accent-color) 18%, var(--pill-surface));
-    border-color: color-mix(in srgb, var(--toggle-accent-color) 45%, var(--ui-border));
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   .toggle-group label:has(input:focus-visible) {
@@ -108,5 +122,11 @@
 
   .toggle-group label:has(input:checked) .filled-icon {
     filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.2));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .toggle-group::before {
+      transition: none;
+    }
   }
 </style>
