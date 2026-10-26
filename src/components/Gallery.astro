@@ -64,7 +64,6 @@
     max-width: 100%;
     overflow-x: hidden;
     display: block;
-    box-sizing: border-box;
     position: relative;
     margin-bottom: calc(2 * var(--header-height));
   }
@@ -123,7 +122,6 @@
   .snaps-prev:hover,
   .snaps-next:hover { color: var(--text-color); }
 
-  /* ── Thumbnail figures ─────────────────────────────── */
   .snaps-figure {
     margin: 0;
     border-radius: 1rem;
@@ -143,7 +141,6 @@
     z-index: 1;
   }
 
-  /* Placeholder background shown while image loads */
   .snaps-figure::before {
     content: '';
     display: block;
@@ -155,7 +152,6 @@
     transition: opacity 0.4s ease;
   }
 
-  /* Rotating glow on the border */
   @property --glow-angle {
     syntax: '<angle>';
     inherits: true;
@@ -188,7 +184,6 @@
     transition: opacity 0.4s ease;
   }
 
-  /* Hide placeholders once the image has loaded */
   .snaps-figure.loaded::before,
   .snaps-figure.loaded::after {
     opacity: 0;

@@ -29,6 +29,17 @@
 
   --radius-sm: clamp(0.25rem, 0.5vw, 0.5rem);
   --radius-lg: clamp(1rem, 1.5vw, 1.5rem);
+  --radius-full: 9999px;
+
+  --pill-surface: color-mix(in srgb, var(--secondary-background) 85%, transparent);
+  --pill-surface-hover: color-mix(in srgb, var(--secondary-background) 70%, transparent);
+  --panel-surface: color-mix(in srgb, var(--secondary-background) 85%, var(--background-color));
+  --panel-surface-hover: color-mix(in srgb, var(--secondary-background) 70%, var(--background-color));
+  --pill-border: 1px solid var(--ui-border);
+  --pill-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --pill-shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.12);
+  --pill-transition: background 0.3s ease, box-shadow 0.3s ease;
+  --theme-transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 html.dark {

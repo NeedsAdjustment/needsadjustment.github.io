@@ -26,20 +26,21 @@
     inline-size: fit-content;
     padding: var(--space-xs);
     margin: 0;
-    border: 1px solid var(--ui-border);
-    border-radius: 9999px;
-    background: color-mix(in srgb, var(--secondary-background) 85%, transparent);
+    border: var(--pill-border);
+    border-radius: var(--radius-full);
+    background: var(--pill-surface);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--pill-shadow);
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
+    transition: var(--theme-transition);
   }
 
   .toggle-group label {
-    border-radius: 9999px;
+    border-radius: var(--radius-full);
     cursor: pointer;
     display: inline-flex;
     width: 2.5rem;
@@ -49,19 +50,14 @@
     user-select: none;
     line-height: 1;
     position: relative;
-    border: 1px solid transparent;
-    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  :global(.toggle-group label:has(input)) {
     background-color: transparent;
     color: var(--text-color);
+    border: 1px solid transparent;
+    transition: var(--theme-transition);
   }
 
   .toggle-group label:has(input:checked) {
-    /* Matches the snaps error pill: a translucent accent tint over the
-       secondary surface rather than a solid fill. */
-    background-color: color-mix(in srgb, var(--toggle-accent-color) 18%, color-mix(in srgb, var(--secondary-background) 85%, transparent));
+    background-color: color-mix(in srgb, var(--toggle-accent-color) 18%, var(--pill-surface));
     border-color: color-mix(in srgb, var(--toggle-accent-color) 45%, var(--ui-border));
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
@@ -95,20 +91,17 @@
     opacity: 0;
   }
 
-  :global(.toggle-group label:has(input:checked) .regular-icon) {
+  .toggle-group label:has(input:checked) .regular-icon,
+  .toggle-group label:not(:has(input:checked)):hover .regular-icon {
     opacity: 0;
   }
 
-  :global(.toggle-group label:has(input:checked) .filled-icon) {
+  .toggle-group label:has(input:checked) .filled-icon,
+  .toggle-group label:not(:has(input:checked)):hover .filled-icon {
     opacity: 1;
+  }
+
+  .toggle-group label:has(input:checked) .filled-icon {
     filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.2));
-  }
-
-  :global(.toggle-group label:not(:has(input:checked)):hover .regular-icon) {
-    opacity: 0;
-  }
-
-  :global(.toggle-group label:not(:has(input:checked)):hover .filled-icon) {
-    opacity: 1;
   }
 </style>

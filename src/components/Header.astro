@@ -103,20 +103,20 @@ const { scrapCount = 0, scrolled = false } = Astro.props
   h2 a.category {
     cursor: pointer;
     padding: var(--space-xs) var(--space-sm);
-    border: 1px solid var(--ui-border);
-    border-radius: 9999px;
-    background: color-mix(in srgb, var(--secondary-background) 85%, transparent);
+    border: var(--pill-border);
+    border-radius: var(--radius-full);
+    background: var(--pill-surface);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--pill-shadow);
     text-decoration: none;
     color: inherit;
-    transition: background 0.3s ease, box-shadow 0.3s ease;
+    transition: var(--pill-transition);
   }
 
   h2 a.category:hover {
-    background: color-mix(in srgb, var(--secondary-background) 70%, transparent);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    background: var(--pill-surface-hover);
+    box-shadow: var(--pill-shadow-hover);
   }
 
   h2 a.category.active {
@@ -150,18 +150,16 @@ const { scrapCount = 0, scrolled = false } = Astro.props
     position: relative;
     color: var(--accent-red);
     text-decoration: line-through;
-    /* Nested two-colour mixes: this browser supports at most two colours per
-       color-mix(), and the inner mix keeps the pill's translucency. */
-    background: color-mix(in srgb, var(--accent-red) 12%, color-mix(in srgb, var(--secondary-background) 85%, transparent));
+    background: color-mix(in srgb, var(--accent-red) 12%, var(--pill-surface));
     border-color: color-mix(in srgb, var(--accent-red) 45%, var(--ui-border));
   }
 
-  h2 a.category.unavailable:hover {
-    background: color-mix(in srgb, var(--accent-red) 18%, color-mix(in srgb, var(--secondary-background) 85%, transparent));
+  h2 a.category.unavailable:hover,
+  h2 a.category.unavailable.active {
+    background: color-mix(in srgb, var(--accent-red) 18%, var(--pill-surface));
   }
 
   h2 a.category.unavailable.active {
-    background: color-mix(in srgb, var(--accent-red) 18%, color-mix(in srgb, var(--secondary-background) 85%, transparent));
     border-color: var(--accent-red);
     color: var(--accent-red);
   }

@@ -27,22 +27,22 @@
 
   .np-tab {
     user-select: none;
-    background: color-mix(in srgb, var(--secondary-background) 85%, transparent);
-    border: 1px solid var(--ui-border);
+    background: var(--pill-surface);
+    border: var(--pill-border);
     border-bottom: none;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--pill-shadow);
     padding: var(--space-xs) var(--space-sm) var(--space-md) var(--space-sm);
     margin-bottom: calc(-1 * var(--radius-lg) + var(--space-xs));
     width: min-content;
     font-size: 0.8rem;
     cursor: pointer;
-    transition: background 0.3s ease, box-shadow 0.3s ease;
+    transition: var(--pill-transition);
   }
 
   .np-tab:hover {
-    background: color-mix(in srgb, var(--secondary-background) 70%, transparent);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    background: var(--pill-surface-hover);
+    box-shadow: var(--pill-shadow-hover);
   }
 
   /* Clipping wrapper: the card grows/shrinks without reflowing its contents. */
@@ -50,12 +50,12 @@
     max-height: var(--np-open-height, 20rem);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--pill-shadow);
     transition: max-height 0.3s ease;
   }
 
   .now-playing:has(.np-inner:hover) .np-collapse {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--pill-shadow-hover);
   }
 
   .np-inner {
@@ -63,16 +63,15 @@
     align-items: center;
     gap: var(--space-md);
     padding: var(--space-sm) var(--space-md) var(--space-sm) var(--space-sm);
-    /* Opaque mix so the tab's border can't show through the panel. */
-    background: color-mix(in srgb, var(--secondary-background) 85%, var(--background-color));
-    border: 1px solid var(--ui-border);
+    background: var(--panel-surface);
+    border: var(--pill-border);
     border-radius: var(--radius-lg);
     cursor: pointer;
     transition: background 0.3s ease;
   }
 
   .np-inner:hover {
-    background: color-mix(in srgb, var(--secondary-background) 70%, var(--background-color));
+    background: var(--panel-surface-hover);
   }
 
   .np-art,
@@ -127,14 +126,14 @@
 
   /* Collapsible state (mobile + desktop when enabled) */
   .now-playing.np-collapsible .np-tab {
-    border-bottom: 1px solid var(--ui-border);
+    border-bottom: var(--pill-border);
     border-radius: var(--radius-lg);
     margin-bottom: var(--space-xs);
     padding: var(--space-xs) var(--space-sm);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease, border-bottom 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+    transition: var(--pill-transition), border-radius 0.3s ease, border-bottom 0.3s ease, margin 0.3s ease, padding 0.3s ease;
     transition-delay: 0.15s;
   }
 
