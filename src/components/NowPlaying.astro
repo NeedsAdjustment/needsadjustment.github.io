@@ -171,6 +171,21 @@
   const NOW_PLAYING_PROXY_URL = "https://sprenlastplayed.val.run/";
   const LS_KEY = "lastPlayedTrack";
 
+  function readSession(key: string) {
+    try {
+      return sessionStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
+
+  function writeSession(key: string, value: string | null) {
+    try {
+      if (value === null) sessionStorage.removeItem(key);
+      else sessionStorage.setItem(key, value);
+    } catch {}
+  }
+
   const el = document.querySelector<HTMLElement>(".now-playing")!;
   const npInner = document.querySelector<HTMLElement>(".np-inner");
   const art = document.querySelector<HTMLImageElement>(".np-art");
@@ -206,35 +221,36 @@
     el?.classList.remove("np-hidden");
   }
 
-  /** Main refresh: fetch from the proxy val */
+  let refreshToken = 0;
+
   async function refresh() {
+    const token = ++refreshToken;
+    let data = null;
+
     try {
       const res = await fetch(NOW_PLAYING_PROXY_URL);
-      const data = await res.json();
+      if (!res.ok) throw new Error(`Proxy error: ${res.status}`);
+      data = await res.json();
+    } catch {}
 
-      if (hasTrack(data)) {
-        // Cache locally for offline / fast reload
+    if (token !== refreshToken) return;
+
+    if (hasTrack(data)) {
+      try {
         localStorage.setItem(LS_KEY, JSON.stringify(data));
-
-        displayTrack(data);
-        return;
-      }
-    } catch {
-      // Network error — fall through to local cache
+      } catch {}
+      displayTrack(data);
+      return;
     }
 
-    // Remote unavailable or no data — try localStorage
     try {
       const local = JSON.parse(localStorage.getItem(LS_KEY) || "null");
       if (local && hasTrack(local)) {
         displayTrack(local);
         return;
       }
-    } catch {
-      // ignore
-    }
+    } catch {}
 
-    // Nothing at all
     el?.classList.add("np-hidden");
   }
 
@@ -252,7 +268,7 @@
       if (el?.classList.contains('np-collapsible')) {
         setOpenHeight();
         const isOpen = el.classList.toggle("np-open");
-        sessionStorage.setItem('np-open', isOpen ? '1' : '0');
+        writeSession('np-open', isOpen ? '1' : '0');
       }
     });
   }
@@ -285,10 +301,10 @@
       // On home: expanded, not collapsible
       el.classList.remove('np-collapsible');
       el.classList.add('np-open');
-      sessionStorage.removeItem('np-open');
+      writeSession('np-open', null);
     } else {
       el.classList.add('np-collapsible');
-      el.classList.toggle('np-open', sessionStorage.getItem('np-open') === '1');
+      el.classList.toggle('np-open', readSession('np-open') === '1');
     }
     if (!animate) {
       void el.offsetWidth;

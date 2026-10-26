@@ -86,9 +86,13 @@ async function loadAlbum() {
 defineMasonryGridLanes()
 
 const ready = (async () => {
-  await adoptMasonryGridLanesStyles(document)
-  if (document.fonts?.ready != null) await document.fonts.ready
-  await loadAlbum()
+  try {
+    await adoptMasonryGridLanesStyles(document)
+    if (document.fonts?.ready != null) await document.fonts.ready
+    await loadAlbum()
+  } catch {
+    setSnapsUnavailable(true)
+  }
 })()
 
 // ─── Lightbox ───────────────────────────────────────────────────────
@@ -207,9 +211,10 @@ function loadImages() {
 
 // ─── Open / close ───────────────────────────────────────────────────
 async function openGallery() {
-  _closeToken++ // invalidate any pending close
+  const token = ++_closeToken
   await ready
-  if (!assets.length) return
+  if (token !== _closeToken || !isSnapsPath() || !assets.length) return
+
   if (!rendered) {
     renderGrid()
     rendered = true
@@ -217,15 +222,11 @@ async function openGallery() {
   overlay.style.display = 'block'
   setBodyScrollLocked(true)
 
-  // Wait for header-settled — it fires immediately on initial load and
-  // after the flip animation completes on navigations, so --header-height
-  // is always correct when the gallery fades in.
-  const openToken = _closeToken
   const reveal = () => {
-    if (_closeToken !== openToken) return // was closed during wait
+    if (token !== _closeToken) return
     overlay.style.opacity = '1'
   }
-  // If header-settled already fired, reveal right away.
+
   if (document.documentElement.dataset.headerSettled !== undefined) {
     reveal()
   } else {

@@ -3,7 +3,11 @@
  * theme; this module keeps the persisted toggle and route swaps in sync.
  */
 function currentTheme() {
-  return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
+  try {
+    const stored = localStorage.getItem('theme')
+    if (stored === 'light' || stored === 'dark') return stored
+  } catch {}
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
 }
 
 function setThemeState(html, theme) {
@@ -14,7 +18,9 @@ function applyTheme(theme) {
   const html = document.documentElement
   setThemeState(html, theme)
   html.style.removeProperty('background-color')
-  localStorage.setItem('theme', theme)
+  try {
+    localStorage.setItem('theme', theme)
+  } catch {}
 }
 
 function clearInlineBackground() {

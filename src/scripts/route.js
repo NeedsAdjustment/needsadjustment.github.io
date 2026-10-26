@@ -144,13 +144,13 @@ function applyCount(key, value) {
 
 function fetchCounts() {
   fetch('https://api.github.com/users/NeedsAdjustment')
-    .then((r) => r.json())
-    .then((d) => applyCount('coding', d.public_repos))
+    .then((r) => (r.ok ? r.json() : null))
+    .then((d) => applyCount('coding', d?.public_repos))
     .catch(() => {})
 
   fetch('https://spren-dribbleshotsgrabber.val.run/')
-    .then((r) => r.json())
-    .then((d) => applyCount('design', d.shots_count))
+    .then((r) => (r.ok ? r.json() : null))
+    .then((d) => applyCount('design', d?.shots_count))
     .catch(() => {})
 }
 
