@@ -8,16 +8,29 @@ function currentTheme() {
 }
 
 function setThemeState(html, theme) {
-  const dark = theme === 'dark'
-  html.classList.toggle('dark', dark)
-  // Mirrors --background-color in variables.css; inline so the canvas is never
-  // left white while the new page's styles settle.
-  html.style.backgroundColor = dark ? '#1f1f28' : '#fffcf0'
+  html.classList.toggle('dark', theme === 'dark')
 }
 
 function applyTheme(theme) {
-  setThemeState(document.documentElement, theme)
+  const html = document.documentElement
+  setThemeState(html, theme)
+  // The blocking script sets an inline background for the first paint. Drop it
+  // once the theme changes so <html> and <body> both follow --background-color
+  // via CSS and animate in sync.
+  html.style.removeProperty('background-color')
   localStorage.setItem('theme', theme)
+}
+
+// Keep the inline first-paint colour until the stylesheet has loaded (the
+// custom property resolves), then hand the background over to CSS.
+function clearInlineBackground() {
+  const html = document.documentElement
+  const background = getComputedStyle(html).getPropertyValue('--background-color').trim()
+  if (!background) {
+    requestAnimationFrame(clearInlineBackground)
+    return
+  }
+  html.style.removeProperty('background-color')
 }
 
 // Astro replaces <html>'s attributes with the incoming document's, which is
@@ -52,6 +65,7 @@ function wireToggle() {
 function init() {
   wireToggle()
   syncRadios()
+  clearInlineBackground()
 }
 
 if (document.readyState !== 'loading') init()
