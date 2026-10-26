@@ -1,15 +1,16 @@
 const h1 = document.querySelector('header.hero h1')
 let letters = []
 
-const waveSpeed = 0.0004
-const waveCycles = 2
+const wavePeriod = 12
+const waveCycles = 0.7
 const rippleAmplitude = 400
-const defaultWeight = 300
+const defaultWeight = 400
 const maxWeight = 900
 const minWeight = 300
 const lockMaxWeight = Math.min(defaultWeight + rippleAmplitude, maxWeight)
 
-let wavePos = 0
+let wavePhase = 0
+let lastFrameTime = 0
 const transitioningLetters = new Set()
 
 function lockWidth(span) {
@@ -46,14 +47,16 @@ function buildLetters() {
 
 function getRippleWeight(index, total) {
   const letterPos = index / total
-  let dist = letterPos - wavePos
-  if (dist < 0) dist += 1
-  const phase = dist * 2 * Math.PI * waveCycles
+  const phase = letterPos * 2 * Math.PI * waveCycles - wavePhase
   const weight = Math.round(defaultWeight + Math.sin(phase) * rippleAmplitude)
   return Math.max(minWeight, Math.min(maxWeight, weight))
 }
 
-function animateRipple() {
+function animateRipple(now) {
+  const delta = lastFrameTime === 0 ? 0 : Math.min((now - lastFrameTime) / 1000, 0.1)
+  lastFrameTime = now
+  wavePhase = (wavePhase + (delta / wavePeriod) * 2 * Math.PI) % (2 * Math.PI)
+
   letters.forEach((letter, i) => {
     const rippleWeight = getRippleWeight(i, letters.length)
     letter.dataset.rippleWeight = rippleWeight.toString()
@@ -73,8 +76,6 @@ function animateRipple() {
     }
   })
 
-  wavePos += waveSpeed
-  if (wavePos >= 1) wavePos -= 1
   requestAnimationFrame(animateRipple)
 }
 
@@ -114,8 +115,7 @@ function bindGlobalListeners() {
     const mousePosX = e.clientX
     const mousePosY = e.clientY
     const r = h1.getBoundingClientRect()
-    const isNear =
-      mousePosX >= r.left - 100 && mousePosX <= r.right + 100 && mousePosY >= r.top - 100 && mousePosY <= r.bottom + 100
+    const isNear = mousePosX >= r.left - 100 && mousePosX <= r.right + 100 && mousePosY >= r.top - 100 && mousePosY <= r.bottom + 100
     if (!isNear) {
       resetMouseAffected()
       return
@@ -177,11 +177,14 @@ if (h1) {
   const run = () => {
     buildLetters()
     bindGlobalListeners()
-    animateRipple()
+    requestAnimationFrame(animateRipple)
   }
 
   if (document.fonts?.ready) {
-    document.fonts.ready.then(() => document.fonts.load('1em Unbounded')).catch(() => {}).then(run)
+    document.fonts.ready
+      .then(() => document.fonts.load('1em Unbounded'))
+      .catch(() => {})
+      .then(run)
   } else {
     run()
   }
