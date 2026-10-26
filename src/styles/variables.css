@@ -57,7 +57,7 @@ html.dark {
   --accent-magenta: #d27e99;
   --accent-purple: #957fb8;
   --link-colour: var(--accent-blue);
-  --toggle-accent-color: var(--accent-red);
+  --toggle-accent-color: var(--accent-magenta);
   --gradient-color-1: var(--accent-magenta);
   --gradient-color-2: var(--accent-purple);
   --gradient-color-3: var(--accent-blue);
