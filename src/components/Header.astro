@@ -2,19 +2,16 @@
 
 const { scrapCount = 0, scrolled = false } = Astro.props
 
-const splitLabel = (label: string) =>
-  [...label].map((char, index) => ({ char, index }))
-
 ---
 
 <header class:list={['hero', { scrolled }]} transition:persist="site-header">
   <h1>Joshua Soong</h1>
   <h2>
     <tera class="category" id="leftCreature"></tera>
-    <a class="category" data-count-key="coding" data-label="coding" data-status="loading" aria-label="coding" href='https://github.com/NeedsAdjustment'>{splitLabel('coding').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<span class="count-wrap"><num></num></span></a>
-    <a class="category" data-scraps data-label="scraps" data-status="ready" aria-label={`scraps, ${scrapCount}`} href="/scraps/">{splitLabel('scraps').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<span class="count-wrap"><num>{scrapCount}</num></span></a>
-    <a class="category" data-snaps data-label="snaps" data-status="loading" aria-label="snaps" href="/snaps/">{splitLabel('snaps').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<span class="count-wrap"><num></num></span></a>
-    <a class="category" data-count-key="design" data-label="design" data-status="loading" aria-label="design" href='https://dribbble.com/NeedsAdjustment'>{splitLabel('design').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<span class="count-wrap"><num></num></span></a>
+    <a class="category" data-count-key="coding" data-label="coding" data-status="loading" aria-label="coding" href='https://github.com/NeedsAdjustment'><span class="pill-label">coding</span><span class="count-wrap"><num></num></span></a>
+    <a class="category" data-scraps data-label="scraps" data-status="ready" aria-label={`scraps, ${scrapCount}`} href="/scraps/"><span class="pill-label">scraps</span><span class="count-wrap"><num>{scrapCount}</num></span></a>
+    <a class="category" data-snaps data-label="snaps" data-status="loading" aria-label="snaps" href="/snaps/"><span class="pill-label">snaps</span><span class="count-wrap"><num></num></span></a>
+    <a class="category" data-count-key="design" data-label="design" data-status="loading" aria-label="design" href='https://dribbble.com/NeedsAdjustment'><span class="pill-label">design</span><span class="count-wrap"><num></num></span></a>
     <tera class="category" id="rightCreature"></tera>
   </h2>
   <div class="scroll-indicator">
@@ -122,14 +119,18 @@ const splitLabel = (label: string) =>
     box-shadow: var(--pill-shadow-hover);
   }
 
-  h2 a.category .label-letter {
+  h2 a.category .pill-label {
     display: inline-block;
   }
 
-  h2 a.category[data-status='loading'] .label-letter {
-    animation: pill-loading 1.3s ease-in-out infinite;
-    animation-delay: calc(var(--letter-index) * 90ms);
-    animation-fill-mode: both;
+  h2 a.category[data-status='loading'] .pill-label {
+    -webkit-mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.2) 0%, rgb(0 0 0 / 0.2) 42%, #000 50%, rgb(0 0 0 / 0.2) 58%, rgb(0 0 0 / 0.2) 100%);
+    mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.2) 0%, rgb(0 0 0 / 0.2) 42%, #000 50%, rgb(0 0 0 / 0.2) 58%, rgb(0 0 0 / 0.2) 100%);
+    -webkit-mask-size: 220% 100%;
+    mask-size: 220% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    animation: pill-loading 1.4s linear infinite;
   }
 
   h2 a.category .count-wrap {
@@ -153,14 +154,21 @@ const splitLabel = (label: string) =>
   }
 
   @keyframes pill-loading {
-    0%, 100% { opacity: 0.35; }
-    35%, 65% { opacity: 1; }
+    from {
+      -webkit-mask-position: 100% 0;
+      mask-position: 100% 0;
+    }
+    to {
+      -webkit-mask-position: 0% 0;
+      mask-position: 0% 0;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    h2 a.category[data-status='loading'] .label-letter {
+    h2 a.category[data-status='loading'] .pill-label {
+      -webkit-mask-image: none;
+      mask-image: none;
       animation: none;
-      opacity: 1;
     }
 
     h2 a.category .count-wrap {
