@@ -57,13 +57,9 @@ body {
   font-family: 'Lilex Duo';
 }
 
-h1 .letter,
+h1,
 tera,
 .snaps-spinner {
-  font-weight: 300;
-  transition: font-weight 0.15s cubic-bezier(0.25, 0.1, 0.25, 1), filter 0.3s ease;
-  position: relative;
-  z-index: 1;
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -73,15 +69,32 @@ tera,
       var(--gradient-color-2),
       var(--gradient-color-3),
       var(--gradient-color-1));
-  background-size: 200px;
   background-blend-mode: normal;
   animation: multi-bg 15s linear infinite alternate;
+}
+
+/* One gradient across the whole name instead of one per letter. */
+h1 {
+  background-size: 200px, 100% 100%;
+}
+
+tera,
+.snaps-spinner {
+  background-size: 200px;
+}
+
+h1 .letter,
+tera,
+.snaps-spinner {
+  font-weight: 300;
+  transition: font-weight 0.15s cubic-bezier(0.25, 0.1, 0.25, 1), filter 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
 h1 .letter.space {
   display: inline-block;
   width: 0.3em;
-  background-image: none;
 }
 
 @supports (font-variation-settings: normal) {
