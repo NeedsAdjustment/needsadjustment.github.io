@@ -11,10 +11,10 @@ const splitLabel = (label: string) =>
   <h1>Joshua Soong</h1>
   <h2>
     <tera class="category" id="leftCreature"></tera>
-    <a class="category" data-count-key="coding" data-label="coding" data-status="loading" aria-label="coding" href='https://github.com/NeedsAdjustment'>{splitLabel('coding').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<num></num></a>
-    <a class="category" data-scraps data-label="scraps" data-status="ready" aria-label={`scraps, ${scrapCount}`} href="/scraps/">{splitLabel('scraps').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<num>{scrapCount}</num></a>
-    <a class="category" data-snaps data-label="snaps" data-status="loading" aria-label="snaps" href="/snaps/">{splitLabel('snaps').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<num></num></a>
-    <a class="category" data-count-key="design" data-label="design" data-status="loading" aria-label="design" href='https://dribbble.com/NeedsAdjustment'>{splitLabel('design').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<num></num></a>
+    <a class="category" data-count-key="coding" data-label="coding" data-status="loading" aria-label="coding" href='https://github.com/NeedsAdjustment'>{splitLabel('coding').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<span class="count-wrap"><num></num></span></a>
+    <a class="category" data-scraps data-label="scraps" data-status="ready" aria-label={`scraps, ${scrapCount}`} href="/scraps/">{splitLabel('scraps').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<span class="count-wrap"><num>{scrapCount}</num></span></a>
+    <a class="category" data-snaps data-label="snaps" data-status="loading" aria-label="snaps" href="/snaps/">{splitLabel('snaps').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<span class="count-wrap"><num></num></span></a>
+    <a class="category" data-count-key="design" data-label="design" data-status="loading" aria-label="design" href='https://dribbble.com/NeedsAdjustment'>{splitLabel('design').map(({ char, index }) => <span class="label-letter" style={`--letter-index:${index}`}>{char}</span>)}<span class="count-wrap"><num></num></span></a>
     <tera class="category" id="rightCreature"></tera>
   </h2>
   <div class="scroll-indicator">
@@ -132,9 +132,24 @@ const splitLabel = (label: string) =>
     animation-fill-mode: both;
   }
 
-  h2 a.category[data-status='loading'] num,
-  h2 a.category[data-status='error'] num {
-    display: none;
+  h2 a.category .count-wrap {
+    display: inline-grid;
+    grid-template-columns: 0fr;
+    vertical-align: sub;
+    overflow: hidden;
+    opacity: 0;
+    transition: grid-template-columns 0.24s ease, opacity 0.09s ease 0.16s;
+  }
+
+  h2 a.category .count-wrap > num {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  h2 a.category[data-status='ready'] .count-wrap {
+    grid-template-columns: 1fr;
+    opacity: 1;
   }
 
   @keyframes pill-loading {
@@ -146,6 +161,10 @@ const splitLabel = (label: string) =>
     h2 a.category[data-status='loading'] .label-letter {
       animation: none;
       opacity: 1;
+    }
+
+    h2 a.category .count-wrap {
+      transition: none;
     }
   }
 
