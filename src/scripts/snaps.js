@@ -37,7 +37,7 @@ function isSnapsPath(p = location.pathname) {
 }
 
 function isGalleryOpen() {
-  return overlay.style.display === 'block' || getComputedStyle(overlay).display === 'block'
+  return overlay.style.display === 'block'
 }
 
 function setBodyScrollLocked(locked) {

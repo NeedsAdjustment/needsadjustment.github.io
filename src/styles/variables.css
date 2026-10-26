@@ -6,7 +6,6 @@
   --secondary-background: #d4d0c8;
   --ui-border: #b7b3ad;
   --accent-red: #af3029;
-  --accent-orange: #bc5214;
   --accent-yellow: #ad8302;
   --accent-green: #66800c;
   --accent-cyan: #24837b;
@@ -15,7 +14,6 @@
   --accent-purple: #5f409d;
   --link-colour: var(--accent-green);
   --toggle-accent-color: var(--accent-yellow);
-  --grain-opacity: 0.2;
   --gradient-color-1: var(--accent-blue);
   --gradient-color-2: var(--accent-cyan);
   --gradient-color-3: var(--accent-green);
@@ -23,21 +21,14 @@
   --noise-filter: url("data:image/svg+xml,%3Csvg viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   --bg-1-x: 25;
   --bg-1-y: 50;
-  --bg-2-x: 35;
-  --bg-2-y: 40;
-  --bg-3-x: 45;
-  --bg-3-y: 45;
 
   --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);
   --space-sm: clamp(0.5rem, 1vw, 1rem);
   --space-md: clamp(1rem, 2vw, 1.5rem);
-  --space-lg: clamp(1.5rem, 3vw, 2.5rem);
   --space-xl: clamp(2rem, 4vw, 4rem);
 
   --radius-sm: clamp(0.25rem, 0.5vw, 0.5rem);
-  --radius-md: clamp(0.5rem, 1vw, 1rem);
   --radius-lg: clamp(1rem, 1.5vw, 1.5rem);
-  --radius-full: 9999px;
 }
 
 html.dark {
@@ -48,7 +39,6 @@ html.dark {
   --secondary-background: #363646;
   --ui-border: #54546d;
   --accent-red: #c34043;
-  --accent-orange: #ffa066;
   --accent-yellow: #e6c384;
   --accent-green: #98bb6c;
   --accent-cyan: #7aa89f;
@@ -57,22 +47,9 @@ html.dark {
   --accent-purple: #957fb8;
   --link-colour: var(--accent-blue);
   --toggle-accent-color: var(--accent-red);
-  --grain-opacity: 0.5;
   --gradient-color-1: var(--accent-magenta);
   --gradient-color-2: var(--accent-purple);
   --gradient-color-3: var(--accent-blue);
-}
-
-@property --bg-shift-x {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 50;
-}
-
-@property --bg-shift-y {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 50;
 }
 
 @property --bg-1-x {
@@ -87,75 +64,31 @@ html.dark {
   initial-value: 50;
 }
 
-@property --bg-2-x {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 35;
-}
-
-@property --bg-2-y {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 40;
-}
-
-@property --bg-3-x {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 45;
-}
-
-@property --bg-3-y {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 45;
-}
-
 @keyframes multi-bg {
   0% {
     --bg-1-x: 25;
     --bg-1-y: 50;
-    --bg-2-x: 35;
-    --bg-2-y: 40;
-    --bg-3-x: 45;
-    --bg-3-y: 45;
     filter: hue-rotate(0deg);
   }
 
   25% {
     --bg-1-x: 30;
-    --bg-2-y: 50;
-    --bg-2-x: 80;
-    --bg-3-y: 20;
-    --bg-3-x: 70;
     filter: hue-rotate(15deg);
   }
 
   50% {
     --bg-1-x: 10;
-    --bg-2-y: 40;
-    --bg-2-x: 30;
-    --bg-3-y: 80;
-    --bg-3-x: 50;
     filter: hue-rotate(0deg);
   }
 
   75% {
     --bg-1-x: 70;
-    --bg-2-y: 10;
-    --bg-2-x: 50;
-    --bg-3-y: 30;
-    --bg-3-x: 40;
     filter: hue-rotate(-15deg);
   }
 
   100% {
     --bg-1-x: 25;
     --bg-1-y: 50;
-    --bg-2-x: 35;
-    --bg-2-y: 40;
-    --bg-3-x: 45;
-    --bg-3-y: 45;
     filter: hue-rotate(0deg);
   }
 }

@@ -60,7 +60,7 @@ const isHome = path === '/';
     <ClientRouter fallback="swap" />
   </head>
   <body>
-    <Header hero={true} scrapCount={scrapCount} scrolled={!isHome} />
+    <Header scrapCount={scrapCount} scrolled={!isHome} />
     <slot />
     <Footer />
     {/* Gallery's two root elements carry their own explicit persist names. */}

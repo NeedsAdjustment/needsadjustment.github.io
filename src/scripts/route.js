@@ -142,8 +142,7 @@ function wireButtons() {
     const tera = document.getElementById(id)
     if (tera && !tera.dataset.wired) {
       tera.dataset.wired = '1'
-      // Re-apply cursor on each page load so it matches the current route
-      tera.addEventListener('click', (e) => {
+      tera.addEventListener('click', () => {
         if (!isHomePath()) navigate('/')
       })
     }
@@ -216,5 +215,3 @@ function init() {
 
 init()
 document.addEventListener('astro:page-load', init)
-
-export { isScrapsPath, isScrapsList, isSnapsPath }

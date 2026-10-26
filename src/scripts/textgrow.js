@@ -57,9 +57,6 @@ function buildLetters() {
   letters.forEach((letter) => {
     lockWidth(letter)
     letter.dataset.mouseAffected = 'false'
-    letter.dataset.transitionStart = '0'
-    letter.dataset.transitionStartWeight = '300'
-    letter.dataset.rippleWeight = '300'
   })
   transitioningLetters.clear()
 }

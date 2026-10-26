@@ -7,7 +7,6 @@ const scraps = defineCollection({
   schema: z.object({
     title: z.string(),
     slug: z.string(),
-    order: z.number().optional(),
     date: z.coerce.string().optional(),
     excerpt: z.string().optional(),
   }),

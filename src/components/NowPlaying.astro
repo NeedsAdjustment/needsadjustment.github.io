@@ -1,4 +1,4 @@
-<div id="now-playing" class="now-playing">
+<div id="now-playing" class="now-playing np-hidden">
   <div class="np-tab">
     listening
   </div>
@@ -15,14 +15,9 @@
 
 <style>
   .now-playing {
-    opacity: 0;
+    opacity: 1;
     font-family: 'Lilex Duo', sans-serif;
     max-width: 15rem;
-  }
-
-  .now-playing.np-visible {
-    opacity: 1;
-    transform: translateY(0);
   }
 
   .now-playing.np-hidden {
@@ -195,7 +190,7 @@
   }
 
   /** Display a track in the widget */
-  function displayTrack(data: { image: string; shortenedName: string | null; formattedArtist: string | null; }, isHistorical = false) {
+  function displayTrack(data: { image: string; shortenedName: string | null; formattedArtist: string | null; }) {
     if (!data || !hasTrack(data)) {
       el?.classList.add("np-hidden");
       return;
@@ -209,10 +204,7 @@
     currentTrack = data.shortenedName || "";
     currentArtist = data.formattedArtist || "";
 
-    el?.classList.remove("np-hidden", "np-visible");
-    // Force reflow so the transition fires
-    void el?.offsetWidth;
-    el?.classList.add("np-visible");
+    el?.classList.remove("np-hidden");
   }
 
   /** Main refresh: fetch from the proxy val */
@@ -225,8 +217,7 @@
         // Cache locally for offline / fast reload
         localStorage.setItem(LS_KEY, JSON.stringify(data));
 
-        // _lastPlayed flag is set by the val when it's a historical track
-        displayTrack(data, data._lastPlayed === true);
+        displayTrack(data);
         return;
       }
     } catch {
@@ -237,7 +228,7 @@
     try {
       const local = JSON.parse(localStorage.getItem(LS_KEY) || "null");
       if (local && hasTrack(local)) {
-        displayTrack(local, true);
+        displayTrack(local);
         return;
       }
     } catch {
@@ -299,18 +290,8 @@
       el.classList.add('np-open');
       sessionStorage.removeItem('np-open');
     } else {
-      // Not on home: collapsible
       el.classList.add('np-collapsible');
-      // Restore previous open state, default to closed
-      const wasOpen = sessionStorage.getItem('np-open');
-      if (wasOpen === '1') {
-        el.classList.add('np-open');
-      } else if (wasOpen === '0') {
-        el.classList.remove('np-open');
-      } else {
-        // First time on non-home: closed by default
-        el.classList.remove('np-open');
-      }
+      el.classList.toggle('np-open', sessionStorage.getItem('np-open') === '1');
     }
     if (!animate) {
       void el.offsetWidth;

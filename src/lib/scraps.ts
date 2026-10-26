@@ -5,7 +5,6 @@ export function stripMarkdown(text: string): string {
     .replace(/!\[.*?\]\(.*?\)/g, '')
     .replace(/\[([^\]]*)\]\(.*?\)/g, '$1')
     .replace(/[#*_~`>|]/g, '')
-    .replace(/\n+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
 }
