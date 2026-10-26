@@ -1,7 +1,8 @@
 const h1 = document.querySelector('header.hero h1')
 let letters = []
 
-const waveSpeed = 0.0004
+const waveSpeed = 0.0012
+const waveCycles = 2
 const rippleAmplitude = 400
 const defaultWeight = 300
 const maxWeight = 900
@@ -47,7 +48,7 @@ function getRippleWeight(index, total) {
   const letterPos = index / total
   let dist = letterPos - wavePos
   if (dist < 0) dist += 1
-  const phase = dist * 2 * Math.PI
+  const phase = dist * 2 * Math.PI * waveCycles
   const weight = Math.round(defaultWeight + Math.sin(phase) * rippleAmplitude)
   return Math.max(minWeight, Math.min(maxWeight, weight))
 }
