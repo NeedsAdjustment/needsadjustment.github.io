@@ -1,11 +1,14 @@
-<div class="snaps-overlay" role="dialog" aria-label="Photo gallery" data-lenis-prevent transition:persist="snaps-overlay">
+<section class="snaps-overlay" aria-label="Photo gallery" tabindex="0" data-lenis-prevent transition:persist="snaps-overlay">
   <div class="snaps-shadow-top"></div>
   <masonry-grid-lanes min-column-width=175 gap=16>
   </masonry-grid-lanes>
   <div class="snaps-shadow-bottom"></div>
-</div>
+</section>
 
-<div class="snaps-lightbox" role="dialog" aria-label="Photo preview" transition:persist="snaps-lightbox">
+<div class="snaps-lightbox" role="dialog" aria-modal="true" aria-label="Photo preview" tabindex="-1" transition:persist="snaps-lightbox">
+  <button class="snaps-close" aria-label="Close photo preview">
+    <i class="ph-bold ph-x" aria-hidden="true"></i>
+  </button>
   <img class="snaps-lightbox-img" alt="">
   <i class="snaps-spinner" aria-hidden="true"></i>
   <button class="snaps-prev" aria-label="Previous">
@@ -22,6 +25,7 @@
 
 <style is:global>
   .snaps-overlay {
+    outline-offset: -4px;
     scrollbar-width: none;
     position: fixed;
     top: 0;
@@ -101,6 +105,21 @@
     animation: snaps-spin 0.8s linear infinite;
   }
 
+  .snaps-close {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    border: none;
+    background: none;
+    color: var(--ui-border);
+    font-size: 2rem;
+    cursor: pointer;
+    border-radius: 8px;
+    z-index: 10003;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+
   .snaps-prev,
   .snaps-next {
     display: none;
@@ -109,7 +128,7 @@
     transform: translateY(-50%);
     border: none;
     background: none;
-    color:  var(--ui-border);
+    color: var(--ui-border);
     font-size: 2rem;
     cursor: pointer;
     border-radius: 8px;
@@ -119,12 +138,23 @@
   }
   .snaps-prev { left: 0; }
   .snaps-next { right: 0; }
+  .snaps-close:hover,
+  .snaps-close:focus-visible,
+  .snaps-prev:hover,
+  .snaps-next:hover { color: var(--text-color); }
   .snaps-prev:hover,
   .snaps-next:hover { color: var(--text-color); }
 
   .snaps-figure {
+    appearance: none;
+    display: block;
+    width: 100%;
     margin: 0;
+    padding: 0;
+    border: 0;
     border-radius: 1rem;
+    background: transparent;
+    color: inherit;
     overflow: hidden;
     cursor: pointer;
     position: relative;
@@ -133,6 +163,10 @@
   }
   .snaps-figure:hover {
     transform: scale(1.02);
+  }
+  .snaps-figure:focus-visible {
+    outline: 2px solid var(--link-colour);
+    outline-offset: 3px;
   }
   .snaps-figure img {
     width: 100%;

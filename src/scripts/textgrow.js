@@ -174,8 +174,13 @@ function bindStretch() {
 bindStretch()
 
 if (h1) {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const run = () => {
     buildLetters()
+    if (reduceMotion) {
+      letters.forEach((letter) => (letter.style.fontWeight = String(defaultWeight)))
+      return
+    }
     bindGlobalListeners()
     requestAnimationFrame(animateRipple)
   }

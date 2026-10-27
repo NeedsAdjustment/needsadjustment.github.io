@@ -33,6 +33,36 @@ main {
   display: contents;
 }
 
+#main-content:focus {
+  outline: none;
+}
+
+.skip-link {
+  position: fixed;
+  top: -4rem;
+  left: 50%;
+  z-index: 10000;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--link-colour);
+  border-radius: var(--radius-sm);
+  background: var(--background-color);
+  color: var(--link-colour);
+  text-decoration: none;
+  transform: translateX(-50%);
+}
+
+.skip-link:focus {
+  top: var(--space-sm);
+}
+
+a:focus-visible,
+button:focus-visible,
+[role='button']:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--link-colour);
+  outline-offset: 3px;
+}
+
 body {
   background-color: var(--background-color);
   color: var(--text-color);
@@ -106,4 +136,15 @@ h1 .letter.space {
   white-space: nowrap;
   width: 1px;
   transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -11,6 +11,12 @@ const scrapCount = allScraps.length;
 
 const path = Astro.url.pathname;
 const isHome = path === '/';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'Joshua Soong — swe, designer' } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -21,7 +27,8 @@ const isHome = path === '/';
     <meta name="darkreader-lock" />
     <meta name="description" content="swe, designer, allegedly human" />
     <meta property="og:description" content="swe, designer, allegedly human" />
-    <title>Joshua Soong</title>
+    <meta property="og:title" content={title} />
+    <title>{title}</title>
     {/* Static icon stylesheets survive ClientRouter head swaps. */}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css" />
@@ -61,8 +68,9 @@ const isHome = path === '/';
     <ClientRouter fallback="swap" />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <Header scrapCount={scrapCount} scrolled={!isHome} />
-    <main><slot /></main>
+    <main><span id="main-content" tabindex="-1"></span><slot /></main>
     <Footer />
     <Gallery />
     <script>

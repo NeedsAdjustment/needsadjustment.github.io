@@ -2,7 +2,7 @@
   /* Flexoki Light */
   --base-color: white;
   --background-color: #fffcf0;
-  --text-color: #6f6e68;
+  --text-color: #5f5e58;
   --secondary-background: #d4d0c8;
   --ui-border: #b7b3ad;
   --accent-red: #af3029;
@@ -12,7 +12,7 @@
   --accent-blue: #205ea6;
   --accent-magenta: #a02f6f;
   --accent-purple: #5f409d;
-  --link-colour: var(--accent-green);
+  --link-colour: #4f6308;
   --toggle-accent-color: var(--accent-yellow);
   --gradient-color-1: var(--accent-blue);
   --gradient-color-2: var(--accent-cyan);

@@ -42,7 +42,8 @@ function handleGesture(dir) {
   }
 }
 
-const lenis = new Lenis({ autoRaf: true })
+const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
+const lenis = motionPreference.matches ? null : new Lenis({ autoRaf: true })
 
 window.addEventListener(
   'wheel',
@@ -77,7 +78,6 @@ function wireScrollIndicator() {
   const indicator = document.querySelector('.scroll-indicator')
   if (!indicator || indicator.dataset.wired) return
   indicator.dataset.wired = '1'
-  indicator.style.cursor = 'pointer'
   indicator.addEventListener('click', () => go(INTRO_PATH, true))
 }
 
@@ -89,5 +89,5 @@ document.addEventListener('astro:page-load', () => {
   if (!isIntroPath()) arrivedByScroll = false
   window.scrollTo(0, 0)
   wireScrollIndicator()
-  lenis.resize()
+  lenis?.resize()
 })

@@ -1,15 +1,16 @@
 <div id="now-playing" class="now-playing np-hidden">
-  <div class="np-tab">
+  <button type="button" class="np-tab" aria-expanded="true" aria-controls="np-collapse">
     listening
-  </div>
-  <div class="np-collapse">
-    <div class="np-inner">
-      <img id="np-art" class="np-art" src="" alt="Album art" />
-      <div class="np-info">
+  </button>
+  <div id="np-collapse" class="np-collapse">
+    <a class="np-inner" target="_blank" rel="noopener noreferrer">
+      <img id="np-art" class="np-art" src="" alt="" />
+      <span class="np-info">
         <span id="np-track" class="np-track"></span>
         <span id="np-artist" class="np-artist"></span>
-      </div>
-    </div>
+        <span data-sr> — search on YouTube</span>
+      </span>
+    </a>
   </div>
 </div>
 
@@ -22,11 +23,17 @@
 
   .now-playing.np-hidden {
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
   }
 
   .np-tab {
+    appearance: none;
+    position: relative;
+    z-index: 0;
     user-select: none;
+    color: inherit;
+    font-family: inherit;
     background: var(--pill-surface);
     border: var(--pill-border);
     border-bottom: none;
@@ -45,7 +52,14 @@
     box-shadow: var(--pill-shadow-hover);
   }
 
+  .np-tab:disabled {
+    color: inherit;
+    cursor: default;
+  }
+
   .np-collapse {
+    position: relative;
+    z-index: 1;
     max-height: var(--np-open-height, 20rem);
     border-radius: var(--radius-lg);
     overflow: hidden;
@@ -65,6 +79,8 @@
     background: var(--panel-surface);
     border: var(--pill-border);
     border-radius: var(--radius-lg);
+    color: inherit;
+    text-decoration: none;
     cursor: pointer;
     transition: background 0.3s ease;
   }
@@ -116,7 +132,7 @@
   .np-artist {
     font-size: 0.8rem;
     font-weight: 400;
-    color: var(--accent-green);
+    color: var(--link-colour);
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -185,15 +201,12 @@
   }
 
   const el = document.querySelector<HTMLElement>(".now-playing")!;
-  const npInner = document.querySelector<HTMLElement>(".np-inner");
+  const npInner = document.querySelector<HTMLAnchorElement>(".np-inner");
+  const npCollapse = document.querySelector<HTMLElement>(".np-collapse");
   const art = document.querySelector<HTMLImageElement>(".np-art");
   const track = document.querySelector<HTMLElement>(".np-track");
   const artist = document.querySelector<HTMLElement>(".np-artist");
-
-  let currentTrack = "";
-  let currentArtist = "";
-
-  const npTab = document.querySelector<HTMLElement>(".np-tab");
+  const npTab = document.querySelector<HTMLButtonElement>(".np-tab");
 
   function hasTrack(data: { shortenedName: string | null; }) {
     return data?.shortenedName && data.shortenedName !== "Currently Not Playing";
@@ -202,6 +215,7 @@
   function displayTrack(data: { image: string; shortenedName: string | null; formattedArtist: string | null; }) {
     if (!data || !hasTrack(data)) {
       el?.classList.add("np-hidden");
+      npInner?.removeAttribute("href");
       return;
     }
 
@@ -210,8 +224,11 @@
     art.src = data.image || "";
     track.textContent = data.shortenedName;
     artist.textContent = data.formattedArtist;
-    currentTrack = data.shortenedName || "";
-    currentArtist = data.formattedArtist || "";
+
+    if (npInner) {
+      const query = encodeURIComponent(`${data.shortenedName} - ${data.formattedArtist ?? ""}`);
+      npInner.href = `https://www.youtube.com/results?search_query=${query}`;
+    }
 
     el?.classList.remove("np-hidden");
   }
@@ -250,21 +267,18 @@
   }
 
   function wireNowPlaying() {
-    if (!npInner) return;
-
-    npInner.addEventListener("click", () => {
-      if (!currentTrack) return;
-      const query = encodeURIComponent(`${currentTrack} - ${currentArtist}`);
-      window.open(`https://www.youtube.com/results?search_query=${query}`, "_blank");
-    });
-
     npTab?.addEventListener("click", () => {
-      if (el?.classList.contains('np-collapsible')) {
-        setOpenHeight();
-        const isOpen = el.classList.toggle("np-open");
-        writeSession('np-open', isOpen ? '1' : '0');
-      }
-    });
+      if (!el?.classList.contains('np-collapsible')) return
+      setOpenHeight()
+      setOpenState(!el.classList.contains('np-open'))
+      writeSession('np-open', el.classList.contains('np-open') ? '1' : '0')
+    })
+  }
+
+  function setOpenState(open: boolean) {
+    el.classList.toggle('np-open', open)
+    if (npCollapse) npCollapse.inert = !open
+    npTab?.setAttribute('aria-expanded', String(open))
   }
 
   function isHome() {
@@ -290,12 +304,13 @@
     const home = isHome();
     if (home) {
       el.classList.remove('np-collapsible');
-      el.classList.add('np-open');
+      setOpenState(true);
       writeSession('np-open', null);
     } else {
       el.classList.add('np-collapsible');
-      el.classList.toggle('np-open', readSession('np-open') === '1');
+      setOpenState(readSession('np-open') === '1');
     }
+    if (npTab) npTab.disabled = home;
     if (!animate) {
       void el.offsetWidth;
       requestAnimationFrame(() => el.classList.remove('np-instant'));

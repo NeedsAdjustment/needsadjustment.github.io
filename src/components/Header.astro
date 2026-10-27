@@ -5,19 +5,27 @@ const { scrapCount = 0, scrolled = false } = Astro.props
 ---
 
 <header class:list={['hero', { scrolled }]} transition:persist="site-header">
-  <h1>Joshua Soong</h1>
-  <h2>
-    <tera class="category" id="leftCreature"></tera>
-    <a class="category" data-count-key="coding" data-label="coding" data-status="loading" aria-label="coding" href='https://github.com/NeedsAdjustment'><span class="pill-label">coding</span><span class="count-wrap"><num></num></span></a>
-    <a class="category" data-scraps data-label="scraps" data-status="ready" aria-label={`scraps, ${scrapCount}`} href="/scraps/"><span class="pill-label">scraps</span><span class="count-wrap"><num>{scrapCount}</num></span></a>
-    <a class="category" data-snaps data-label="snaps" data-status="loading" aria-label="snaps" href="/snaps/"><span class="pill-label">snaps</span><span class="count-wrap"><num></num></span></a>
-    <a class="category" data-count-key="design" data-label="design" data-status="loading" aria-label="design" href='https://dribbble.com/NeedsAdjustment'><span class="pill-label">design</span><span class="count-wrap"><num></num></span></a>
-    <tera class="category" id="rightCreature"></tera>
-  </h2>
-  <div class="scroll-indicator">
+  <h1 aria-label="Joshua Soong">Joshua Soong</h1>
+  <nav aria-label="Primary">
+    <h2>
+      <span class="tera-control">
+        <tera class="category" id="leftCreature" aria-hidden="true"></tera>
+        <button type="button" class="tera-button" id="leftCreatureButton" aria-label="Back to home"></button>
+      </span>
+      <a class="category" data-count-key="coding" data-status="loading" href='https://github.com/NeedsAdjustment'><span class="pill-label">coding</span><span class="count-wrap"><num></num></span></a>
+      <a class="category" data-scraps data-status="ready" href="/scraps/"><span class="pill-label">scraps</span><span class="count-wrap"><num>{scrapCount}</num></span></a>
+      <a class="category" data-snaps data-status="loading" href="/snaps/"><span class="pill-label">snaps</span><span class="count-wrap"><num></num></span><span class="pill-status" data-sr></span></a>
+      <a class="category" data-count-key="design" data-status="loading" href='https://dribbble.com/NeedsAdjustment'><span class="pill-label">design</span><span class="count-wrap"><num></num></span></a>
+      <span class="tera-control">
+        <tera class="category" id="rightCreature" aria-hidden="true"></tera>
+        <button type="button" class="tera-button" id="rightCreatureButton" aria-label="Back to home"></button>
+      </span>
+    </h2>
+  </nav>
+  <button type="button" class="scroll-indicator" aria-label="Read intro">
     <i class="arrow1 ph-bold ph-caret-down" aria-hidden="true"></i>
     <i class="arrow2 ph-bold ph-caret-down" aria-hidden="true"></i>
-  </div>
+  </button>
 </header>
 
 <style>
@@ -77,6 +85,30 @@ const { scrapCount = 0, scrolled = false } = Astro.props
     user-select: none;
     font-family: 'Teranoptia';
     font-size: 1.5em;
+  }
+
+  .tera-control {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .tera-button {
+    position: absolute;
+    inset: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  @media (max-width: 499px) {
+    .tera-control {
+      display: none;
+    }
+  }
+
+  nav {
+    width: 100%;
   }
 
   h2 {
@@ -256,8 +288,13 @@ const { scrapCount = 0, scrolled = false } = Astro.props
     align-items: center;
     margin-top: 1em;
     padding: var(--space-sm);
+    border: 0;
+    background: none;
+    font-family: inherit;
     font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: 1;
     color: var(--text-color);
+    cursor: pointer;
   }
 
   .arrow1 {

@@ -14,11 +14,47 @@ const grid = overlay?.querySelector('masonry-grid-lanes')
 const lightbox = document.querySelector('.snaps-lightbox')
 const lightboxImg = lightbox?.querySelector('.snaps-lightbox-img')
 const lightboxSpinner = lightbox?.querySelector('.snaps-spinner')
+const closeBtn = lightbox?.querySelector('.snaps-close')
 const prevBtn = lightbox?.querySelector('.snaps-prev')
 const nextBtn = lightbox?.querySelector('.snaps-next')
 
-if (!overlay || !grid || !lightbox || !lightboxImg || !lightboxSpinner || !prevBtn || !nextBtn) {
+if (!overlay || !grid || !lightbox || !lightboxImg || !lightboxSpinner || !closeBtn || !prevBtn || !nextBtn) {
   throw new Error('Gallery: required DOM elements not found — is Gallery.astro included in the page?')
+}
+
+let galleryReturnFocus = null
+let lightboxReturnFocus = null
+
+function setPageInert(value) {
+  for (const el of document.querySelectorAll('header, main, footer, .snaps-overlay')) {
+    el.inert = value
+  }
+}
+
+function lightboxFocusable() {
+  return [closeBtn, prevBtn, nextBtn].filter((el) => getComputedStyle(el).display !== 'none')
+}
+
+function trapLightboxFocus(e) {
+  const items = lightboxFocusable()
+  if (!items.length) {
+    e.preventDefault()
+    lightbox.focus()
+    return
+  }
+  const first = items[0]
+  const last = items[items.length - 1]
+  const active = document.activeElement
+  if (active === lightbox || !lightbox.contains(active)) {
+    e.preventDefault()
+    ;(e.shiftKey ? last : first).focus()
+  } else if (e.shiftKey && active === first) {
+    e.preventDefault()
+    last.focus()
+  } else if (!e.shiftKey && active === last) {
+    e.preventDefault()
+    first.focus()
+  }
 }
 
 function isSnapsPath(p = location.pathname) {
@@ -34,20 +70,20 @@ function setBodyScrollLocked(locked) {
 }
 
 const snapsBtn = document.querySelector('h2 a.category[data-snaps]')
+const snapsStatus = snapsBtn?.querySelector('.pill-status')
 
 function setSnapsUnavailable(value) {
   if (!snapsBtn) return
   snapsBtn.classList.toggle('unavailable', value)
   snapsBtn.dataset.status = value ? 'error' : 'ready'
   snapsBtn.href = value ? TAILSCALE_ISSUE_URL : '/snaps/'
-  if (value) snapsBtn.setAttribute('aria-label', `${snapsBtn.dataset.label ?? 'snaps'}, unavailable`)
+  if (snapsStatus) snapsStatus.textContent = value ? ' unavailable' : ''
 }
 
 function setSnapsCount(value) {
   const count = Number(value)
   if (!snapsBtn || !Number.isFinite(count) || count <= 0) return
   snapsBtn.dataset.status = 'ready'
-  snapsBtn.setAttribute('aria-label', `${snapsBtn.dataset.label ?? 'snaps'}, ${count}`)
   const num = snapsBtn.querySelector('num')
   if (num) num.textContent = String(count)
 }
@@ -93,6 +129,12 @@ function showLightbox(index) {
   const total = assets.length
   index = ((index % total) + total) % total
   currentIndex = index
+  const wasOpen = lightbox.style.display === 'flex'
+
+  if (!wasOpen) {
+    lightboxReturnFocus = document.activeElement
+    setPageInert(true)
+  }
 
   const asset = assets[currentIndex]
   lightboxImg.alt = asset.originalFileName ?? ''
@@ -103,13 +145,22 @@ function showLightbox(index) {
   lightbox.style.display = 'flex'
   prevBtn.style.display = total > 1 ? 'block' : 'none'
   nextBtn.style.display = total > 1 ? 'block' : 'none'
+  if (!wasOpen) closeBtn.focus()
 }
 
-function closeLightbox() {
+function closeLightbox(restoreFocus = true) {
+  const wasOpen = lightbox.style.display === 'flex'
   lightbox.style.display = 'none'
   lightboxImg.src = ''
   lightboxSpinner.textContent = ''
   lightboxSpinner.style.display = 'none'
+  if (!wasOpen) return
+
+  setPageInert(false)
+  if (restoreFocus && lightboxReturnFocus instanceof HTMLElement && lightboxReturnFocus.isConnected) {
+    lightboxReturnFocus.focus()
+  }
+  lightboxReturnFocus = null
 }
 
 lightboxImg.addEventListener('load', () => {
@@ -124,6 +175,7 @@ lightboxImg.addEventListener('error', () => {
 lightbox.addEventListener('click', (e) => {
   if (e.target === lightbox) closeLightbox()
 })
+closeBtn.addEventListener('click', () => closeLightbox())
 prevBtn.addEventListener('click', (e) => {
   e.stopPropagation()
   showLightbox(currentIndex - 1)
@@ -135,12 +187,14 @@ nextBtn.addEventListener('click', (e) => {
 
 document.addEventListener('keydown', (e) => {
   if (!isGalleryOpen()) return
+  const lightboxOpen = lightbox.style.display === 'flex'
   if (e.key === 'Escape') {
-    if (lightbox.style.display === 'flex') closeLightbox()
+    if (lightboxOpen) closeLightbox()
     else navigate('/')
     return
   }
-  if (lightbox.style.display === 'flex') {
+  if (lightboxOpen) {
+    if (e.key === 'Tab') trapLightboxFocus(e)
     if (e.key === 'ArrowLeft') showLightbox(currentIndex - 1)
     if (e.key === 'ArrowRight') showLightbox(currentIndex + 1)
   }
@@ -154,8 +208,10 @@ function renderGrid() {
   }
   // Placeholder figures establish the masonry layout before images load.
   for (const [i, asset] of assets.entries()) {
-    const fig = document.createElement('figure')
+    const fig = document.createElement('button')
+    fig.type = 'button'
     fig.className = 'snaps-figure'
+    fig.setAttribute('aria-label', asset.originalFileName ? `View ${asset.originalFileName}` : `View photo ${i + 1}`)
     fig.style.setProperty('--glow-angle', `${Math.random() * 360}deg`)
     fig.addEventListener('click', () => showLightbox(i))
     if (asset.width && asset.height) {
@@ -171,7 +227,7 @@ function loadImages() {
   for (const [i, asset] of assets.entries()) {
     const fig = grid.children[i]
     const img = document.createElement('img')
-    img.alt = asset.originalFileName ?? ''
+    img.alt = ''
     img.addEventListener(
       'load',
       () => {
@@ -200,8 +256,11 @@ async function openGallery() {
     renderGrid()
     rendered = true
   }
+  galleryReturnFocus = document.activeElement === document.body ? snapsBtn : document.activeElement
   overlay.style.display = 'block'
+  overlay.inert = false
   setBodyScrollLocked(true)
+  overlay.focus({ preventScroll: true })
 
   const reveal = () => {
     if (token !== _closeToken) return
@@ -218,14 +277,20 @@ async function openGallery() {
   }
 }
 
-function closeGallery() {
+function closeGallery(restoreFocus = true) {
   const token = ++_closeToken
+  const returnFocus = galleryReturnFocus
+  galleryReturnFocus = null
   overlay.style.opacity = '0'
-  closeLightbox()
+  closeLightbox(false)
   setBodyScrollLocked(false)
   setTimeout(() => {
     if (_closeToken !== token) return // re-opened since
     overlay.style.display = 'none'
+    overlay.inert = false
+    if (restoreFocus && returnFocus instanceof HTMLElement && returnFocus.isConnected) {
+      returnFocus.focus()
+    }
   }, 300)
 }
 
@@ -240,8 +305,9 @@ document.addEventListener('astro:page-load', handleRoute)
 document.addEventListener('astro:before-swap', () => {
   if (!isGalleryOpen()) return
   _closeToken++
-  closeLightbox()
+  closeLightbox(false)
   setBodyScrollLocked(false)
   overlay.style.opacity = '0'
   overlay.style.display = 'none'
+  overlay.inert = false
 })

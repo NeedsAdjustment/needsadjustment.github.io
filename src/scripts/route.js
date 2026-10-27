@@ -13,6 +13,8 @@ function isHomePath(p = location.pathname) {
   return p === '/'
 }
 
+const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
+
 let prevScrolled = null
 let headerAnimation = null
 let headerSettleTimer = null
@@ -42,7 +44,7 @@ document.addEventListener('astro:after-swap', () => {
   if (!header) return
 
   const target = !isHomePath()
-  const animates = prevScrolled !== null && prevScrolled !== target
+  const animates = !motionPreference.matches && prevScrolled !== null && prevScrolled !== target
   headerAnimation?.cancel()
   headerAnimation = null
 
@@ -66,7 +68,7 @@ document.addEventListener('astro:after-swap', () => {
 
   prevScrolled = null
   applyActive()
-  applyTeraCursor()
+  applyTeraState()
 
   headerSettleTimer = setTimeout(
     () => {
@@ -77,14 +79,17 @@ document.addEventListener('astro:after-swap', () => {
   )
 })
 
+function setActive(link, active) {
+  if (!link) return
+  link.classList.toggle('active', active)
+  if (active) link.setAttribute('aria-current', 'page')
+  else link.removeAttribute('aria-current')
+}
+
 function applyActive() {
   const path = location.pathname
-  document
-    .querySelector('h2 a.category[data-scraps]')
-    ?.classList.toggle('active', isScrapsPath(path))
-  document
-    .querySelector('h2 a.category[data-snaps]')
-    ?.classList.toggle('active', isSnapsPath(path))
+  setActive(document.querySelector('h2 a.category[data-scraps]'), isScrapsPath(path))
+  setActive(document.querySelector('h2 a.category[data-snaps]'), isSnapsPath(path))
 }
 
 function applyInitialScrolled() {
@@ -118,32 +123,34 @@ function wireButtons() {
     else navigate('/snaps/')
   })
 
-  for (const id of ['leftCreature', 'rightCreature']) {
+  for (const id of ['leftCreatureButton', 'rightCreatureButton']) {
     document.getElementById(id)?.addEventListener('click', () => {
       if (!isHomePath()) navigate('/')
     })
   }
 }
 
-function applyTeraCursor() {
-  for (const id of ['leftCreature', 'rightCreature']) {
-    const tera = document.getElementById(id)
-    if (tera) tera.style.cursor = isHomePath() ? 'default' : 'pointer'
+function applyTeraState() {
+  const home = isHomePath()
+  for (const id of ['leftCreatureButton', 'rightCreatureButton']) {
+    const button = document.getElementById(id)
+    if (!button) continue
+    button.style.cursor = home ? 'default' : 'pointer'
+    button.tabIndex = home ? -1 : 0
+    if (home) button.setAttribute('aria-hidden', 'true')
+    else button.removeAttribute('aria-hidden')
   }
 }
 
 function applyCount(key, value) {
   const link = document.querySelector(`h2 a.category[data-count-key="${key}"]`)
   if (!link) return
-  const label = link.dataset.label ?? key
   const count = Number(value)
   if (value == null || !Number.isFinite(count) || count <= 0) {
     link.dataset.status = 'error'
-    link.setAttribute('aria-label', label)
     return
   }
   link.dataset.status = 'ready'
-  link.setAttribute('aria-label', `${label}, ${count}`)
   const num = link.querySelector('num')
   if (num) num.textContent = String(count)
 }
@@ -162,7 +169,7 @@ function fetchCounts() {
 
 wireButtons()
 applyActive()
-applyTeraCursor()
+applyTeraState()
 applyInitialScrolled()
 setHeaderSettled()
 fetchCounts()

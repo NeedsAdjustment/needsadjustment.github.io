@@ -7,12 +7,18 @@ export async function getStaticPaths() {
   const allScraps = await getCollection('scraps');
   return allScraps.map((s) => ({
     params: { slug: s.id },
+    props: { title: s.data.title },
   }));
 }
 
+interface Props {
+  title: string;
+}
+
 const { slug } = Astro.params;
+const { title } = Astro.props;
 ---
 
-<Layout>
+<Layout title={`${title} — Joshua Soong`}>
   <ScrapsView slug={slug} />
 </Layout>
