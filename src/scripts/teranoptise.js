@@ -77,7 +77,7 @@ function teranoptise(numChars, direction, portals = false) {
     let head = ''
     if (numChars > 3 && Math.random() < 1 / (bodySegments[direction].length + 1)) {
       head = generateEatingHead(direction, used)
-      offset = 3 // Adjust offset for the eating head
+      offset = 3
     } else {
       head = generateHead(direction, used)
     }
@@ -142,7 +142,7 @@ function initTeranoptise() {
         leftCreature.innerText = teranoptise(newCreatureWidth, 'left', false)
         rightCreature.innerText = teranoptise(newCreatureWidth, 'right', false)
         if (newCreatureWidth === 1) {
-          // Flip right oddity
+          // flip right oddity
           rightCreature.style.transform = 'scaleX(-1)'
         } else {
           rightCreature.style.transform = ''
@@ -153,13 +153,10 @@ function initTeranoptise() {
   }
 }
 
-// Idempotent ensure: populate creatures if they're missing (fresh header)
-// while leaving them alone if they were persisted (text already there).
 function ensureCreatures() {
   const left = document.getElementById('leftCreature')
   const right = document.getElementById('rightCreature')
   if (!left || !right) return
-  // If creatures already have content, they survived via persist — leave them.
   if (left.dataset.teraInit === '1') return
   left.dataset.teraInit = '1'
   initTeranoptise()

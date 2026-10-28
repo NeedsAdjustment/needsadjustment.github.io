@@ -206,7 +206,7 @@ function renderGrid() {
     const j = Math.floor(Math.random() * (i + 1))
     ;[assets[i], assets[j]] = [assets[j], assets[i]]
   }
-  // Placeholder figures establish the masonry layout before images load.
+  // grid placeholders with correct sizes
   for (const [i, asset] of assets.entries()) {
     const fig = document.createElement('button')
     fig.type = 'button'
@@ -219,7 +219,6 @@ function renderGrid() {
     }
     grid.appendChild(fig)
   }
-  // Images load separately so the grid can reflow as each one arrives.
   loadImages()
 }
 
@@ -301,7 +300,6 @@ function handleRoute() {
 
 document.addEventListener('astro:page-load', handleRoute)
 
-// Close before the swap so the fade cannot overlap the header animation.
 document.addEventListener('astro:before-swap', () => {
   if (!isGalleryOpen()) return
   _closeToken++

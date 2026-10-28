@@ -97,7 +97,6 @@ tera,
   animation: multi-bg 15s linear infinite alternate;
 }
 
-/* One gradient across the whole name instead of one per letter. */
 h1 {
   background-size: 200px, 100% 100%;
 }

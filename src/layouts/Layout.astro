@@ -16,7 +16,7 @@ interface Props {
   title?: string;
 }
 
-const { title = 'Joshua Soong — swe, designer' } = Astro.props;
+const { title = 'Joshua Soong' } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -29,11 +29,10 @@ const { title = 'Joshua Soong — swe, designer' } = Astro.props;
     <meta property="og:description" content="swe, designer, allegedly human" />
     <meta property="og:title" content={title} />
     <title>{title}</title>
-    {/* Static icon stylesheets survive ClientRouter head swaps. */}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css" />
-    {/* Apply the theme before first paint to avoid a wrong-theme flash. */}
+    {/* apply theme before first paint */}
     <script is:inline>
       (function () {
         let stored = null;
@@ -52,11 +51,10 @@ const { title = 'Joshua Soong — swe, designer' } = Astro.props;
         const html = document.documentElement;
         const dark = theme === 'dark';
         html.classList.toggle('dark', dark);
-        // Inline so first paint uses the theme colour before CSS loads.
         html.style.backgroundColor = dark ? '#1f1f28' : '#fffcf0';
       })();
     </script>
-    {/* Let the custom route animations own the swap instead of a native crossfade. */}
+    {/* disable native route transitions */}
     <script is:inline>
       try {
         Object.defineProperty(Document.prototype, 'startViewTransition', {

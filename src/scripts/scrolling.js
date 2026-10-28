@@ -10,7 +10,6 @@ const INTRO_PATH = '/scraps/intro/'
 const TOUCH_THRESHOLD = 10
 
 let navigating = false
-// Scroll-up may leave intro only when it was entered by the home gesture.
 let arrivedByScroll = false
 
 function isHomePath(p = location.pathname) {
@@ -27,7 +26,7 @@ function go(path, fromScroll = false) {
   navigate(path)
 }
 
-// Intro scrolls internally; only leave it once that content is at the top.
+// handle text scrolling before leaving intro
 function scrapsAtTop() {
   const view = document.querySelector('#view-scraps')
   return !view || view.scrollTop <= 1
@@ -66,7 +65,7 @@ window.addEventListener(
   'touchmove',
   (e) => {
     if (touchStartY == null) return
-    const delta = touchStartY - e.touches[0].clientY // + = swiped up (scroll down)
+    const delta = touchStartY - e.touches[0].clientY
     if (Math.abs(delta) < TOUCH_THRESHOLD) return
     handleGesture(delta > 0 ? 1 : -1)
     touchStartY = null
