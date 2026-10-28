@@ -14,8 +14,6 @@ const index = scraps.findIndex((s) => s.id === slug);
 const current = index >= 0 ? scraps[index] : null;
 const rendered = current ? await render(current) : null;
 
-const olderSlug = current && index < scraps.length - 1 ? scraps[index + 1].id : null;
-const newerSlug = current && index > 0 ? scraps[index - 1].id : null;
 const detailDate = current ? formatDate(current.data.date) : undefined;
 const detailDatetime = current?.data.date?.toISOString();
 ---
@@ -23,21 +21,16 @@ const detailDatetime = current?.data.date?.toISOString();
 {
   current && rendered ? (
     <article class="scrap-item detail">
-      <div class="scrap-nav">
-        <span class="scrap-nav-prev">
-          {olderSlug ? <a href={`/scraps/${olderSlug}/`}>← older</a> : <span data-disabled aria-disabled="true">← older</span>}
-        </span>
-        <span class="scrap-nav-list"><a href="/scraps/">list</a></span>
-        <span class="scrap-nav-next">
-          {newerSlug ? <a href={`/scraps/${newerSlug}/`}>newer →</a> : <span data-disabled aria-disabled="true">newer →</span>}
-        </span>
-      </div>
-      <div class="scrap-left">
-        <b>{current.data.title}</b>
-      </div>
-      {detailDate && <time class="scrap-date" datetime={detailDatetime}>{detailDate}</time>}
-      <div class="scrap-body">
-        <rendered.Content />
+      <div class="scrap-content">
+        <div class="scrap-heading">
+          <div class="scrap-left">
+            <b>{current.data.title}</b>
+          </div>
+          {detailDate && <time class="scrap-date" datetime={detailDatetime}>{detailDate}</time>}
+        </div>
+        <div class="scrap-body">
+          <rendered.Content />
+        </div>
       </div>
     </article>
   ) : (

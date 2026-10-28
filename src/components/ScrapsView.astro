@@ -12,53 +12,139 @@ const { slug } = Astro.props;
 
 const allScraps = await getCollection('scraps');
 const scraps = sortScrapsNewestFirst(allScraps);
+const index = slug ? scraps.findIndex((s) => s.id === slug) : -1;
+const olderSlug = index >= 0 && index < scraps.length - 1 ? scraps[index + 1].id : null;
+const newerSlug = index > 0 ? scraps[index - 1].id : null;
 ---
 
+{slug && (
+  <div class="scrap-nav-layer view-scraps-hidden">
+    <nav class="scrap-nav" aria-label="Scrap navigation">
+      <span class="scrap-nav-prev">
+        {olderSlug ? <a href={`/scraps/${olderSlug}/`}>← older</a> : <span data-disabled aria-disabled="true">← older</span>}
+      </span>
+      <span class="scrap-nav-list"><a href="/scraps/">list</a></span>
+      <span class="scrap-nav-next">
+        {newerSlug ? <a href={`/scraps/${newerSlug}/`}>newer →</a> : <span data-disabled aria-disabled="true">newer →</span>}
+      </span>
+    </nav>
+  </div>
+)}
+<div class="scraps-fade scraps-fade-top" aria-hidden="true"></div>
 <div id="view-scraps" class="view-scraps-hidden" data-lenis-prevent>
   {slug ? <ScrapsDetail scraps={scraps} slug={slug} /> : <ScrapsList scraps={scraps} />}
 </div>
+<div class="scraps-fade scraps-fade-bottom" aria-hidden="true"></div>
 
 <script>
   function showScraps() {
-    const view = document.getElementById('view-scraps')
-    if (!view) return
+    const elements = document.querySelectorAll('#view-scraps, .scrap-nav-layer')
+    if (!elements.length) return
+    const show = () => elements.forEach((element) => element.classList.remove('view-scraps-hidden'))
     // Wait for the header measurement while it is still moving.
     if (document.documentElement.dataset.headerSettled !== undefined) {
-      view.classList.remove('view-scraps-hidden')
+      show()
       return
     }
-    document.addEventListener('header-settled', () => view.classList.remove('view-scraps-hidden'), { once: true })
+    document.addEventListener('header-settled', show, { once: true })
   }
   showScraps()
   document.addEventListener('astro:page-load', showScraps)
 </script>
 
 <style is:global>
-  #view-scraps.view-scraps-hidden {
+  #view-scraps.view-scraps-hidden,
+  .scrap-nav-layer.view-scraps-hidden {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
   }
 
+  .scraps-fade,
+  .scrap-nav-layer,
+  #view-scraps {
+    --scraps-top: calc(var(--header-height) + 0.5rem);
+    --scraps-bottom: var(--space-md);
+    --scraps-content-top: calc(var(--scraps-top) + 3rem);
+    --scraps-fade-height: calc(var(--space-xl) + 3rem);
+    --scraps-column: min(80vw, 1280px);
+  }
+
+  .scrap-nav-layer {
+    position: fixed;
+    top: var(--scraps-top);
+    left: 50%;
+    z-index: 2;
+    width: var(--scraps-column);
+    transform: translateX(-50%);
+  }
+
+  .scraps-fade {
+    position: fixed;
+    left: 50%;
+    width: calc(var(--scraps-column) + 2rem);
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .scraps-fade-top {
+    top: 0;
+    height: var(--scraps-content-top);
+    background: linear-gradient(to bottom, var(--background-color) 0, var(--background-color) calc(var(--scraps-top) + 1.5rem), transparent 100%);
+  }
+
+  .scraps-fade-bottom {
+    bottom: 0;
+    height: var(--scraps-fade-height);
+    background: linear-gradient(to top, var(--background-color) 0, var(--background-color) var(--scraps-bottom), transparent 100%);
+  }
+
   #view-scraps {
     position: fixed;
-    width: 100vw;
-    height: calc(100dvh - var(--header-height) - 2rem);
-    padding-top: calc(var(--header-height) + 2rem);
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    padding-top: var(--scraps-content-top);
+    padding-bottom: var(--scraps-fade-height);
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    max-width: 1600px;
-    z-index: 5;
-    overflow-y: scroll;
-    scrollbar-width: none;
+    overflow-y: auto;
+    scrollbar-gutter: stable both-edges;
+    scrollbar-width: thin;
+    scrollbar-color: var(--ui-border) transparent;
+  }
+
+  #view-scraps::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  #view-scraps::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  #view-scraps::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  #view-scraps::-webkit-scrollbar-thumb {
+    background: var(--ui-border);
+    background-clip: padding-box;
+    border: 3px solid transparent;
+    border-radius: var(--radius-full);
+  }
+
+  #view-scraps::-webkit-scrollbar-thumb:hover {
+    background-color: var(--text-color);
   }
 
   .scrap-list {
     display: flex;
     flex-direction: column;
-    width: 80%;
+    width: var(--scraps-column);
     gap: 1rem;
   }
 
@@ -72,7 +158,27 @@ const scraps = sortScrapsNewestFirst(allScraps);
   }
 
   .scrap-item.detail {
-    width: 80%;
+    width: var(--scraps-column);
+    min-height: calc(100dvh - var(--scraps-content-top) - var(--scraps-fade-height));
+    flex: 0 0 auto;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+  }
+
+  .scrap-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .scrap-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
   }
 
   a.scrap-item {
@@ -112,8 +218,6 @@ const scraps = sortScrapsNewestFirst(allScraps);
   .scrap-nav {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem;
-    flex-basis: 100%;
   }
   .scrap-nav a {
     cursor: pointer;
