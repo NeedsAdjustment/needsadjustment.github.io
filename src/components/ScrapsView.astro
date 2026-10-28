@@ -31,7 +31,7 @@ const newerSlug = index > 0 ? scraps[index - 1].id : null;
   </div>
 )}
 <div class="scraps-fade scraps-fade-top" aria-hidden="true"></div>
-<div id="view-scraps" class="view-scraps-hidden" data-lenis-prevent>
+<div id="view-scraps" class="view-scraps-hidden">
   {slug ? <ScrapsDetail scraps={scraps} slug={slug} /> : <ScrapsList scraps={scraps} />}
 </div>
 <div class="scraps-fade scraps-fade-bottom" aria-hidden="true"></div>

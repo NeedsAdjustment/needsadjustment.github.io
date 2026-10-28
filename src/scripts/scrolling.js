@@ -1,4 +1,3 @@
-import Lenis from 'lenis'
 import { navigate } from 'astro:transitions/client'
 
 if ('scrollRestoration' in history) {
@@ -40,9 +39,6 @@ function handleGesture(dir) {
     if (dir < 0 && arrivedByScroll && scrapsAtTop()) go('/')
   }
 }
-
-const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
-const lenis = motionPreference.matches ? null : new Lenis({ autoRaf: true })
 
 window.addEventListener(
   'wheel',
@@ -88,5 +84,4 @@ document.addEventListener('astro:page-load', () => {
   if (!isIntroPath()) arrivedByScroll = false
   window.scrollTo(0, 0)
   wireScrollIndicator()
-  lenis?.resize()
 })
