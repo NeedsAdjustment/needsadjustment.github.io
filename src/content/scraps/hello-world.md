@@ -1,6 +1,6 @@
 ---
 title: about this site
-date: 2026-06-30
+date: 2026-10-30
 ---
 
 This site is built statically with [astro](https://astro.build/) and hosted on Github Pages. Dynamic content is provided via serverless functions running on [val.town](https://val.town/):
