@@ -211,6 +211,16 @@ const newerSlug = index > 0 ? scraps[index - 1].id : null;
     text-wrap: pretty;
   }
 
+  .scrap-body a:any-link {
+    color: var(--link-colour);
+  }
+
+  .scrap-body a.snaps-unavailable {
+    color: color-mix(in srgb, var(--accent-red) 70%, var(--text-color));
+    text-decoration: line-through;
+    cursor: default;
+  }
+
   .scrap-body .email span:nth-child(odd) {
     display: none;
   }

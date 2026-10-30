@@ -3,11 +3,13 @@ import { navigate } from 'astro:transitions/client'
 
 const SNAPS_PROXY_URL = 'https://spren-immichgrabber.val.run/'
 const TAILSCALE_ISSUE_URL = 'https://github.com/tailscale/tailscale/issues/11849'
+const SNAPS_TIMEOUT_MS = 6000
 
 let assets = []
 let currentIndex = -1
 let _closeToken = 0
 let rendered = false
+let snapsUnavailable = null
 
 const overlay = document.querySelector('.snaps-overlay')
 const grid = overlay?.querySelector('masonry-grid-lanes')
@@ -73,11 +75,41 @@ const snapsBtn = document.querySelector('h2 a.category[data-snaps]')
 const snapsStatus = snapsBtn?.querySelector('.pill-status')
 
 function setSnapsUnavailable(value) {
-  if (!snapsBtn) return
-  snapsBtn.classList.toggle('unavailable', value)
-  snapsBtn.dataset.status = value ? 'error' : 'ready'
-  snapsBtn.href = value ? TAILSCALE_ISSUE_URL : '/snaps/'
-  if (snapsStatus) snapsStatus.textContent = value ? ' unavailable' : ''
+  snapsUnavailable = value
+  if (snapsBtn) {
+    snapsBtn.classList.toggle('unavailable', value)
+    snapsBtn.dataset.status = value ? 'error' : 'ready'
+    snapsBtn.href = value ? TAILSCALE_ISSUE_URL : '/snaps/'
+    if (snapsStatus) snapsStatus.textContent = value ? ' unavailable' : ''
+  }
+  updateSnapsLinks()
+}
+
+function isSnapsHref(href) {
+  try {
+    return new URL(href, location.href).pathname.replace(/\/+$/, '') === '/snaps'
+  } catch {
+    return false
+  }
+}
+
+function updateSnapsLinks() {
+  if (snapsUnavailable === null) return
+  for (const link of document.querySelectorAll('.scrap-body a')) {
+    const href = link.dataset.snapsHref || link.getAttribute('href')
+    if (!href || !isSnapsHref(href)) continue
+    if (!link.dataset.snapsHref) link.dataset.snapsHref = href
+    link.classList.toggle('snaps-unavailable', snapsUnavailable)
+    if (snapsUnavailable) {
+      link.removeAttribute('href')
+      link.setAttribute('aria-disabled', 'true')
+      link.tabIndex = -1
+    } else {
+      link.setAttribute('href', href)
+      link.removeAttribute('aria-disabled')
+      link.removeAttribute('tabindex')
+    }
+  }
 }
 
 function setSnapsCount(value) {
@@ -90,7 +122,8 @@ function setSnapsCount(value) {
 
 async function fetchAlbum() {
   try {
-    const res = await fetch(SNAPS_PROXY_URL)
+    const signal = AbortSignal.timeout?.(SNAPS_TIMEOUT_MS)
+    const res = await fetch(SNAPS_PROXY_URL, signal ? { signal } : undefined)
     if (!res.ok) throw new Error(`Proxy error: ${res.status}`)
     return await res.json()
   } catch {
@@ -249,7 +282,11 @@ function loadImages() {
 async function openGallery() {
   const token = ++_closeToken
   await ready
-  if (token !== _closeToken || !isSnapsPath() || !assets.length) return
+  if (token !== _closeToken || !isSnapsPath()) return
+  if (!assets.length) {
+    navigate('/', { history: 'replace' })
+    return
+  }
 
   if (!rendered) {
     renderGrid()
@@ -298,7 +335,10 @@ function handleRoute() {
   else if (isGalleryOpen()) closeGallery()
 }
 
-document.addEventListener('astro:page-load', handleRoute)
+document.addEventListener('astro:page-load', () => {
+  updateSnapsLinks()
+  handleRoute()
+})
 
 document.addEventListener('astro:before-swap', () => {
   if (!isGalleryOpen()) return

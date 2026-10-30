@@ -1,11 +1,14 @@
 ---
-title: Hello, World
+title: about this site
 date: 2026-06-30
-excerpt: A first test post to make sure the scraps system works.
 ---
 
-This is a test post to validate the scraps system. If you're reading this, it means the markdown pipeline is working correctly.
+This site is built statically with [astro](https://astro.build/) and hosted on Github Pages. Dynamic content is provided via serverless functions running on [val.town](https://val.town/):
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+- pulling images from my [Immich](https://immich.app/) instance and serving them to [snaps](https://joshuasoong.studio/snaps)
+- displaying my [currently-playing](https://www.val.town/x/spren/NowPlayingGrabber) (or [last-played](https://www.val.town/x/spren/LastPlayedStore)) track on Spotify
+- displaying my Dribbble shot [count](https://www.val.town/x/spren/DribbbleShotsGrabber)
 
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+The creature illustrations are randomly generated on load, using the [Teranoptia](https://www.tunera.xyz/fonts/teranoptia/) font by [Ariel Martín Pérez](https://arielmartinperez.com/). [Unbounded](https://unbounded.polkadot.network/) from Polkadot, and the duospaced variant of [Lilex](https://lilex.myrt.co/) by [Mikhael Khrustik](https://myrt.co/en/) are the other fonts used on this site.
+
+Colours for this site are adapted from [Kanagawa Wave](https://github.com/rebelot/kanagawa.nvim) (dark) by [Tommaso Laurenzi](https://github.com/rebelot), and [Flexoki](https://stephango.com/flexoki) (light) by [Steph Ango](https://stephango.com/).
