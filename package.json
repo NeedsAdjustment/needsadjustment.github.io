@@ -11,10 +11,10 @@
   },
   "dependencies": {
     "@schalkneethling/masonry-gridlanes-wc": "^0.1.0",
-    "astro": "7.4.2"
+    "astro": "7.4.4"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
-    "typescript": "^6"
+    "typescript": "^7"
   }
 }
