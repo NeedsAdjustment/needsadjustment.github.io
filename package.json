@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@schalkneethling/masonry-gridlanes-wc": "^0.1.0",
-    "astro": "7.4.7"
+    "astro": "7.4.11"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
